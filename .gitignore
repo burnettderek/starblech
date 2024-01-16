@@ -21,6 +21,9 @@
 *.a
 *.la
 *.lo
+*.o
+*.gbc
+*.nes
 
 # Shared objects (inc. Windows DLLs)
 *.dll
