@@ -1,0 +1,384 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler 
+                                      3 ; Version 4.3.2 #14228 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module hudmode
+                                      6 	.optsdcc -msm83
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _gameobjects
+                                     12 	.globl _sprites_reset
+                                     13 	.globl _hide
+                                     14 	.globl _show
+                                     15 	.globl _setPalette
+                                     16 	.globl _createPalette
+                                     17 	.globl _move
+                                     18 	.globl _setFrame
+                                     19 	.globl _ctor
+                                     20 	.globl _set_bkg_palette
+                                     21 	.globl _set_win_tiles
+                                     22 	.globl _set_win_data
+                                     23 	.globl _planetSprite
+                                     24 	.globl _hud_pallette
+                                     25 	.globl _Hud_init
+                                     26 	.globl _Hud_drawScreen
+                                     27 	.globl _Hud_processInput
+                                     28 ;--------------------------------------------------------
+                                     29 ; special function registers
+                                     30 ;--------------------------------------------------------
+                                     31 ;--------------------------------------------------------
+                                     32 ; ram data
+                                     33 ;--------------------------------------------------------
+                                     34 	.area _DATA
+      000000                         35 _planetSprite::
+      000000                         36 	.ds 20
+                                     37 ;--------------------------------------------------------
+                                     38 ; ram data
+                                     39 ;--------------------------------------------------------
+                                     40 	.area _INITIALIZED
+      000000                         41 _HUD_SCALE:
+      000000                         42 	.ds 2
+                                     43 ;--------------------------------------------------------
+                                     44 ; absolute external ram data
+                                     45 ;--------------------------------------------------------
+                                     46 	.area _DABS (ABS)
+                                     47 ;--------------------------------------------------------
+                                     48 ; global & static initialisations
+                                     49 ;--------------------------------------------------------
+                                     50 	.area _HOME
+                                     51 	.area _GSINIT
+                                     52 	.area _GSFINAL
+                                     53 	.area _GSINIT
+                                     54 ;--------------------------------------------------------
+                                     55 ; Home
+                                     56 ;--------------------------------------------------------
+                                     57 	.area _HOME
+                                     58 	.area _HOME
+                                     59 ;--------------------------------------------------------
+                                     60 ; code
+                                     61 ;--------------------------------------------------------
+                                     62 	.area _CODE
+                                     63 ;..\modes\hudmode.c:18: void Hud_init(struct Hud* this) {
+                                     64 ;	---------------------------------
+                                     65 ; Function Hud_init
+                                     66 ; ---------------------------------
+      000000                         67 _Hud_init::
+                                     68 ;..\modes\hudmode.c:19: this->sensorLevel = SENSORS_LONG;
+      000000 21 04 00         [12]   69 	ld	hl, #0x0004
+      000003 19               [ 8]   70 	add	hl, de
+      000004 3E 64            [ 8]   71 	ld	a, #0x64
+      000006 22               [ 8]   72 	ld	(hl+), a
+      000007 36 00            [12]   73 	ld	(hl), #0x00
+                                     74 ;..\modes\hudmode.c:20: HIDE_BKG;
+      000009 F0r00            [12]   75 	ldh	a, (_LCDC_REG + 0)
+      00000B E6 FE            [ 8]   76 	and	a, #0xfe
+      00000D E0r00            [12]   77 	ldh	(_LCDC_REG + 0), a
+                                     78 ;..\modes\hudmode.c:21: SHOW_WIN;
+      00000F F0r00            [12]   79 	ldh	a, (_LCDC_REG + 0)
+      000011 F6 20            [ 8]   80 	or	a, #0x20
+      000013 E0r00            [12]   81 	ldh	(_LCDC_REG + 0), a
+                                     82 ;..\modes\hudmode.c:22: sprites_reset();
+      000015 D5               [16]   83 	push	de
+      000016 CDr00r00         [24]   84 	call	_sprites_reset
+      000019 D1               [12]   85 	pop	de
+                                     86 ;..\modes\hudmode.c:23: this->screen_position.x = 7 + BORDER;
+      00001A 6B               [ 4]   87 	ld	l, e
+      00001B 62               [ 4]   88 	ld	h, d
+      00001C 3E 07            [ 8]   89 	ld	a, #0x07
+      00001E 22               [ 8]   90 	ld	(hl+), a
+      00001F 36 00            [12]   91 	ld	(hl), #0x00
+                                     92 ;..\modes\hudmode.c:24: this->screen_position.y = 17 * 8;
+      000021 4B               [ 4]   93 	ld	c, e
+      000022 42               [ 4]   94 	ld	b, d
+      000023 03               [ 8]   95 	inc	bc
+      000024 03               [ 8]   96 	inc	bc
+      000025 69               [ 4]   97 	ld	l, c
+      000026 60               [ 4]   98 	ld	h, b
+      000027 3E 88            [ 8]   99 	ld	a, #0x88
+      000029 22               [ 8]  100 	ld	(hl+), a
+      00002A 36 00            [12]  101 	ld	(hl), #0x00
+                                    102 ;..\modes\hudmode.c:25: set_win_data(0, 15, sensor_tiles);
+      00002C D5               [16]  103 	push	de
+      00002D 21r00r00         [12]  104 	ld	hl, #_sensor_tiles
+      000030 E5               [16]  105 	push	hl
+      000031 21 00 0F         [12]  106 	ld	hl, #0xf00
+      000034 E5               [16]  107 	push	hl
+      000035 CDr00r00         [24]  108 	call	_set_win_data
+      000038 E8 04            [16]  109 	add	sp, #4
+      00003A 21r00r00         [12]  110 	ld	hl, #_sensor_screen
+      00003D E5               [16]  111 	push	hl
+      00003E 21 1F 20         [12]  112 	ld	hl, #0x201f
+      000041 E5               [16]  113 	push	hl
+      000042 AF               [ 4]  114 	xor	a, a
+      000043 0F               [ 4]  115 	rrca
+      000044 F5               [16]  116 	push	af
+      000045 CDr00r00         [24]  117 	call	_set_win_tiles
+      000048 E8 06            [16]  118 	add	sp, #6
+      00004A D1               [12]  119 	pop	de
+                                    120 ;..\modes\hudmode.c:27: move_win(this->screen_position.x, this->screen_position.y);
+      00004B 0A               [ 8]  121 	ld	a, (bc)
+      00004C F5               [16]  122 	push	af
+      00004D 1A               [ 8]  123 	ld	a, (de)
+      00004E E0r00            [12]  124 	ldh	(_WX_REG + 0), a
+      000050 F1               [12]  125 	pop	af
+                                    126 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1656: WX_REG=x, WY_REG=y;
+      000051 E0r00            [12]  127 	ldh	(_WY_REG + 0), a
+                                    128 ;..\modes\hudmode.c:28: set_bkg_palette(0,1, hud_pallette);
+      000053 11r96r00         [12]  129 	ld	de, #_hud_pallette
+      000056 D5               [16]  130 	push	de
+      000057 3E 01            [ 8]  131 	ld	a, #0x01
+      000059 F5               [16]  132 	push	af
+      00005A 33               [ 8]  133 	inc	sp
+      00005B AF               [ 4]  134 	xor	a, a
+      00005C F5               [16]  135 	push	af
+      00005D 33               [ 8]  136 	inc	sp
+      00005E CDr00r00         [24]  137 	call	_set_bkg_palette
+      000061 E8 04            [16]  138 	add	sp, #4
+                                    139 ;..\modes\hudmode.c:29: ctor(&planetSprite, sensor_sprites, 2, 2, 1);
+      000063 11 01 00         [12]  140 	ld	de, #0x0001
+      000066 D5               [16]  141 	push	de
+      000067 11 02 00         [12]  142 	ld	de, #0x0002
+      00006A D5               [16]  143 	push	de
+      00006B D5               [16]  144 	push	de
+      00006C 01r00r00         [12]  145 	ld	bc, #_sensor_sprites
+      00006F 11r00r00         [12]  146 	ld	de, #_planetSprite
+      000072 CDr00r00         [24]  147 	call	_ctor
+                                    148 ;..\modes\hudmode.c:30: setFrame(&planetSprite, 0);
+      000075 01 00 00         [12]  149 	ld	bc, #0x0000
+      000078 11r00r00         [12]  150 	ld	de, #_planetSprite
+      00007B CDr00r00         [24]  151 	call	_setFrame
+                                    152 ;..\modes\hudmode.c:32: byte planetPalette = createPalette(RGB_BLACK, RGB_YELLOW, RGB_ORANGE, RGB_RED);
+      00007E 11 1F 00         [12]  153 	ld	de, #0x001f
+      000081 D5               [16]  154 	push	de
+      000082 11 9E 02         [12]  155 	ld	de, #0x029e
+      000085 D5               [16]  156 	push	de
+      000086 01 FF 03         [12]  157 	ld	bc, #0x03ff
+      000089 11 00 00         [12]  158 	ld	de, #0x0000
+      00008C CDr00r00         [24]  159 	call	_createPalette
+                                    160 ;..\modes\hudmode.c:33: setPalette(&planetSprite, planetPalette);    
+      00008F 4F               [ 4]  161 	ld	c, a
+      000090 11r00r00         [12]  162 	ld	de, #_planetSprite
+                                    163 ;..\modes\hudmode.c:34: }
+      000093 C3r00r00         [16]  164 	jp	_setPalette
+      000096                        165 _hud_pallette:
+      000096 00 00                  166 	.dw #0x0000
+      000098 07 00                  167 	.dw #0x0007
+      00009A FF 03                  168 	.dw #0x03ff
+      00009C 20 7F                  169 	.dw #0x7f20
+                                    170 ;..\modes\hudmode.c:36: void Hud_drawScreen(struct Hud* this) {
+                                    171 ;	---------------------------------
+                                    172 ; Function Hud_drawScreen
+                                    173 ; ---------------------------------
+      00009E                        174 _Hud_drawScreen::
+      00009E E8 FA            [16]  175 	add	sp, #-6
+      0000A0 4B               [ 4]  176 	ld	c, e
+      0000A1 42               [ 4]  177 	ld	b, d
+                                    178 ;..\modes\hudmode.c:38: if(this->screen_position.y > BORDER) {
+      0000A2 21 02 00         [12]  179 	ld	hl, #0x0002
+      0000A5 09               [ 8]  180 	add	hl, bc
+      0000A6 33               [ 8]  181 	inc	sp
+      0000A7 33               [ 8]  182 	inc	sp
+      0000A8 5D               [ 4]  183 	ld	e, l
+      0000A9 54               [ 4]  184 	ld	d, h
+      0000AA D5               [16]  185 	push	de
+      0000AB 1A               [ 8]  186 	ld	a, (de)
+      0000AC F8 02            [12]  187 	ldhl	sp,	#2
+      0000AE 22               [ 8]  188 	ld	(hl+), a
+      0000AF 13               [ 8]  189 	inc	de
+      0000B0 1A               [ 8]  190 	ld	a, (de)
+      0000B1 32               [ 8]  191 	ld	(hl-), a
+      0000B2 AF               [ 4]  192 	xor	a, a
+      0000B3 96               [ 8]  193 	sub	a, (hl)
+      0000B4 23               [ 8]  194 	inc	hl
+      0000B5 3E 00            [ 8]  195 	ld	a, #0x00
+      0000B7 9E               [ 8]  196 	sbc	a, (hl)
+      0000B8 3E 00            [ 8]  197 	ld	a, #0x00
+      0000BA 57               [ 4]  198 	ld	d, a
+      0000BB CB 7E            [12]  199 	bit	7, (hl)
+      0000BD 28 07            [12]  200 	jr	Z, 00132$
+      0000BF CB 7A            [ 8]  201 	bit	7, d
+      0000C1 20 08            [12]  202 	jr	NZ, 00133$
+      0000C3 BF               [ 4]  203 	cp	a, a
+      0000C4 18 05            [12]  204 	jr	00133$
+      0000C6                        205 00132$:
+      0000C6 CB 7A            [ 8]  206 	bit	7, d
+      0000C8 28 01            [12]  207 	jr	Z, 00133$
+      0000CA 37               [ 4]  208 	scf
+      0000CB                        209 00133$:
+      0000CB 30 2B            [12]  210 	jr	NC, 00104$
+                                    211 ;..\modes\hudmode.c:39: this->screen_position.y -= 12;  
+      0000CD F8 02            [12]  212 	ldhl	sp,#2
+      0000CF 2A               [ 8]  213 	ld	a, (hl+)
+      0000D0 5F               [ 4]  214 	ld	e, a
+      0000D1 56               [ 8]  215 	ld	d, (hl)
+      0000D2 21 0C 00         [12]  216 	ld	hl, #0x000c
+      0000D5 7B               [ 4]  217 	ld	a, e
+      0000D6 95               [ 4]  218 	sub	a, l
+      0000D7 5F               [ 4]  219 	ld	e, a
+      0000D8 7A               [ 4]  220 	ld	a, d
+      0000D9 9C               [ 4]  221 	sbc	a, h
+      0000DA F8 05            [12]  222 	ldhl	sp,	#5
+      0000DC 32               [ 8]  223 	ld	(hl-), a
+      0000DD 73               [ 8]  224 	ld	(hl), e
+      0000DE D1               [12]  225 	pop	de
+      0000DF D5               [16]  226 	push	de
+      0000E0 2A               [ 8]  227 	ld	a, (hl+)
+      0000E1 12               [ 8]  228 	ld	(de), a
+      0000E2 13               [ 8]  229 	inc	de
+      0000E3 7E               [ 8]  230 	ld	a, (hl)
+      0000E4 12               [ 8]  231 	ld	(de), a
+                                    232 ;..\modes\hudmode.c:40: if(this->screen_position.y < BORDER)this->screen_position.y = BORDER;
+      0000E5 CB 7E            [12]  233 	bit	7, (hl)
+      0000E7 28 05            [12]  234 	jr	Z, 00102$
+      0000E9 E1               [12]  235 	pop	hl
+      0000EA E5               [16]  236 	push	hl
+      0000EB AF               [ 4]  237 	xor	a, a
+      0000EC 22               [ 8]  238 	ld	(hl+), a
+      0000ED 77               [ 8]  239 	ld	(hl), a
+      0000EE                        240 00102$:
+                                    241 ;..\modes\hudmode.c:41: move_win(this->screen_position.x, this->screen_position.y);
+      0000EE D1               [12]  242 	pop	de
+      0000EF D5               [16]  243 	push	de
+      0000F0 1A               [ 8]  244 	ld	a, (de)
+      0000F1 F5               [16]  245 	push	af
+      0000F2 0A               [ 8]  246 	ld	a, (bc)
+      0000F3 E0r00            [12]  247 	ldh	(_WX_REG + 0), a
+      0000F5 F1               [12]  248 	pop	af
+                                    249 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1656: WX_REG=x, WY_REG=y;
+      0000F6 E0r00            [12]  250 	ldh	(_WY_REG + 0), a
+                                    251 ;..\modes\hudmode.c:41: move_win(this->screen_position.x, this->screen_position.y);
+      0000F8                        252 00104$:
+                                    253 ;..\modes\hudmode.c:45: struct GameObject* ship = gameobjects(GO_SHIP);
+      0000F8 11 00 00         [12]  254 	ld	de, #0x0000
+      0000FB CDr00r00         [24]  255 	call	_gameobjects
+      0000FE E1               [12]  256 	pop	hl
+      0000FF C5               [16]  257 	push	bc
+                                    258 ;..\modes\hudmode.c:46: struct GameObject* planet1 = gameobjects(GO_PLANET1);
+      000100 11 01 00         [12]  259 	ld	de, #0x0001
+      000103 CDr00r00         [24]  260 	call	_gameobjects
+      000106 F8 02            [12]  261 	ldhl	sp,	#2
+      000108 79               [ 4]  262 	ld	a, c
+      000109 22               [ 8]  263 	ld	(hl+), a
+      00010A 70               [ 8]  264 	ld	(hl), b
+                                    265 ;..\modes\hudmode.c:47: int screen_x = (planet1->world.x - ship->world.x)/HUD_SCALE + center_offset_x;
+      00010B F8 02            [12]  266 	ldhl	sp,#2
+      00010D 2A               [ 8]  267 	ld	a, (hl+)
+      00010E 5F               [ 4]  268 	ld	e, a
+      00010F 56               [ 8]  269 	ld	d, (hl)
+      000110 1A               [ 8]  270 	ld	a, (de)
+      000111 4F               [ 4]  271 	ld	c, a
+      000112 13               [ 8]  272 	inc	de
+      000113 1A               [ 8]  273 	ld	a, (de)
+      000114 47               [ 4]  274 	ld	b, a
+      000115 D1               [12]  275 	pop	de
+      000116 D5               [16]  276 	push	de
+      000117 1A               [ 8]  277 	ld	a, (de)
+      000118 6F               [ 4]  278 	ld	l, a
+                                    279 ;	spillPairReg hl
+                                    280 ;	spillPairReg hl
+      000119 13               [ 8]  281 	inc	de
+      00011A 1A               [ 8]  282 	ld	a, (de)
+      00011B 67               [ 4]  283 	ld	h, a
+                                    284 ;	spillPairReg hl
+                                    285 ;	spillPairReg hl
+      00011C 79               [ 4]  286 	ld	a, c
+      00011D 95               [ 4]  287 	sub	a, l
+      00011E 5F               [ 4]  288 	ld	e, a
+      00011F 78               [ 4]  289 	ld	a, b
+      000120 9C               [ 4]  290 	sbc	a, h
+      000121 57               [ 4]  291 	ld	d, a
+      000122 21r00r00         [12]  292 	ld	hl, #_HUD_SCALE
+      000125 2A               [ 8]  293 	ld	a, (hl+)
+      000126 4F               [ 4]  294 	ld	c, a
+      000127 46               [ 8]  295 	ld	b, (hl)
+      000128 CDr00r00         [24]  296 	call	__divsint
+      00012B 21 50 00         [12]  297 	ld	hl, #0x0050
+      00012E 09               [ 8]  298 	add	hl, bc
+      00012F E5               [16]  299 	push	hl
+      000130 7D               [ 4]  300 	ld	a, l
+      000131 F8 06            [12]  301 	ldhl	sp,	#6
+      000133 77               [ 8]  302 	ld	(hl), a
+      000134 E1               [12]  303 	pop	hl
+      000135 7C               [ 4]  304 	ld	a, h
+      000136 F8 05            [12]  305 	ldhl	sp,	#5
+      000138 77               [ 8]  306 	ld	(hl), a
+                                    307 ;..\modes\hudmode.c:48: int screen_y = (planet1->world.y - ship->world.y)/HUD_SCALE + center_offset_y;
+      000139 F8 02            [12]  308 	ldhl	sp,	#2
+      00013B 2A               [ 8]  309 	ld	a, (hl+)
+      00013C 66               [ 8]  310 	ld	h, (hl)
+                                    311 ;	spillPairReg hl
+                                    312 ;	spillPairReg hl
+      00013D 6F               [ 4]  313 	ld	l, a
+                                    314 ;	spillPairReg hl
+                                    315 ;	spillPairReg hl
+      00013E 23               [ 8]  316 	inc	hl
+      00013F 23               [ 8]  317 	inc	hl
+      000140 2A               [ 8]  318 	ld	a, (hl+)
+      000141 4F               [ 4]  319 	ld	c, a
+      000142 46               [ 8]  320 	ld	b, (hl)
+      000143 E1               [12]  321 	pop	hl
+      000144 E5               [16]  322 	push	hl
+      000145 23               [ 8]  323 	inc	hl
+      000146 23               [ 8]  324 	inc	hl
+      000147 2A               [ 8]  325 	ld	a,	(hl+)
+      000148 66               [ 8]  326 	ld	h, (hl)
+                                    327 ;	spillPairReg hl
+      000149 6F               [ 4]  328 	ld	l, a
+                                    329 ;	spillPairReg hl
+                                    330 ;	spillPairReg hl
+      00014A 79               [ 4]  331 	ld	a, c
+      00014B 95               [ 4]  332 	sub	a, l
+      00014C 5F               [ 4]  333 	ld	e, a
+      00014D 78               [ 4]  334 	ld	a, b
+      00014E 9C               [ 4]  335 	sbc	a, h
+      00014F 57               [ 4]  336 	ld	d, a
+      000150 21r00r00         [12]  337 	ld	hl, #_HUD_SCALE
+      000153 2A               [ 8]  338 	ld	a, (hl+)
+      000154 4F               [ 4]  339 	ld	c, a
+      000155 46               [ 8]  340 	ld	b, (hl)
+      000156 CDr00r00         [24]  341 	call	__divsint
+      000159 21 50 00         [12]  342 	ld	hl, #0x0050
+      00015C 09               [ 8]  343 	add	hl, bc
+      00015D 4D               [ 4]  344 	ld	c, l
+      00015E 44               [ 4]  345 	ld	b, h
+                                    346 ;..\modes\hudmode.c:49: if(screen_y < 20)hide(&planetSprite);
+      00015F 79               [ 4]  347 	ld	a, c
+      000160 D6 14            [ 8]  348 	sub	a, #0x14
+      000162 78               [ 4]  349 	ld	a, b
+      000163 17               [ 4]  350 	rla
+      000164 3F               [ 4]  351 	ccf
+      000165 1F               [ 4]  352 	rra
+      000166 DE 80            [ 8]  353 	sbc	a, #0x80
+      000168 30 08            [12]  354 	jr	NC, 00106$
+      00016A 11r00r00         [12]  355 	ld	de, #_planetSprite
+      00016D CDr00r00         [24]  356 	call	_hide
+      000170 18 12            [12]  357 	jr	00109$
+      000172                        358 00106$:
+                                    359 ;..\modes\hudmode.c:51: show(&planetSprite);
+      000172 C5               [16]  360 	push	bc
+      000173 11r00r00         [12]  361 	ld	de, #_planetSprite
+      000176 CDr00r00         [24]  362 	call	_show
+      000179 F8 06            [12]  363 	ldhl	sp,	#6
+      00017B 2A               [ 8]  364 	ld	a, (hl+)
+      00017C 4F               [ 4]  365 	ld	c, a
+      00017D 46               [ 8]  366 	ld	b, (hl)
+      00017E 11r00r00         [12]  367 	ld	de, #_planetSprite
+      000181 CDr00r00         [24]  368 	call	_move
+      000184                        369 00109$:
+                                    370 ;..\modes\hudmode.c:54: }
+      000184 E8 06            [16]  371 	add	sp, #6
+      000186 C9               [16]  372 	ret
+                                    373 ;..\modes\hudmode.c:56: void Hud_processInput(struct Hud* this, byte joypad) {
+                                    374 ;	---------------------------------
+                                    375 ; Function Hud_processInput
+                                    376 ; ---------------------------------
+      000187                        377 _Hud_processInput::
+                                    378 ;..\modes\hudmode.c:67: }
+      000187 C9               [16]  379 	ret
+                                    380 	.area _CODE
+                                    381 	.area _INITIALIZER
+      000000                        382 __xinit__HUD_SCALE:
+      000000 14 00                  383 	.dw #0x0014
+                                    384 	.area _CABS (ABS)

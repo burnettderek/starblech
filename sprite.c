@@ -48,7 +48,7 @@ void setFrame(struct Sprite* this, int frame) {
 void setVisible(struct Sprite* this, bool visible) {
     if(visible == this->visible) return; // no op;
     this->visible = visible;
-    int totalTiles = this->tileDimension.width * this->tileDimension.height * this->frames;
+    int totalTiles = this->tileDimension.width * this->tileDimension.height;
     if(!visible) {
         //we leave tile 0 empty so we just set all of our tiles to that
         for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
@@ -68,19 +68,19 @@ bool getVisible(struct Sprite* this) {
 }
 
 void move(struct Sprite* this, int screen_x, int screen_y) {
-    if(this->hidden)return;
-    if(isOnScreen(this, screen_x, screen_y)) {
+    //if(this->hidden)return;
+    if(this->hidden == false && isOnScreen(this, screen_x, screen_y)) {
         setVisible(this, true);
-        for(int x = 0; x < this->tileDimension.width; x++)
-        {
-            for(int y = 0; y < this->tileDimension.height; y++)
-            {
-                move_sprite(this->spriteIndex + (y + this->tileDimension.width * x), screen_x + x * 8, screen_y + y * 8);
-            }
-        }
     }
     else {
         setVisible(this, false);
+    }
+    for(int x = 0; x < this->tileDimension.width; x++)
+    {
+        for(int y = 0; y < this->tileDimension.height; y++)
+        {
+            move_sprite(this->spriteIndex + (y + this->tileDimension.width * x), screen_x + x * 8, screen_y + y * 8);
+        }
     }
 }
 

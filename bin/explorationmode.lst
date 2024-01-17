@@ -1,0 +1,2185 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler 
+                                      3 ; Version 4.3.2 #14228 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module explorationmode
+                                      6 	.optsdcc -msm83
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _manage_asteroid
+                                     12 	.globl _to_screen
+                                     13 	.globl _do_explosion
+                                     14 	.globl _gameobjects
+                                     15 	.globl _sprites_reset
+                                     16 	.globl _hide
+                                     17 	.globl _show
+                                     18 	.globl _setPalette
+                                     19 	.globl _isOnScreen
+                                     20 	.globl _createPalette
+                                     21 	.globl _move
+                                     22 	.globl _setFrame
+                                     23 	.globl _ctor
+                                     24 	.globl _set_bkg_palette
+                                     25 	.globl _abs
+                                     26 	.globl _rand
+                                     27 	.globl _set_bkg_tiles
+                                     28 	.globl _set_bkg_data
+                                     29 	.globl _mid_screen
+                                     30 	.globl _explosionGraphic
+                                     31 	.globl _asteroidGraphic
+                                     32 	.globl _shipGraphic
+                                     33 	.globl _photonGraphic
+                                     34 	.globl _explosion
+                                     35 	.globl _saturnGraphic
+                                     36 	.globl _asteroid
+                                     37 	.globl _photon
+                                     38 	.globl _space_pallette
+                                     39 	.globl _ExplorationMode_init
+                                     40 	.globl _ExplorationMode_update
+                                     41 	.globl _ExplorationMode_processInput
+                                     42 ;--------------------------------------------------------
+                                     43 ; special function registers
+                                     44 ;--------------------------------------------------------
+                                     45 ;--------------------------------------------------------
+                                     46 ; ram data
+                                     47 ;--------------------------------------------------------
+                                     48 	.area _DATA
+      000000                         49 _photon::
+      000000                         50 	.ds 9
+      000009                         51 _asteroid::
+      000009                         52 	.ds 9
+      000012                         53 _saturnGraphic::
+      000012                         54 	.ds 20
+      000026                         55 _explosion::
+      000026                         56 	.ds 9
+      00002F                         57 _photonGraphic::
+      00002F                         58 	.ds 20
+      000043                         59 _shipGraphic::
+      000043                         60 	.ds 20
+      000057                         61 _asteroidGraphic::
+      000057                         62 	.ds 20
+      00006B                         63 _explosionGraphic::
+      00006B                         64 	.ds 20
+                                     65 ;--------------------------------------------------------
+                                     66 ; ram data
+                                     67 ;--------------------------------------------------------
+                                     68 	.area _INITIALIZED
+      000000                         69 _mid_screen::
+      000000                         70 	.ds 4
+                                     71 ;--------------------------------------------------------
+                                     72 ; absolute external ram data
+                                     73 ;--------------------------------------------------------
+                                     74 	.area _DABS (ABS)
+                                     75 ;--------------------------------------------------------
+                                     76 ; global & static initialisations
+                                     77 ;--------------------------------------------------------
+                                     78 	.area _HOME
+                                     79 	.area _GSINIT
+                                     80 	.area _GSFINAL
+                                     81 	.area _GSINIT
+                                     82 ;--------------------------------------------------------
+                                     83 ; Home
+                                     84 ;--------------------------------------------------------
+                                     85 	.area _HOME
+                                     86 	.area _HOME
+                                     87 ;--------------------------------------------------------
+                                     88 ; code
+                                     89 ;--------------------------------------------------------
+                                     90 	.area _CODE
+                                     91 ;..\modes\explorationmode.c:34: void do_explosion(int world_x, int world_y) {
+                                     92 ;	---------------------------------
+                                     93 ; Function do_explosion
+                                     94 ; ---------------------------------
+      000000                         95 _do_explosion::
+      000000 D5               [16]   96 	push	de
+                                     97 ;..\modes\explorationmode.c:35: explosion.isAlive = true;
+      000001 21r2Ar00         [12]   98 	ld	hl, #(_explosion + 4)
+      000004 36 01            [12]   99 	ld	(hl), #0x01
+                                    100 ;..\modes\explorationmode.c:36: explosion.world.x = world_x;
+      000006 11r26r00         [12]  101 	ld	de, #_explosion
+      000009 F8 00            [12]  102 	ldhl	sp,	#0
+      00000B 2A               [ 8]  103 	ld	a, (hl+)
+      00000C 12               [ 8]  104 	ld	(de), a
+      00000D 13               [ 8]  105 	inc	de
+      00000E 7E               [ 8]  106 	ld	a, (hl)
+      00000F 12               [ 8]  107 	ld	(de), a
+                                    108 ;..\modes\explorationmode.c:37: explosion.world.y = world_y;
+      000010 21r28r00         [12]  109 	ld	hl, #(_explosion + 2)
+      000013 71               [ 8]  110 	ld	(hl), c
+      000014 23               [ 8]  111 	inc	hl
+      000015 70               [ 8]  112 	ld	(hl), b
+                                    113 ;..\modes\explorationmode.c:38: show(&explosionGraphic);
+      000016 11r6Br00         [12]  114 	ld	de, #_explosionGraphic
+      000019 33               [ 8]  115 	inc	sp
+      00001A 33               [ 8]  116 	inc	sp
+      00001B C3r00r00         [16]  117 	jp	_show
+                                    118 ;..\modes\explorationmode.c:39: }
+      00001E 33               [ 8]  119 	inc	sp
+      00001F 33               [ 8]  120 	inc	sp
+      000020 C9               [16]  121 	ret
+      000021                        122 _space_pallette:
+      000021 08 21                  123 	.dw #0x2108
+      000023 C0 20                  124 	.dw #0x20c0
+      000025 24 00                  125 	.dw #0x0024
+      000027 00 00                  126 	.dw #0x0000
+                                    127 ;..\modes\explorationmode.c:41: struct Vector to_screen(struct Vector* ship, struct Vector* object) {
+                                    128 ;	---------------------------------
+                                    129 ; Function to_screen
+                                    130 ; ---------------------------------
+      000029                        131 _to_screen::
+      000029 E8 F8            [16]  132 	add	sp, #-8
+      00002B F8 06            [12]  133 	ldhl	sp,	#6
+      00002D 7B               [ 4]  134 	ld	a, e
+      00002E 22               [ 8]  135 	ld	(hl+), a
+      00002F 72               [ 8]  136 	ld	(hl), d
+      000030 F8 04            [12]  137 	ldhl	sp,	#4
+      000032 79               [ 4]  138 	ld	a, c
+      000033 22               [ 8]  139 	ld	(hl+), a
+                                    140 ;..\modes\explorationmode.c:43: result.x = object->x - ship->x + mid_screen.width;
+      000034 78               [ 4]  141 	ld	a, b
+      000035 32               [ 8]  142 	ld	(hl-), a
+      000036 2A               [ 8]  143 	ld	a, (hl+)
+      000037 5F               [ 4]  144 	ld	e, a
+      000038 2A               [ 8]  145 	ld	a, (hl+)
+      000039 57               [ 4]  146 	ld	d, a
+      00003A 1A               [ 8]  147 	ld	a, (de)
+      00003B 4F               [ 4]  148 	ld	c, a
+      00003C 13               [ 8]  149 	inc	de
+      00003D 1A               [ 8]  150 	ld	a, (de)
+      00003E 47               [ 4]  151 	ld	b, a
+      00003F 2A               [ 8]  152 	ld	a, (hl+)
+      000040 5F               [ 4]  153 	ld	e, a
+      000041 56               [ 8]  154 	ld	d, (hl)
+      000042 1A               [ 8]  155 	ld	a, (de)
+      000043 6F               [ 4]  156 	ld	l, a
+                                    157 ;	spillPairReg hl
+                                    158 ;	spillPairReg hl
+      000044 13               [ 8]  159 	inc	de
+      000045 1A               [ 8]  160 	ld	a, (de)
+      000046 67               [ 4]  161 	ld	h, a
+                                    162 ;	spillPairReg hl
+                                    163 ;	spillPairReg hl
+      000047 79               [ 4]  164 	ld	a, c
+      000048 95               [ 4]  165 	sub	a, l
+      000049 4F               [ 4]  166 	ld	c, a
+      00004A 78               [ 4]  167 	ld	a, b
+      00004B 9C               [ 4]  168 	sbc	a, h
+      00004C 47               [ 4]  169 	ld	b, a
+      00004D 21r00r00         [12]  170 	ld	hl, #_mid_screen
+      000050 2A               [ 8]  171 	ld	a,	(hl+)
+      000051 66               [ 8]  172 	ld	h, (hl)
+                                    173 ;	spillPairReg hl
+      000052 6F               [ 4]  174 	ld	l, a
+                                    175 ;	spillPairReg hl
+                                    176 ;	spillPairReg hl
+      000053 09               [ 8]  177 	add	hl, bc
+      000054 4D               [ 4]  178 	ld	c, l
+      000055 44               [ 4]  179 	ld	b, h
+      000056 33               [ 8]  180 	inc	sp
+      000057 33               [ 8]  181 	inc	sp
+      000058 C5               [16]  182 	push	bc
+                                    183 ;..\modes\explorationmode.c:44: result.y = object->y - ship->y + mid_screen.height;
+      000059 F8 04            [12]  184 	ldhl	sp,	#4
+      00005B 2A               [ 8]  185 	ld	a, (hl+)
+      00005C 66               [ 8]  186 	ld	h, (hl)
+                                    187 ;	spillPairReg hl
+                                    188 ;	spillPairReg hl
+      00005D 6F               [ 4]  189 	ld	l, a
+                                    190 ;	spillPairReg hl
+                                    191 ;	spillPairReg hl
+      00005E 23               [ 8]  192 	inc	hl
+      00005F 23               [ 8]  193 	inc	hl
+      000060 2A               [ 8]  194 	ld	a, (hl+)
+      000061 4F               [ 4]  195 	ld	c, a
+      000062 46               [ 8]  196 	ld	b, (hl)
+      000063 F8 06            [12]  197 	ldhl	sp,	#6
+      000065 2A               [ 8]  198 	ld	a, (hl+)
+      000066 66               [ 8]  199 	ld	h, (hl)
+                                    200 ;	spillPairReg hl
+                                    201 ;	spillPairReg hl
+      000067 6F               [ 4]  202 	ld	l, a
+                                    203 ;	spillPairReg hl
+                                    204 ;	spillPairReg hl
+      000068 23               [ 8]  205 	inc	hl
+      000069 23               [ 8]  206 	inc	hl
+      00006A 2A               [ 8]  207 	ld	a,	(hl+)
+      00006B 66               [ 8]  208 	ld	h, (hl)
+                                    209 ;	spillPairReg hl
+      00006C 6F               [ 4]  210 	ld	l, a
+                                    211 ;	spillPairReg hl
+                                    212 ;	spillPairReg hl
+      00006D 79               [ 4]  213 	ld	a, c
+      00006E 95               [ 4]  214 	sub	a, l
+      00006F 4F               [ 4]  215 	ld	c, a
+      000070 78               [ 4]  216 	ld	a, b
+      000071 9C               [ 4]  217 	sbc	a, h
+      000072 47               [ 4]  218 	ld	b, a
+      000073 21r02r00         [12]  219 	ld	hl, #(_mid_screen + 2)
+      000076 2A               [ 8]  220 	ld	a,	(hl+)
+      000077 66               [ 8]  221 	ld	h, (hl)
+                                    222 ;	spillPairReg hl
+      000078 6F               [ 4]  223 	ld	l, a
+                                    224 ;	spillPairReg hl
+                                    225 ;	spillPairReg hl
+      000079 09               [ 8]  226 	add	hl, bc
+      00007A 4D               [ 4]  227 	ld	c, l
+      00007B 44               [ 4]  228 	ld	b, h
+      00007C F8 02            [12]  229 	ldhl	sp,	#2
+      00007E 79               [ 4]  230 	ld	a, c
+      00007F 22               [ 8]  231 	ld	(hl+), a
+      000080 70               [ 8]  232 	ld	(hl), b
+                                    233 ;..\modes\explorationmode.c:45: return result;
+      000081 F8 0A            [12]  234 	ldhl	sp,	#10
+      000083 2A               [ 8]  235 	ld	a, (hl+)
+      000084 4F               [ 4]  236 	ld	c, a
+      000085 46               [ 8]  237 	ld	b, (hl)
+      000086 F8 00            [12]  238 	ldhl	sp,	#0
+      000088 2A               [ 8]  239 	ld	a, (hl+)
+      000089 02               [ 8]  240 	ld	(bc), a
+      00008A 03               [ 8]  241 	inc	bc
+      00008B 2A               [ 8]  242 	ld	a, (hl+)
+      00008C 02               [ 8]  243 	ld	(bc), a
+      00008D 03               [ 8]  244 	inc	bc
+      00008E 2A               [ 8]  245 	ld	a, (hl+)
+      00008F 02               [ 8]  246 	ld	(bc), a
+      000090 03               [ 8]  247 	inc	bc
+      000091 7E               [ 8]  248 	ld	a, (hl)
+      000092 02               [ 8]  249 	ld	(bc), a
+                                    250 ;..\modes\explorationmode.c:46: }
+      000093 E8 08            [16]  251 	add	sp, #8
+      000095 E1               [12]  252 	pop	hl
+      000096 F1               [12]  253 	pop	af
+      000097 E9               [ 4]  254 	jp	(hl)
+                                    255 ;..\modes\explorationmode.c:48: void manage_asteroid(struct GameObject* ship) {
+                                    256 ;	---------------------------------
+                                    257 ; Function manage_asteroid
+                                    258 ; ---------------------------------
+      000098                        259 _manage_asteroid::
+      000098 E8 F8            [16]  260 	add	sp, #-8
+      00009A F8 02            [12]  261 	ldhl	sp,	#2
+      00009C 7B               [ 4]  262 	ld	a, e
+      00009D 22               [ 8]  263 	ld	(hl+), a
+      00009E 72               [ 8]  264 	ld	(hl), d
+                                    265 ;..\modes\explorationmode.c:49: if(asteroid.isAlive == false){
+      00009F 21r0Dr00         [12]  266 	ld	hl, #(_asteroid + 4)
+      0000A2 4E               [ 8]  267 	ld	c, (hl)
+                                    268 ;..\modes\explorationmode.c:60: asteroid.world.y = ship->world.y - randy;
+      0000A3 F8 02            [12]  269 	ldhl	sp,#2
+      0000A5 2A               [ 8]  270 	ld	a, (hl+)
+      0000A6 5F               [ 4]  271 	ld	e, a
+      0000A7 56               [ 8]  272 	ld	d, (hl)
+      0000A8 21 02 00         [12]  273 	ld	hl, #0x0002
+      0000AB 19               [ 8]  274 	add	hl, de
+      0000AC 33               [ 8]  275 	inc	sp
+      0000AD 33               [ 8]  276 	inc	sp
+      0000AE E5               [16]  277 	push	hl
+                                    278 ;..\modes\explorationmode.c:61: if(asteroid.world.x < ship->world.x)asteroid.vector.x = 1;
+                                    279 ;..\modes\explorationmode.c:63: if(asteroid.world.y < ship->world.y)asteroid.vector.y = 1;
+                                    280 ;..\modes\explorationmode.c:49: if(asteroid.isAlive == false){
+      0000AF 79               [ 4]  281 	ld	a, c
+      0000B0 B7               [ 4]  282 	or	a, a
+      0000B1 C2r74r02         [16]  283 	jp	NZ, 00125$
+                                    284 ;..\modes\explorationmode.c:50: byte rando = rand();
+      0000B4 CDr00r00         [24]  285 	call	_rand
+                                    286 ;..\modes\explorationmode.c:51: if(rando > 254) {
+      0000B7 3E FE            [ 8]  287 	ld	a, #0xfe
+      0000B9 93               [ 4]  288 	sub	a, e
+      0000BA D2r3Cr04         [16]  289 	jp	NC, 00127$
+                                    290 ;..\modes\explorationmode.c:52: asteroid.isAlive = true;
+      0000BD 21r0Dr00         [12]  291 	ld	hl, #(_asteroid + 4)
+      0000C0 36 01            [12]  292 	ld	(hl), #0x01
+                                    293 ;..\modes\explorationmode.c:53: int randx = (int)rand();
+      0000C2 CDr00r00         [24]  294 	call	_rand
+      0000C5 F8 04            [12]  295 	ldhl	sp,	#4
+      0000C7 7B               [ 4]  296 	ld	a, e
+      0000C8 22               [ 8]  297 	ld	(hl+), a
+      0000C9 36 00            [12]  298 	ld	(hl), #0x00
+                                    299 ;..\modes\explorationmode.c:54: int randy = (int)rand();
+      0000CB CDr00r00         [24]  300 	call	_rand
+      0000CE F8 06            [12]  301 	ldhl	sp,	#6
+      0000D0 7B               [ 4]  302 	ld	a, e
+      0000D1 22               [ 8]  303 	ld	(hl+), a
+      0000D2 36 00            [12]  304 	ld	(hl), #0x00
+                                    305 ;..\modes\explorationmode.c:55: if(randx < 100)randx += 100; //make sure the asteroid is position at least 100 away
+      0000D4 F8 04            [12]  306 	ldhl	sp,	#4
+      0000D6 2A               [ 8]  307 	ld	a, (hl+)
+      0000D7 D6 64            [ 8]  308 	sub	a, #0x64
+      0000D9 7E               [ 8]  309 	ld	a, (hl)
+      0000DA DE 00            [ 8]  310 	sbc	a, #0x00
+      0000DC 56               [ 8]  311 	ld	d, (hl)
+      0000DD 3E 00            [ 8]  312 	ld	a, #0x00
+      0000DF CB 7F            [ 8]  313 	bit	7,a
+      0000E1 28 07            [12]  314 	jr	Z, 00245$
+      0000E3 CB 7A            [ 8]  315 	bit	7, d
+      0000E5 20 08            [12]  316 	jr	NZ, 00246$
+      0000E7 BF               [ 4]  317 	cp	a, a
+      0000E8 18 05            [12]  318 	jr	00246$
+      0000EA                        319 00245$:
+      0000EA CB 7A            [ 8]  320 	bit	7, d
+      0000EC 28 01            [12]  321 	jr	Z, 00246$
+      0000EE 37               [ 4]  322 	scf
+      0000EF                        323 00246$:
+      0000EF 30 13            [12]  324 	jr	NC, 00102$
+      0000F1 F8 04            [12]  325 	ldhl	sp,#4
+      0000F3 2A               [ 8]  326 	ld	a, (hl+)
+      0000F4 5F               [ 4]  327 	ld	e, a
+      0000F5 56               [ 8]  328 	ld	d, (hl)
+      0000F6 21 64 00         [12]  329 	ld	hl, #0x0064
+      0000F9 19               [ 8]  330 	add	hl, de
+      0000FA E5               [16]  331 	push	hl
+      0000FB 7D               [ 4]  332 	ld	a, l
+      0000FC F8 06            [12]  333 	ldhl	sp,	#6
+      0000FE 77               [ 8]  334 	ld	(hl), a
+      0000FF E1               [12]  335 	pop	hl
+      000100 7C               [ 4]  336 	ld	a, h
+      000101 F8 05            [12]  337 	ldhl	sp,	#5
+      000103 77               [ 8]  338 	ld	(hl), a
+      000104                        339 00102$:
+                                    340 ;..\modes\explorationmode.c:56: if(randy < 100)randy += 100;
+      000104 F8 06            [12]  341 	ldhl	sp,	#6
+      000106 2A               [ 8]  342 	ld	a, (hl+)
+      000107 D6 64            [ 8]  343 	sub	a, #0x64
+      000109 7E               [ 8]  344 	ld	a, (hl)
+      00010A DE 00            [ 8]  345 	sbc	a, #0x00
+      00010C 56               [ 8]  346 	ld	d, (hl)
+      00010D 3E 00            [ 8]  347 	ld	a, #0x00
+      00010F CB 7F            [ 8]  348 	bit	7,a
+      000111 28 07            [12]  349 	jr	Z, 00247$
+      000113 CB 7A            [ 8]  350 	bit	7, d
+      000115 20 08            [12]  351 	jr	NZ, 00248$
+      000117 BF               [ 4]  352 	cp	a, a
+      000118 18 05            [12]  353 	jr	00248$
+      00011A                        354 00247$:
+      00011A CB 7A            [ 8]  355 	bit	7, d
+      00011C 28 01            [12]  356 	jr	Z, 00248$
+      00011E 37               [ 4]  357 	scf
+      00011F                        358 00248$:
+      00011F 30 13            [12]  359 	jr	NC, 00104$
+      000121 F8 06            [12]  360 	ldhl	sp,#6
+      000123 2A               [ 8]  361 	ld	a, (hl+)
+      000124 5F               [ 4]  362 	ld	e, a
+      000125 56               [ 8]  363 	ld	d, (hl)
+      000126 21 64 00         [12]  364 	ld	hl, #0x0064
+      000129 19               [ 8]  365 	add	hl, de
+      00012A E5               [16]  366 	push	hl
+      00012B 7D               [ 4]  367 	ld	a, l
+      00012C F8 08            [12]  368 	ldhl	sp,	#8
+      00012E 77               [ 8]  369 	ld	(hl), a
+      00012F E1               [12]  370 	pop	hl
+      000130 7C               [ 4]  371 	ld	a, h
+      000131 F8 07            [12]  372 	ldhl	sp,	#7
+      000133 77               [ 8]  373 	ld	(hl), a
+      000134                        374 00104$:
+                                    375 ;..\modes\explorationmode.c:57: if(randx % 2 == 0)randx = -randx; //50% of the time switch the sign so it comes from both sides
+      000134 01 02 00         [12]  376 	ld	bc, #0x0002
+      000137 F8 04            [12]  377 	ldhl	sp,	#4
+      000139 5E               [ 8]  378 	ld	e, (hl)
+      00013A 16 00            [ 8]  379 	ld	d, #0x00
+      00013C CDr00r00         [24]  380 	call	__modsint
+      00013F 78               [ 4]  381 	ld	a, b
+      000140 B1               [ 4]  382 	or	a, c
+      000141 20 11            [12]  383 	jr	NZ, 00106$
+      000143 11 00 00         [12]  384 	ld	de, #0x0000
+      000146 F8 04            [12]  385 	ldhl	sp,	#4
+      000148 2A               [ 8]  386 	ld	a,	(hl+)
+      000149 66               [ 8]  387 	ld	h, (hl)
+      00014A 6F               [ 4]  388 	ld	l, a
+      00014B 7B               [ 4]  389 	ld	a, e
+      00014C 95               [ 4]  390 	sub	a, l
+      00014D 5F               [ 4]  391 	ld	e, a
+      00014E 7A               [ 4]  392 	ld	a, d
+      00014F 9C               [ 4]  393 	sbc	a, h
+      000150 F8 05            [12]  394 	ldhl	sp,	#5
+      000152 32               [ 8]  395 	ld	(hl-), a
+      000153 73               [ 8]  396 	ld	(hl), e
+      000154                        397 00106$:
+                                    398 ;..\modes\explorationmode.c:58: if(randy % 2 == 0)randy = -randy;
+      000154 01 02 00         [12]  399 	ld	bc, #0x0002
+      000157 F8 06            [12]  400 	ldhl	sp,	#6
+      000159 5E               [ 8]  401 	ld	e, (hl)
+      00015A 16 00            [ 8]  402 	ld	d, #0x00
+      00015C CDr00r00         [24]  403 	call	__modsint
+      00015F 78               [ 4]  404 	ld	a, b
+      000160 B1               [ 4]  405 	or	a, c
+      000161 20 11            [12]  406 	jr	NZ, 00108$
+      000163 11 00 00         [12]  407 	ld	de, #0x0000
+      000166 F8 06            [12]  408 	ldhl	sp,	#6
+      000168 2A               [ 8]  409 	ld	a,	(hl+)
+      000169 66               [ 8]  410 	ld	h, (hl)
+      00016A 6F               [ 4]  411 	ld	l, a
+      00016B 7B               [ 4]  412 	ld	a, e
+      00016C 95               [ 4]  413 	sub	a, l
+      00016D 5F               [ 4]  414 	ld	e, a
+      00016E 7A               [ 4]  415 	ld	a, d
+      00016F 9C               [ 4]  416 	sbc	a, h
+      000170 F8 07            [12]  417 	ldhl	sp,	#7
+      000172 32               [ 8]  418 	ld	(hl-), a
+      000173 73               [ 8]  419 	ld	(hl), e
+      000174                        420 00108$:
+                                    421 ;..\modes\explorationmode.c:59: asteroid.world.x = ship->world.x - randx;
+      000174 F8 02            [12]  422 	ldhl	sp,#2
+      000176 2A               [ 8]  423 	ld	a, (hl+)
+      000177 5F               [ 4]  424 	ld	e, a
+      000178 2A               [ 8]  425 	ld	a, (hl+)
+      000179 57               [ 4]  426 	ld	d, a
+      00017A 1A               [ 8]  427 	ld	a, (de)
+      00017B 4F               [ 4]  428 	ld	c, a
+      00017C 13               [ 8]  429 	inc	de
+      00017D 1A               [ 8]  430 	ld	a, (de)
+      00017E 47               [ 4]  431 	ld	b, a
+      00017F 2A               [ 8]  432 	ld	a, (hl+)
+      000180 5F               [ 4]  433 	ld	e, a
+      000181 56               [ 8]  434 	ld	d, (hl)
+      000182 79               [ 4]  435 	ld	a, c
+      000183 93               [ 4]  436 	sub	a, e
+      000184 5F               [ 4]  437 	ld	e, a
+      000185 78               [ 4]  438 	ld	a, b
+      000186 9A               [ 4]  439 	sbc	a, d
+      000187 47               [ 4]  440 	ld	b, a
+      000188 7B               [ 4]  441 	ld	a, e
+      000189 21r09r00         [12]  442 	ld	hl, #_asteroid
+      00018C 22               [ 8]  443 	ld	(hl+), a
+      00018D 70               [ 8]  444 	ld	(hl), b
+                                    445 ;..\modes\explorationmode.c:60: asteroid.world.y = ship->world.y - randy;
+      00018E D1               [12]  446 	pop	de
+      00018F D5               [16]  447 	push	de
+      000190 1A               [ 8]  448 	ld	a, (de)
+      000191 4F               [ 4]  449 	ld	c, a
+      000192 13               [ 8]  450 	inc	de
+      000193 1A               [ 8]  451 	ld	a, (de)
+      000194 47               [ 4]  452 	ld	b, a
+      000195 F8 06            [12]  453 	ldhl	sp,#6
+      000197 2A               [ 8]  454 	ld	a, (hl+)
+      000198 5F               [ 4]  455 	ld	e, a
+      000199 56               [ 8]  456 	ld	d, (hl)
+      00019A 79               [ 4]  457 	ld	a, c
+      00019B 93               [ 4]  458 	sub	a, e
+      00019C 5F               [ 4]  459 	ld	e, a
+      00019D 78               [ 4]  460 	ld	a, b
+      00019E 9A               [ 4]  461 	sbc	a, d
+      00019F 47               [ 4]  462 	ld	b, a
+      0001A0 7B               [ 4]  463 	ld	a, e
+      0001A1 21r0Br00         [12]  464 	ld	hl, #(_asteroid + 2)
+      0001A4 22               [ 8]  465 	ld	(hl+), a
+      0001A5 70               [ 8]  466 	ld	(hl), b
+                                    467 ;..\modes\explorationmode.c:61: if(asteroid.world.x < ship->world.x)asteroid.vector.x = 1;
+      0001A6 21r09r00         [12]  468 	ld	hl, #_asteroid
+      0001A9 2A               [ 8]  469 	ld	a, (hl+)
+      0001AA 4F               [ 4]  470 	ld	c, a
+      0001AB 46               [ 8]  471 	ld	b, (hl)
+      0001AC F8 02            [12]  472 	ldhl	sp,#2
+      0001AE 2A               [ 8]  473 	ld	a, (hl+)
+      0001AF 5F               [ 4]  474 	ld	e, a
+      0001B0 56               [ 8]  475 	ld	d, (hl)
+      0001B1 1A               [ 8]  476 	ld	a, (de)
+      0001B2 6F               [ 4]  477 	ld	l, a
+                                    478 ;	spillPairReg hl
+                                    479 ;	spillPairReg hl
+      0001B3 13               [ 8]  480 	inc	de
+      0001B4 1A               [ 8]  481 	ld	a, (de)
+      0001B5 67               [ 4]  482 	ld	h, a
+                                    483 ;	spillPairReg hl
+                                    484 ;	spillPairReg hl
+      0001B6 5C               [ 4]  485 	ld	e, h
+      0001B7 50               [ 4]  486 	ld	d, b
+      0001B8 79               [ 4]  487 	ld	a, c
+      0001B9 95               [ 4]  488 	sub	a, l
+      0001BA 78               [ 4]  489 	ld	a, b
+      0001BB 9C               [ 4]  490 	sbc	a, h
+      0001BC CB 7B            [ 8]  491 	bit	7, e
+      0001BE 28 07            [12]  492 	jr	Z, 00249$
+      0001C0 CB 7A            [ 8]  493 	bit	7, d
+      0001C2 20 08            [12]  494 	jr	NZ, 00250$
+      0001C4 BF               [ 4]  495 	cp	a, a
+      0001C5 18 05            [12]  496 	jr	00250$
+      0001C7                        497 00249$:
+      0001C7 CB 7A            [ 8]  498 	bit	7, d
+      0001C9 28 01            [12]  499 	jr	Z, 00250$
+      0001CB 37               [ 4]  500 	scf
+      0001CC                        501 00250$:
+      0001CC 30 0A            [12]  502 	jr	NC, 00110$
+      0001CE 21r0Er00         [12]  503 	ld	hl, #(_asteroid + 5)
+      0001D1 3E 01            [ 8]  504 	ld	a, #0x01
+      0001D3 22               [ 8]  505 	ld	(hl+), a
+      0001D4 36 00            [12]  506 	ld	(hl), #0x00
+      0001D6 18 08            [12]  507 	jr	00111$
+      0001D8                        508 00110$:
+                                    509 ;..\modes\explorationmode.c:62: else asteroid.vector.x = -1;
+      0001D8 21r0Er00         [12]  510 	ld	hl, #(_asteroid + 5)
+      0001DB 3E FF            [ 8]  511 	ld	a, #0xff
+      0001DD 22               [ 8]  512 	ld	(hl+), a
+      0001DE 36 FF            [12]  513 	ld	(hl), #0xff
+      0001E0                        514 00111$:
+                                    515 ;..\modes\explorationmode.c:63: if(asteroid.world.y < ship->world.y)asteroid.vector.y = 1;
+      0001E0 21r0Br00         [12]  516 	ld	hl, #(_asteroid + 2)
+      0001E3 2A               [ 8]  517 	ld	a, (hl+)
+      0001E4 4F               [ 4]  518 	ld	c, a
+      0001E5 46               [ 8]  519 	ld	b, (hl)
+      0001E6 D1               [12]  520 	pop	de
+      0001E7 D5               [16]  521 	push	de
+      0001E8 1A               [ 8]  522 	ld	a, (de)
+      0001E9 6F               [ 4]  523 	ld	l, a
+                                    524 ;	spillPairReg hl
+                                    525 ;	spillPairReg hl
+      0001EA 13               [ 8]  526 	inc	de
+      0001EB 1A               [ 8]  527 	ld	a, (de)
+      0001EC 67               [ 4]  528 	ld	h, a
+                                    529 ;	spillPairReg hl
+                                    530 ;	spillPairReg hl
+      0001ED 5C               [ 4]  531 	ld	e, h
+      0001EE 50               [ 4]  532 	ld	d, b
+      0001EF 79               [ 4]  533 	ld	a, c
+      0001F0 95               [ 4]  534 	sub	a, l
+      0001F1 78               [ 4]  535 	ld	a, b
+      0001F2 9C               [ 4]  536 	sbc	a, h
+      0001F3 CB 7B            [ 8]  537 	bit	7, e
+      0001F5 28 07            [12]  538 	jr	Z, 00251$
+      0001F7 CB 7A            [ 8]  539 	bit	7, d
+      0001F9 20 08            [12]  540 	jr	NZ, 00252$
+      0001FB BF               [ 4]  541 	cp	a, a
+      0001FC 18 05            [12]  542 	jr	00252$
+      0001FE                        543 00251$:
+      0001FE CB 7A            [ 8]  544 	bit	7, d
+      000200 28 01            [12]  545 	jr	Z, 00252$
+      000202 37               [ 4]  546 	scf
+      000203                        547 00252$:
+      000203 30 0A            [12]  548 	jr	NC, 00113$
+      000205 21r10r00         [12]  549 	ld	hl, #(_asteroid + 7)
+      000208 3E 01            [ 8]  550 	ld	a, #0x01
+      00020A 22               [ 8]  551 	ld	(hl+), a
+      00020B 36 00            [12]  552 	ld	(hl), #0x00
+      00020D 18 08            [12]  553 	jr	00114$
+      00020F                        554 00113$:
+                                    555 ;..\modes\explorationmode.c:64: else asteroid.vector.y = -1;
+      00020F 21r10r00         [12]  556 	ld	hl, #(_asteroid + 7)
+      000212 3E FF            [ 8]  557 	ld	a, #0xff
+      000214 22               [ 8]  558 	ld	(hl+), a
+      000215 36 FF            [12]  559 	ld	(hl), #0xff
+      000217                        560 00114$:
+                                    561 ;..\modes\explorationmode.c:65: int screen_x = asteroid.world.x - ship->world.x + mid_screen.width;
+      000217 21r09r00         [12]  562 	ld	hl, #_asteroid
+      00021A 2A               [ 8]  563 	ld	a, (hl+)
+      00021B 4F               [ 4]  564 	ld	c, a
+      00021C 46               [ 8]  565 	ld	b, (hl)
+      00021D F8 02            [12]  566 	ldhl	sp,#2
+      00021F 2A               [ 8]  567 	ld	a, (hl+)
+      000220 5F               [ 4]  568 	ld	e, a
+      000221 56               [ 8]  569 	ld	d, (hl)
+      000222 1A               [ 8]  570 	ld	a, (de)
+      000223 6F               [ 4]  571 	ld	l, a
+                                    572 ;	spillPairReg hl
+                                    573 ;	spillPairReg hl
+      000224 13               [ 8]  574 	inc	de
+      000225 1A               [ 8]  575 	ld	a, (de)
+      000226 67               [ 4]  576 	ld	h, a
+                                    577 ;	spillPairReg hl
+                                    578 ;	spillPairReg hl
+      000227 79               [ 4]  579 	ld	a, c
+      000228 95               [ 4]  580 	sub	a, l
+      000229 4F               [ 4]  581 	ld	c, a
+      00022A 78               [ 4]  582 	ld	a, b
+      00022B 9C               [ 4]  583 	sbc	a, h
+      00022C 47               [ 4]  584 	ld	b, a
+      00022D 11r00r00         [12]  585 	ld	de, #_mid_screen
+      000230 1A               [ 8]  586 	ld	a, (de)
+      000231 F8 04            [12]  587 	ldhl	sp,	#4
+      000233 22               [ 8]  588 	ld	(hl+), a
+      000234 13               [ 8]  589 	inc	de
+      000235 1A               [ 8]  590 	ld	a, (de)
+      000236 32               [ 8]  591 	ld	(hl-), a
+      000237 2A               [ 8]  592 	ld	a,	(hl+)
+      000238 66               [ 8]  593 	ld	h, (hl)
+      000239 6F               [ 4]  594 	ld	l, a
+      00023A 09               [ 8]  595 	add	hl, bc
+      00023B E5               [16]  596 	push	hl
+      00023C 7D               [ 4]  597 	ld	a, l
+      00023D F8 08            [12]  598 	ldhl	sp,	#8
+      00023F 77               [ 8]  599 	ld	(hl), a
+      000240 E1               [12]  600 	pop	hl
+      000241 7C               [ 4]  601 	ld	a, h
+      000242 F8 07            [12]  602 	ldhl	sp,	#7
+      000244 77               [ 8]  603 	ld	(hl), a
+                                    604 ;..\modes\explorationmode.c:66: int screen_y = asteroid.world.y - ship->world.y + mid_screen.height;
+      000245 21r0Br00         [12]  605 	ld	hl, #(_asteroid + 2)
+      000248 2A               [ 8]  606 	ld	a, (hl+)
+      000249 4F               [ 4]  607 	ld	c, a
+      00024A 46               [ 8]  608 	ld	b, (hl)
+      00024B D1               [12]  609 	pop	de
+      00024C D5               [16]  610 	push	de
+      00024D 1A               [ 8]  611 	ld	a, (de)
+      00024E 6F               [ 4]  612 	ld	l, a
+                                    613 ;	spillPairReg hl
+                                    614 ;	spillPairReg hl
+      00024F 13               [ 8]  615 	inc	de
+      000250 1A               [ 8]  616 	ld	a, (de)
+      000251 67               [ 4]  617 	ld	h, a
+                                    618 ;	spillPairReg hl
+                                    619 ;	spillPairReg hl
+      000252 79               [ 4]  620 	ld	a, c
+      000253 95               [ 4]  621 	sub	a, l
+      000254 4F               [ 4]  622 	ld	c, a
+      000255 78               [ 4]  623 	ld	a, b
+      000256 9C               [ 4]  624 	sbc	a, h
+      000257 47               [ 4]  625 	ld	b, a
+      000258 21r02r00         [12]  626 	ld	hl, #(_mid_screen + 2)
+      00025B 2A               [ 8]  627 	ld	a,	(hl+)
+      00025C 66               [ 8]  628 	ld	h, (hl)
+                                    629 ;	spillPairReg hl
+      00025D 6F               [ 4]  630 	ld	l, a
+                                    631 ;	spillPairReg hl
+                                    632 ;	spillPairReg hl
+      00025E 09               [ 8]  633 	add	hl, bc
+                                    634 ;..\modes\explorationmode.c:67: show(&asteroidGraphic);
+      00025F E5               [16]  635 	push	hl
+      000260 11r57r00         [12]  636 	ld	de, #_asteroidGraphic
+      000263 CDr00r00         [24]  637 	call	_show
+      000266 F8 08            [12]  638 	ldhl	sp,	#8
+      000268 2A               [ 8]  639 	ld	a, (hl+)
+      000269 4F               [ 4]  640 	ld	c, a
+      00026A 46               [ 8]  641 	ld	b, (hl)
+      00026B 11r57r00         [12]  642 	ld	de, #_asteroidGraphic
+      00026E CDr00r00         [24]  643 	call	_move
+      000271 C3r3Cr04         [16]  644 	jp	00127$
+      000274                        645 00125$:
+                                    646 ;..\modes\explorationmode.c:71: asteroid.world.x += asteroid.vector.x;
+      000274 21r09r00         [12]  647 	ld	hl, #_asteroid
+      000277 2A               [ 8]  648 	ld	a, (hl+)
+      000278 4F               [ 4]  649 	ld	c, a
+      000279 46               [ 8]  650 	ld	b, (hl)
+      00027A 21r0Er00         [12]  651 	ld	hl, #(_asteroid + 5)
+      00027D 2A               [ 8]  652 	ld	a,	(hl+)
+      00027E 66               [ 8]  653 	ld	h, (hl)
+                                    654 ;	spillPairReg hl
+      00027F 6F               [ 4]  655 	ld	l, a
+                                    656 ;	spillPairReg hl
+                                    657 ;	spillPairReg hl
+      000280 09               [ 8]  658 	add	hl, bc
+      000281 4D               [ 4]  659 	ld	c, l
+      000282 44               [ 4]  660 	ld	b, h
+      000283 21r09r00         [12]  661 	ld	hl, #_asteroid
+      000286 79               [ 4]  662 	ld	a, c
+      000287 22               [ 8]  663 	ld	(hl+), a
+      000288 70               [ 8]  664 	ld	(hl), b
+                                    665 ;..\modes\explorationmode.c:72: asteroid.world.y += asteroid.vector.y;
+      000289 21r0Br00         [12]  666 	ld	hl, #(_asteroid + 2)
+      00028C 2A               [ 8]  667 	ld	a, (hl+)
+      00028D 4F               [ 4]  668 	ld	c, a
+      00028E 46               [ 8]  669 	ld	b, (hl)
+      00028F 21r10r00         [12]  670 	ld	hl, #(_asteroid + 7)
+      000292 2A               [ 8]  671 	ld	a,	(hl+)
+      000293 66               [ 8]  672 	ld	h, (hl)
+                                    673 ;	spillPairReg hl
+      000294 6F               [ 4]  674 	ld	l, a
+                                    675 ;	spillPairReg hl
+                                    676 ;	spillPairReg hl
+      000295 09               [ 8]  677 	add	hl, bc
+      000296 4D               [ 4]  678 	ld	c, l
+      000297 44               [ 4]  679 	ld	b, h
+      000298 21r0Br00         [12]  680 	ld	hl, #(_asteroid + 2)
+      00029B 79               [ 4]  681 	ld	a, c
+      00029C 22               [ 8]  682 	ld	(hl+), a
+      00029D 70               [ 8]  683 	ld	(hl), b
+                                    684 ;..\modes\explorationmode.c:73: if(photon.isAlive == true && asteroid.world.x/8 == photon.world.x/8 && asteroid.world.y/8 == photon.world.y/8) {
+      00029E FAr04r00         [16]  685 	ld	a, (#(_photon + 4) + 0)
+      0002A1 3D               [ 4]  686 	dec	a
+      0002A2 C2rA9r03         [16]  687 	jp	NZ,00118$
+      0002A5 21r09r00         [12]  688 	ld	hl, #_asteroid
+      0002A8 2A               [ 8]  689 	ld	a, (hl+)
+      0002A9 4F               [ 4]  690 	ld	c, a
+      0002AA 46               [ 8]  691 	ld	b, (hl)
+      0002AB F8 06            [12]  692 	ldhl	sp,	#6
+      0002AD 79               [ 4]  693 	ld	a, c
+      0002AE 22               [ 8]  694 	ld	(hl+), a
+      0002AF 70               [ 8]  695 	ld	(hl), b
+      0002B0 CB 78            [ 8]  696 	bit	7, b
+      0002B2 28 0E            [12]  697 	jr	Z, 00129$
+      0002B4 21 07 00         [12]  698 	ld	hl, #0x0007
+      0002B7 09               [ 8]  699 	add	hl, bc
+      0002B8 E5               [16]  700 	push	hl
+      0002B9 7D               [ 4]  701 	ld	a, l
+      0002BA F8 08            [12]  702 	ldhl	sp,	#8
+      0002BC 77               [ 8]  703 	ld	(hl), a
+      0002BD E1               [12]  704 	pop	hl
+      0002BE 7C               [ 4]  705 	ld	a, h
+      0002BF F8 07            [12]  706 	ldhl	sp,	#7
+      0002C1 77               [ 8]  707 	ld	(hl), a
+      0002C2                        708 00129$:
+      0002C2 F8 06            [12]  709 	ldhl	sp,#6
+      0002C4 2A               [ 8]  710 	ld	a, (hl+)
+      0002C5 4F               [ 4]  711 	ld	c, a
+      0002C6 46               [ 8]  712 	ld	b, (hl)
+      0002C7 CB 28            [ 8]  713 	sra	b
+      0002C9 CB 19            [ 8]  714 	rr	c
+      0002CB CB 28            [ 8]  715 	sra	b
+      0002CD CB 19            [ 8]  716 	rr	c
+      0002CF CB 28            [ 8]  717 	sra	b
+      0002D1 CB 19            [ 8]  718 	rr	c
+      0002D3 11r00r00         [12]  719 	ld	de, #_photon
+      0002D6 1A               [ 8]  720 	ld	a, (de)
+      0002D7 F8 04            [12]  721 	ldhl	sp,	#4
+      0002D9 22               [ 8]  722 	ld	(hl+), a
+      0002DA 13               [ 8]  723 	inc	de
+      0002DB 1A               [ 8]  724 	ld	a, (de)
+      0002DC 32               [ 8]  725 	ld	(hl-), a
+      0002DD 2A               [ 8]  726 	ld	a, (hl+)
+      0002DE 23               [ 8]  727 	inc	hl
+      0002DF 32               [ 8]  728 	ld	(hl-), a
+      0002E0 2A               [ 8]  729 	ld	a, (hl+)
+      0002E1 23               [ 8]  730 	inc	hl
+      0002E2 32               [ 8]  731 	ld	(hl-), a
+      0002E3 2B               [ 8]  732 	dec	hl
+      0002E4 CB 7E            [12]  733 	bit	7, (hl)
+      0002E6 28 12            [12]  734 	jr	Z, 00130$
+      0002E8 2B               [ 8]  735 	dec	hl
+      0002E9 2A               [ 8]  736 	ld	a, (hl+)
+      0002EA 5F               [ 4]  737 	ld	e, a
+      0002EB 56               [ 8]  738 	ld	d, (hl)
+      0002EC 21 07 00         [12]  739 	ld	hl, #0x0007
+      0002EF 19               [ 8]  740 	add	hl, de
+      0002F0 E5               [16]  741 	push	hl
+      0002F1 7D               [ 4]  742 	ld	a, l
+      0002F2 F8 08            [12]  743 	ldhl	sp,	#8
+      0002F4 77               [ 8]  744 	ld	(hl), a
+      0002F5 E1               [12]  745 	pop	hl
+      0002F6 7C               [ 4]  746 	ld	a, h
+      0002F7 F8 07            [12]  747 	ldhl	sp,	#7
+      0002F9 77               [ 8]  748 	ld	(hl), a
+      0002FA                        749 00130$:
+      0002FA F8 06            [12]  750 	ldhl	sp,#6
+      0002FC 2A               [ 8]  751 	ld	a, (hl+)
+      0002FD 5F               [ 4]  752 	ld	e, a
+      0002FE 56               [ 8]  753 	ld	d, (hl)
+      0002FF CB 2A            [ 8]  754 	sra	d
+      000301 CB 1B            [ 8]  755 	rr	e
+      000303 CB 2A            [ 8]  756 	sra	d
+      000305 CB 1B            [ 8]  757 	rr	e
+      000307 CB 2A            [ 8]  758 	sra	d
+      000309 CB 1B            [ 8]  759 	rr	e
+      00030B 7B               [ 4]  760 	ld	a, e
+      00030C 91               [ 4]  761 	sub	a, c
+      00030D C2rA9r03         [16]  762 	jp	NZ,00118$
+      000310 7A               [ 4]  763 	ld	a, d
+      000311 90               [ 4]  764 	sub	a, b
+      000312 C2rA9r03         [16]  765 	jp	NZ,00118$
+      000315 21r0Br00         [12]  766 	ld	hl, #(_asteroid + 2)
+      000318 2A               [ 8]  767 	ld	a, (hl+)
+      000319 4F               [ 4]  768 	ld	c, a
+      00031A 46               [ 8]  769 	ld	b, (hl)
+      00031B F8 06            [12]  770 	ldhl	sp,	#6
+      00031D 79               [ 4]  771 	ld	a, c
+      00031E 22               [ 8]  772 	ld	(hl+), a
+      00031F 70               [ 8]  773 	ld	(hl), b
+      000320 CB 78            [ 8]  774 	bit	7, b
+      000322 28 0E            [12]  775 	jr	Z, 00131$
+      000324 21 07 00         [12]  776 	ld	hl, #0x0007
+      000327 09               [ 8]  777 	add	hl, bc
+      000328 E5               [16]  778 	push	hl
+      000329 7D               [ 4]  779 	ld	a, l
+      00032A F8 08            [12]  780 	ldhl	sp,	#8
+      00032C 77               [ 8]  781 	ld	(hl), a
+      00032D E1               [12]  782 	pop	hl
+      00032E 7C               [ 4]  783 	ld	a, h
+      00032F F8 07            [12]  784 	ldhl	sp,	#7
+      000331 77               [ 8]  785 	ld	(hl), a
+      000332                        786 00131$:
+      000332 F8 06            [12]  787 	ldhl	sp,#6
+      000334 2A               [ 8]  788 	ld	a, (hl+)
+      000335 4F               [ 4]  789 	ld	c, a
+      000336 46               [ 8]  790 	ld	b, (hl)
+      000337 CB 28            [ 8]  791 	sra	b
+      000339 CB 19            [ 8]  792 	rr	c
+      00033B CB 28            [ 8]  793 	sra	b
+      00033D CB 19            [ 8]  794 	rr	c
+      00033F CB 28            [ 8]  795 	sra	b
+      000341 CB 19            [ 8]  796 	rr	c
+      000343 11r02r00         [12]  797 	ld	de, #(_photon + 2)
+      000346 1A               [ 8]  798 	ld	a, (de)
+      000347 F8 04            [12]  799 	ldhl	sp,	#4
+      000349 22               [ 8]  800 	ld	(hl+), a
+      00034A 13               [ 8]  801 	inc	de
+      00034B 1A               [ 8]  802 	ld	a, (de)
+      00034C 32               [ 8]  803 	ld	(hl-), a
+      00034D 2A               [ 8]  804 	ld	a, (hl+)
+      00034E 23               [ 8]  805 	inc	hl
+      00034F 32               [ 8]  806 	ld	(hl-), a
+      000350 2A               [ 8]  807 	ld	a, (hl+)
+      000351 23               [ 8]  808 	inc	hl
+      000352 32               [ 8]  809 	ld	(hl-), a
+      000353 2B               [ 8]  810 	dec	hl
+      000354 CB 7E            [12]  811 	bit	7, (hl)
+      000356 28 12            [12]  812 	jr	Z, 00132$
+      000358 2B               [ 8]  813 	dec	hl
+      000359 2A               [ 8]  814 	ld	a, (hl+)
+      00035A 5F               [ 4]  815 	ld	e, a
+      00035B 56               [ 8]  816 	ld	d, (hl)
+      00035C 21 07 00         [12]  817 	ld	hl, #0x0007
+      00035F 19               [ 8]  818 	add	hl, de
+      000360 E5               [16]  819 	push	hl
+      000361 7D               [ 4]  820 	ld	a, l
+      000362 F8 08            [12]  821 	ldhl	sp,	#8
+      000364 77               [ 8]  822 	ld	(hl), a
+      000365 E1               [12]  823 	pop	hl
+      000366 7C               [ 4]  824 	ld	a, h
+      000367 F8 07            [12]  825 	ldhl	sp,	#7
+      000369 77               [ 8]  826 	ld	(hl), a
+      00036A                        827 00132$:
+      00036A F8 06            [12]  828 	ldhl	sp,#6
+      00036C 2A               [ 8]  829 	ld	a, (hl+)
+      00036D 5F               [ 4]  830 	ld	e, a
+      00036E 56               [ 8]  831 	ld	d, (hl)
+      00036F CB 2A            [ 8]  832 	sra	d
+      000371 CB 1B            [ 8]  833 	rr	e
+      000373 CB 2A            [ 8]  834 	sra	d
+      000375 CB 1B            [ 8]  835 	rr	e
+      000377 CB 2A            [ 8]  836 	sra	d
+      000379 CB 1B            [ 8]  837 	rr	e
+      00037B 7B               [ 4]  838 	ld	a, e
+      00037C 91               [ 4]  839 	sub	a, c
+      00037D 20 2A            [12]  840 	jr	NZ, 00118$
+      00037F 7A               [ 4]  841 	ld	a, d
+      000380 90               [ 4]  842 	sub	a, b
+      000381 20 26            [12]  843 	jr	NZ, 00118$
+                                    844 ;..\modes\explorationmode.c:74: asteroid.isAlive = false;
+      000383 21r0Dr00         [12]  845 	ld	hl, #(_asteroid + 4)
+      000386 36 00            [12]  846 	ld	(hl), #0x00
+                                    847 ;..\modes\explorationmode.c:75: photon.isAlive = false;
+      000388 21r04r00         [12]  848 	ld	hl, #(_photon + 4)
+      00038B 36 00            [12]  849 	ld	(hl), #0x00
+                                    850 ;..\modes\explorationmode.c:76: hide(&asteroidGraphic);
+      00038D 11r57r00         [12]  851 	ld	de, #_asteroidGraphic
+      000390 CDr00r00         [24]  852 	call	_hide
+                                    853 ;..\modes\explorationmode.c:77: hide(&photonGraphic);
+      000393 11r2Fr00         [12]  854 	ld	de, #_photonGraphic
+      000396 CDr00r00         [24]  855 	call	_hide
+                                    856 ;..\modes\explorationmode.c:78: do_explosion(photon.world.x, photon.world.y);
+      000399 21r02r00         [12]  857 	ld	hl, #(_photon + 2)
+      00039C 2A               [ 8]  858 	ld	a, (hl+)
+      00039D 4F               [ 4]  859 	ld	c, a
+      00039E 46               [ 8]  860 	ld	b, (hl)
+      00039F 21r00r00         [12]  861 	ld	hl, #_photon
+      0003A2 2A               [ 8]  862 	ld	a,	(hl+)
+      0003A3 66               [ 8]  863 	ld	h, (hl)
+                                    864 ;	spillPairReg hl
+                                    865 ;	spillPairReg hl
+                                    866 ;	spillPairReg hl
+      0003A4 5F               [ 4]  867 	ld	e, a
+      0003A5 54               [ 4]  868 	ld	d, h
+      0003A6 CDr00r00         [24]  869 	call	_do_explosion
+      0003A9                        870 00118$:
+                                    871 ;..\modes\explorationmode.c:80: if(abs(asteroid.world.x - ship->world.x) > 255) { //we're so far away, kill the asteroid
+      0003A9 21r09r00         [12]  872 	ld	hl, #_asteroid
+      0003AC 2A               [ 8]  873 	ld	a, (hl+)
+      0003AD 4F               [ 4]  874 	ld	c, a
+      0003AE 46               [ 8]  875 	ld	b, (hl)
+      0003AF F8 02            [12]  876 	ldhl	sp,#2
+      0003B1 2A               [ 8]  877 	ld	a, (hl+)
+      0003B2 5F               [ 4]  878 	ld	e, a
+      0003B3 56               [ 8]  879 	ld	d, (hl)
+      0003B4 1A               [ 8]  880 	ld	a, (de)
+      0003B5 6F               [ 4]  881 	ld	l, a
+                                    882 ;	spillPairReg hl
+                                    883 ;	spillPairReg hl
+      0003B6 13               [ 8]  884 	inc	de
+      0003B7 1A               [ 8]  885 	ld	a, (de)
+      0003B8 67               [ 4]  886 	ld	h, a
+                                    887 ;	spillPairReg hl
+                                    888 ;	spillPairReg hl
+      0003B9 79               [ 4]  889 	ld	a, c
+      0003BA 95               [ 4]  890 	sub	a, l
+      0003BB 4F               [ 4]  891 	ld	c, a
+      0003BC 78               [ 4]  892 	ld	a, b
+      0003BD 9C               [ 4]  893 	sbc	a, h
+      0003BE 47               [ 4]  894 	ld	b, a
+      0003BF C5               [16]  895 	push	bc
+      0003C0 CDr00r00         [24]  896 	call	_abs
+      0003C3 E1               [12]  897 	pop	hl
+      0003C4 4B               [ 4]  898 	ld	c, e
+      0003C5 42               [ 4]  899 	ld	b, d
+      0003C6 58               [ 4]  900 	ld	e, b
+      0003C7 16 00            [ 8]  901 	ld	d, #0x00
+      0003C9 3E FF            [ 8]  902 	ld	a, #0xff
+      0003CB B9               [ 4]  903 	cp	a, c
+      0003CC 3E 00            [ 8]  904 	ld	a, #0x00
+      0003CE 98               [ 4]  905 	sbc	a, b
+      0003CF CB 7B            [ 8]  906 	bit	7, e
+      0003D1 28 07            [12]  907 	jr	Z, 00259$
+      0003D3 CB 7A            [ 8]  908 	bit	7, d
+      0003D5 20 08            [12]  909 	jr	NZ, 00260$
+      0003D7 BF               [ 4]  910 	cp	a, a
+      0003D8 18 05            [12]  911 	jr	00260$
+      0003DA                        912 00259$:
+      0003DA CB 7A            [ 8]  913 	bit	7, d
+      0003DC 28 01            [12]  914 	jr	Z, 00260$
+      0003DE 37               [ 4]  915 	scf
+      0003DF                        916 00260$:
+      0003DF 30 07            [12]  917 	jr	NC, 00122$
+                                    918 ;..\modes\explorationmode.c:81: asteroid.isAlive = false;
+      0003E1 21r0Dr00         [12]  919 	ld	hl, #(_asteroid + 4)
+      0003E4 36 00            [12]  920 	ld	(hl), #0x00
+      0003E6 18 54            [12]  921 	jr	00127$
+      0003E8                        922 00122$:
+                                    923 ;..\modes\explorationmode.c:85: int screen_x = asteroid.world.x - ship->world.x + mid_screen.width;
+      0003E8 21r09r00         [12]  924 	ld	hl, #_asteroid
+      0003EB 2A               [ 8]  925 	ld	a, (hl+)
+      0003EC 4F               [ 4]  926 	ld	c, a
+      0003ED 46               [ 8]  927 	ld	b, (hl)
+      0003EE F8 02            [12]  928 	ldhl	sp,#2
+      0003F0 2A               [ 8]  929 	ld	a, (hl+)
+      0003F1 5F               [ 4]  930 	ld	e, a
+      0003F2 56               [ 8]  931 	ld	d, (hl)
+      0003F3 1A               [ 8]  932 	ld	a, (de)
+      0003F4 6F               [ 4]  933 	ld	l, a
+                                    934 ;	spillPairReg hl
+                                    935 ;	spillPairReg hl
+      0003F5 13               [ 8]  936 	inc	de
+      0003F6 1A               [ 8]  937 	ld	a, (de)
+      0003F7 67               [ 4]  938 	ld	h, a
+                                    939 ;	spillPairReg hl
+                                    940 ;	spillPairReg hl
+      0003F8 79               [ 4]  941 	ld	a, c
+      0003F9 95               [ 4]  942 	sub	a, l
+      0003FA 4F               [ 4]  943 	ld	c, a
+      0003FB 78               [ 4]  944 	ld	a, b
+      0003FC 9C               [ 4]  945 	sbc	a, h
+      0003FD 47               [ 4]  946 	ld	b, a
+      0003FE 11r00r00         [12]  947 	ld	de, #_mid_screen
+      000401 1A               [ 8]  948 	ld	a, (de)
+      000402 F8 04            [12]  949 	ldhl	sp,	#4
+      000404 22               [ 8]  950 	ld	(hl+), a
+      000405 13               [ 8]  951 	inc	de
+      000406 1A               [ 8]  952 	ld	a, (de)
+      000407 32               [ 8]  953 	ld	(hl-), a
+      000408 2A               [ 8]  954 	ld	a,	(hl+)
+      000409 66               [ 8]  955 	ld	h, (hl)
+      00040A 6F               [ 4]  956 	ld	l, a
+      00040B 09               [ 8]  957 	add	hl, bc
+      00040C E5               [16]  958 	push	hl
+      00040D 7D               [ 4]  959 	ld	a, l
+      00040E F8 08            [12]  960 	ldhl	sp,	#8
+      000410 77               [ 8]  961 	ld	(hl), a
+      000411 E1               [12]  962 	pop	hl
+      000412 7C               [ 4]  963 	ld	a, h
+      000413 F8 07            [12]  964 	ldhl	sp,	#7
+      000415 77               [ 8]  965 	ld	(hl), a
+                                    966 ;..\modes\explorationmode.c:86: int screen_y = asteroid.world.y - ship->world.y + mid_screen.height;
+      000416 21r0Br00         [12]  967 	ld	hl, #(_asteroid + 2)
+      000419 2A               [ 8]  968 	ld	a, (hl+)
+      00041A 4F               [ 4]  969 	ld	c, a
+      00041B 46               [ 8]  970 	ld	b, (hl)
+      00041C D1               [12]  971 	pop	de
+      00041D D5               [16]  972 	push	de
+      00041E 1A               [ 8]  973 	ld	a, (de)
+      00041F 6F               [ 4]  974 	ld	l, a
+                                    975 ;	spillPairReg hl
+                                    976 ;	spillPairReg hl
+      000420 13               [ 8]  977 	inc	de
+      000421 1A               [ 8]  978 	ld	a, (de)
+      000422 67               [ 4]  979 	ld	h, a
+                                    980 ;	spillPairReg hl
+                                    981 ;	spillPairReg hl
+      000423 79               [ 4]  982 	ld	a, c
+      000424 95               [ 4]  983 	sub	a, l
+      000425 4F               [ 4]  984 	ld	c, a
+      000426 78               [ 4]  985 	ld	a, b
+      000427 9C               [ 4]  986 	sbc	a, h
+      000428 47               [ 4]  987 	ld	b, a
+      000429 21r02r00         [12]  988 	ld	hl, #(_mid_screen + 2)
+      00042C 2A               [ 8]  989 	ld	a,	(hl+)
+      00042D 66               [ 8]  990 	ld	h, (hl)
+                                    991 ;	spillPairReg hl
+      00042E 6F               [ 4]  992 	ld	l, a
+                                    993 ;	spillPairReg hl
+                                    994 ;	spillPairReg hl
+      00042F 09               [ 8]  995 	add	hl, bc
+                                    996 ;..\modes\explorationmode.c:89: move(&asteroidGraphic, screen_x, screen_y);
+      000430 E5               [16]  997 	push	hl
+      000431 F8 08            [12]  998 	ldhl	sp,	#8
+      000433 2A               [ 8]  999 	ld	a, (hl+)
+      000434 4F               [ 4] 1000 	ld	c, a
+      000435 46               [ 8] 1001 	ld	b, (hl)
+      000436 11r57r00         [12] 1002 	ld	de, #_asteroidGraphic
+      000439 CDr00r00         [24] 1003 	call	_move
+      00043C                       1004 00127$:
+                                   1005 ;..\modes\explorationmode.c:92: }
+      00043C E8 08            [16] 1006 	add	sp, #8
+      00043E C9               [16] 1007 	ret
+                                   1008 ;..\modes\explorationmode.c:94: void ExplorationMode_init(struct ExplorationMode* this) {
+                                   1009 ;	---------------------------------
+                                   1010 ; Function ExplorationMode_init
+                                   1011 ; ---------------------------------
+      00043F                       1012 _ExplorationMode_init::
+      00043F 3B               [ 8] 1013 	dec	sp
+      000440 4B               [ 4] 1014 	ld	c, e
+      000441 42               [ 4] 1015 	ld	b, d
+                                   1016 ;..\modes\explorationmode.c:95: SHOW_SPRITES;
+      000442 F0r00            [12] 1017 	ldh	a, (_LCDC_REG + 0)
+      000444 F6 02            [ 8] 1018 	or	a, #0x02
+      000446 E0r00            [12] 1019 	ldh	(_LCDC_REG + 0), a
+                                   1020 ;..\modes\explorationmode.c:96: SHOW_BKG;
+      000448 F0r00            [12] 1021 	ldh	a, (_LCDC_REG + 0)
+      00044A F6 01            [ 8] 1022 	or	a, #0x01
+      00044C E0r00            [12] 1023 	ldh	(_LCDC_REG + 0), a
+                                   1024 ;..\modes\explorationmode.c:97: HIDE_WIN;
+      00044E F0r00            [12] 1025 	ldh	a, (_LCDC_REG + 0)
+      000450 E6 DF            [ 8] 1026 	and	a, #0xdf
+      000452 E0r00            [12] 1027 	ldh	(_LCDC_REG + 0), a
+                                   1028 ;..\modes\explorationmode.c:98: sprites_reset();
+      000454 C5               [16] 1029 	push	bc
+      000455 CDr00r00         [24] 1030 	call	_sprites_reset
+      000458 C1               [12] 1031 	pop	bc
+                                   1032 ;..\modes\explorationmode.c:99: set_bkg_data(0, 12, space1_tile);
+      000459 11r00r00         [12] 1033 	ld	de, #_space1_tile
+      00045C D5               [16] 1034 	push	de
+      00045D 21 00 0C         [12] 1035 	ld	hl, #0xc00
+      000460 E5               [16] 1036 	push	hl
+      000461 CDr00r00         [24] 1037 	call	_set_bkg_data
+      000464 E8 04            [16] 1038 	add	sp, #4
+                                   1039 ;..\modes\explorationmode.c:100: set_bkg_tiles(0, 0, bckground_mapWidth, bckground_mapHeight, bckground_map);
+      000466 11r00r00         [12] 1040 	ld	de, #_bckground_map
+      000469 D5               [16] 1041 	push	de
+      00046A 21 20 20         [12] 1042 	ld	hl, #0x2020
+      00046D E5               [16] 1043 	push	hl
+      00046E AF               [ 4] 1044 	xor	a, a
+      00046F 0F               [ 4] 1045 	rrca
+      000470 F5               [16] 1046 	push	af
+      000471 CDr00r00         [24] 1047 	call	_set_bkg_tiles
+      000474 E8 06            [16] 1048 	add	sp, #6
+                                   1049 ;..\modes\explorationmode.c:101: set_bkg_palette(0,1, space_pallette);
+      000476 C5               [16] 1050 	push	bc
+      000477 11r21r00         [12] 1051 	ld	de, #_space_pallette
+      00047A D5               [16] 1052 	push	de
+      00047B AF               [ 4] 1053 	xor	a, a
+      00047C 3C               [ 4] 1054 	inc	a
+      00047D F5               [16] 1055 	push	af
+      00047E CDr00r00         [24] 1056 	call	_set_bkg_palette
+      000481 E8 04            [16] 1057 	add	sp, #4
+      000483 C1               [12] 1058 	pop	bc
+                                   1059 ;..\modes\explorationmode.c:102: this->counter = 0;
+      000484 AF               [ 4] 1060 	xor	a, a
+      000485 02               [ 8] 1061 	ld	(bc), a
+      000486 03               [ 8] 1062 	inc	bc
+      000487 02               [ 8] 1063 	ld	(bc), a
+                                   1064 ;..\modes\explorationmode.c:103: byte ship_pal = createPalette(0xFFFFFF,RGB8(200,200,200),RGB8(127, 127, 127),RGB8(255, 255, 255));
+      000488 11 FF 7F         [12] 1065 	ld	de, #0x7fff
+      00048B D5               [16] 1066 	push	de
+      00048C 11 EF 3D         [12] 1067 	ld	de, #0x3def
+      00048F D5               [16] 1068 	push	de
+      000490 01 39 67         [12] 1069 	ld	bc, #0x6739
+      000493 11 FF FF         [12] 1070 	ld	de, #0xffff
+      000496 CDr00r00         [24] 1071 	call	_createPalette
+                                   1072 ;..\modes\explorationmode.c:107: ctor(&shipGraphic, enterprise_tiles, 2, 2, 8);
+      000499 11 08 00         [12] 1073 	ld	de, #0x0008
+      00049C D5               [16] 1074 	push	de
+      00049D 11 02 00         [12] 1075 	ld	de, #0x0002
+      0004A0 D5               [16] 1076 	push	de
+      0004A1 D5               [16] 1077 	push	de
+      0004A2 01r00r00         [12] 1078 	ld	bc, #_enterprise_tiles
+      0004A5 11r43r00         [12] 1079 	ld	de, #_shipGraphic
+      0004A8 CDr00r00         [24] 1080 	call	_ctor
+                                   1081 ;..\modes\explorationmode.c:109: setFrame(&shipGraphic, 0);
+      0004AB 01 00 00         [12] 1082 	ld	bc, #0x0000
+      0004AE 11r43r00         [12] 1083 	ld	de, #_shipGraphic
+      0004B1 CDr00r00         [24] 1084 	call	_setFrame
+                                   1085 ;..\modes\explorationmode.c:110: move(&shipGraphic, mid_screen.width, mid_screen.height);
+      0004B4 21r02r00         [12] 1086 	ld	hl, #_mid_screen + 2
+      0004B7 2A               [ 8] 1087 	ld	a, (hl+)
+      0004B8 4F               [ 4] 1088 	ld	c, a
+      0004B9 46               [ 8] 1089 	ld	b, (hl)
+      0004BA 21r00r00         [12] 1090 	ld	hl, #_mid_screen
+      0004BD 2A               [ 8] 1091 	ld	a,	(hl+)
+      0004BE 66               [ 8] 1092 	ld	h, (hl)
+                                   1093 ;	spillPairReg hl
+      0004BF 6F               [ 4] 1094 	ld	l, a
+                                   1095 ;	spillPairReg hl
+                                   1096 ;	spillPairReg hl
+      0004C0 C5               [16] 1097 	push	bc
+      0004C1 4D               [ 4] 1098 	ld	c, l
+      0004C2 44               [ 4] 1099 	ld	b, h
+      0004C3 11r43r00         [12] 1100 	ld	de, #_shipGraphic
+      0004C6 CDr00r00         [24] 1101 	call	_move
+                                   1102 ;..\modes\explorationmode.c:112: ctor(&saturnGraphic, saturn_tiles, 2, 2, 1);
+      0004C9 11 01 00         [12] 1103 	ld	de, #0x0001
+      0004CC D5               [16] 1104 	push	de
+      0004CD 11 02 00         [12] 1105 	ld	de, #0x0002
+      0004D0 D5               [16] 1106 	push	de
+      0004D1 D5               [16] 1107 	push	de
+      0004D2 01r00r00         [12] 1108 	ld	bc, #_saturn_tiles
+      0004D5 11r12r00         [12] 1109 	ld	de, #_saturnGraphic
+      0004D8 CDr00r00         [24] 1110 	call	_ctor
+                                   1111 ;..\modes\explorationmode.c:113: setFrame(&saturnGraphic, 0);
+      0004DB 01 00 00         [12] 1112 	ld	bc, #0x0000
+      0004DE 11r12r00         [12] 1113 	ld	de, #_saturnGraphic
+      0004E1 CDr00r00         [24] 1114 	call	_setFrame
+                                   1115 ;..\modes\explorationmode.c:114: setPalette(&saturnGraphic, createPalette(0, RGB8(255, 200, 200), RGB8(200, 50, 50), RGB8(255, 160, 68)));
+      0004E4 11 9F 22         [12] 1116 	ld	de, #0x229f
+      0004E7 D5               [16] 1117 	push	de
+      0004E8 11 D9 18         [12] 1118 	ld	de, #0x18d9
+      0004EB D5               [16] 1119 	push	de
+      0004EC 01 3F 67         [12] 1120 	ld	bc, #0x673f
+      0004EF 11 00 00         [12] 1121 	ld	de, #0x0000
+      0004F2 CDr00r00         [24] 1122 	call	_createPalette
+      0004F5 11r12r00         [12] 1123 	ld	de, #_saturnGraphic
+      0004F8 CDr00r00         [24] 1124 	call	_setPalette
+                                   1125 ;..\modes\explorationmode.c:116: byte fire_pallet = createPalette(0, RGB_WHITE, RGB8(255, 160, 68), RGB_RED);
+      0004FB 11 1F 00         [12] 1126 	ld	de, #0x001f
+      0004FE D5               [16] 1127 	push	de
+      0004FF 11 9F 22         [12] 1128 	ld	de, #0x229f
+      000502 D5               [16] 1129 	push	de
+      000503 01 FF 7F         [12] 1130 	ld	bc, #0x7fff
+      000506 11 00 00         [12] 1131 	ld	de, #0x0000
+      000509 CDr00r00         [24] 1132 	call	_createPalette
+      00050C F8 00            [12] 1133 	ldhl	sp,	#0
+      00050E 77               [ 8] 1134 	ld	(hl), a
+                                   1135 ;..\modes\explorationmode.c:117: photon.isAlive = false;
+      00050F 21r04r00         [12] 1136 	ld	hl, #(_photon + 4)
+                                   1137 ;..\modes\explorationmode.c:118: ctor(&photonGraphic, photon_tiles, 1, 1, 2);
+      000512 11 02 00         [12] 1138 	ld	de, #0x0002
+      000515 72               [ 8] 1139 	ld	(hl), d
+      000516 D5               [16] 1140 	push	de
+      000517 11 01 00         [12] 1141 	ld	de, #0x0001
+      00051A D5               [16] 1142 	push	de
+      00051B D5               [16] 1143 	push	de
+      00051C 01r00r00         [12] 1144 	ld	bc, #_photon_tiles
+      00051F 11r2Fr00         [12] 1145 	ld	de, #_photonGraphic
+      000522 CDr00r00         [24] 1146 	call	_ctor
+                                   1147 ;..\modes\explorationmode.c:119: setFrame(&photonGraphic, 0);
+      000525 01 00 00         [12] 1148 	ld	bc, #0x0000
+      000528 11r2Fr00         [12] 1149 	ld	de, #_photonGraphic
+      00052B CDr00r00         [24] 1150 	call	_setFrame
+                                   1151 ;..\modes\explorationmode.c:120: setPalette(&photonGraphic, fire_pallet);
+      00052E F8 00            [12] 1152 	ldhl	sp,	#0
+      000530 7E               [ 8] 1153 	ld	a, (hl)
+      000531 11r2Fr00         [12] 1154 	ld	de, #_photonGraphic
+      000534 CDr00r00         [24] 1155 	call	_setPalette
+                                   1156 ;..\modes\explorationmode.c:121: hide(&photonGraphic);
+      000537 11r2Fr00         [12] 1157 	ld	de, #_photonGraphic
+      00053A CDr00r00         [24] 1158 	call	_hide
+                                   1159 ;..\modes\explorationmode.c:123: ctor(&asteroidGraphic, asteroid_tiles, 1, 1, 4);
+      00053D 11 04 00         [12] 1160 	ld	de, #0x0004
+      000540 D5               [16] 1161 	push	de
+      000541 11 01 00         [12] 1162 	ld	de, #0x0001
+      000544 D5               [16] 1163 	push	de
+      000545 D5               [16] 1164 	push	de
+      000546 01r00r00         [12] 1165 	ld	bc, #_asteroid_tiles
+      000549 11r57r00         [12] 1166 	ld	de, #_asteroidGraphic
+      00054C CDr00r00         [24] 1167 	call	_ctor
+                                   1168 ;..\modes\explorationmode.c:124: setFrame(&asteroidGraphic, 0);
+      00054F 01 00 00         [12] 1169 	ld	bc, #0x0000
+      000552 11r57r00         [12] 1170 	ld	de, #_asteroidGraphic
+      000555 CDr00r00         [24] 1171 	call	_setFrame
+                                   1172 ;..\modes\explorationmode.c:125: hide(&asteroidGraphic);
+      000558 11r57r00         [12] 1173 	ld	de, #_asteroidGraphic
+      00055B CDr00r00         [24] 1174 	call	_hide
+                                   1175 ;..\modes\explorationmode.c:127: setPalette(&asteroidGraphic, createPalette(0, RGB8(223, 223, 223), RGB8(128, 128, 128), RGB8(64, 64, 64)));
+      00055E 11 08 21         [12] 1176 	ld	de, #0x2108
+      000561 D5               [16] 1177 	push	de
+      000562 11 10 42         [12] 1178 	ld	de, #0x4210
+      000565 D5               [16] 1179 	push	de
+      000566 01 7B 6F         [12] 1180 	ld	bc, #0x6f7b
+      000569 11 00 00         [12] 1181 	ld	de, #0x0000
+      00056C CDr00r00         [24] 1182 	call	_createPalette
+      00056F 11r57r00         [12] 1183 	ld	de, #_asteroidGraphic
+      000572 CDr00r00         [24] 1184 	call	_setPalette
+                                   1185 ;..\modes\explorationmode.c:128: asteroid.isAlive = false;
+      000575 21r0Dr00         [12] 1186 	ld	hl, #(_asteroid + 4)
+                                   1187 ;..\modes\explorationmode.c:130: ctor(&explosionGraphic, explosion_tiles, 2, 2, 4);
+      000578 11 04 00         [12] 1188 	ld	de, #0x0004
+      00057B 72               [ 8] 1189 	ld	(hl), d
+      00057C D5               [16] 1190 	push	de
+      00057D 11 02 00         [12] 1191 	ld	de, #0x0002
+      000580 D5               [16] 1192 	push	de
+      000581 D5               [16] 1193 	push	de
+      000582 01r00r00         [12] 1194 	ld	bc, #_explosion_tiles
+      000585 11r6Br00         [12] 1195 	ld	de, #_explosionGraphic
+      000588 CDr00r00         [24] 1196 	call	_ctor
+                                   1197 ;..\modes\explorationmode.c:131: setFrame(&explosionGraphic, 0);
+      00058B 01 00 00         [12] 1198 	ld	bc, #0x0000
+      00058E 11r6Br00         [12] 1199 	ld	de, #_explosionGraphic
+      000591 CDr00r00         [24] 1200 	call	_setFrame
+                                   1201 ;..\modes\explorationmode.c:132: hide(&explosionGraphic);
+      000594 11r6Br00         [12] 1202 	ld	de, #_explosionGraphic
+      000597 CDr00r00         [24] 1203 	call	_hide
+                                   1204 ;..\modes\explorationmode.c:133: setPalette(&explosionGraphic, fire_pallet);
+      00059A F8 00            [12] 1205 	ldhl	sp,	#0
+      00059C 7E               [ 8] 1206 	ld	a, (hl)
+      00059D 11r6Br00         [12] 1207 	ld	de, #_explosionGraphic
+      0005A0 CDr00r00         [24] 1208 	call	_setPalette
+                                   1209 ;..\modes\explorationmode.c:134: explosion.isAlive = false;
+      0005A3 21r2Ar00         [12] 1210 	ld	hl, #(_explosion + 4)
+      0005A6 36 00            [12] 1211 	ld	(hl), #0x00
+                                   1212 ;..\modes\explorationmode.c:135: }
+      0005A8 33               [ 8] 1213 	inc	sp
+      0005A9 C9               [16] 1214 	ret
+                                   1215 ;..\modes\explorationmode.c:137: void ExplorationMode_update(struct ExplorationMode* this) {
+                                   1216 ;	---------------------------------
+                                   1217 ; Function ExplorationMode_update
+                                   1218 ; ---------------------------------
+      0005AA                       1219 _ExplorationMode_update::
+      0005AA E8 F4            [16] 1220 	add	sp, #-12
+      0005AC F8 0A            [12] 1221 	ldhl	sp,	#10
+      0005AE 7B               [ 4] 1222 	ld	a, e
+      0005AF 22               [ 8] 1223 	ld	(hl+), a
+                                   1224 ;..\modes\explorationmode.c:138: this->counter++;
+      0005B0 7A               [ 4] 1225 	ld	a, d
+      0005B1 32               [ 8] 1226 	ld	(hl-), a
+      0005B2 2A               [ 8] 1227 	ld	a, (hl+)
+      0005B3 5F               [ 4] 1228 	ld	e, a
+      0005B4 56               [ 8] 1229 	ld	d, (hl)
+      0005B5 1A               [ 8] 1230 	ld	a, (de)
+      0005B6 4F               [ 4] 1231 	ld	c, a
+      0005B7 13               [ 8] 1232 	inc	de
+      0005B8 1A               [ 8] 1233 	ld	a, (de)
+      0005B9 47               [ 4] 1234 	ld	b, a
+      0005BA 03               [ 8] 1235 	inc	bc
+      0005BB 3A               [ 8] 1236 	ld	a, (hl-)
+      0005BC 6E               [ 8] 1237 	ld	l, (hl)
+      0005BD 67               [ 4] 1238 	ld	h, a
+      0005BE 79               [ 4] 1239 	ld	a, c
+      0005BF 22               [ 8] 1240 	ld	(hl+), a
+      0005C0 70               [ 8] 1241 	ld	(hl), b
+                                   1242 ;..\modes\explorationmode.c:139: if(this->counter > 10) {
+      0005C1 58               [ 4] 1243 	ld	e, b
+      0005C2 16 00            [ 8] 1244 	ld	d, #0x00
+      0005C4 3E 0A            [ 8] 1245 	ld	a, #0x0a
+      0005C6 B9               [ 4] 1246 	cp	a, c
+      0005C7 3E 00            [ 8] 1247 	ld	a, #0x00
+      0005C9 98               [ 4] 1248 	sbc	a, b
+      0005CA CB 7B            [ 8] 1249 	bit	7, e
+      0005CC 28 07            [12] 1250 	jr	Z, 00185$
+      0005CE CB 7A            [ 8] 1251 	bit	7, d
+      0005D0 20 08            [12] 1252 	jr	NZ, 00186$
+      0005D2 BF               [ 4] 1253 	cp	a, a
+      0005D3 18 05            [12] 1254 	jr	00186$
+      0005D5                       1255 00185$:
+      0005D5 CB 7A            [ 8] 1256 	bit	7, d
+      0005D7 28 01            [12] 1257 	jr	Z, 00186$
+      0005D9 37               [ 4] 1258 	scf
+      0005DA                       1259 00186$:
+      0005DA D2rC5r06         [16] 1260 	jp	NC, 00115$
+                                   1261 ;..\modes\explorationmode.c:140: this->counter = 0;
+      0005DD F8 0A            [12] 1262 	ldhl	sp,	#10
+      0005DF 2A               [ 8] 1263 	ld	a,	(hl+)
+      0005E0 66               [ 8] 1264 	ld	h, (hl)
+      0005E1 6F               [ 4] 1265 	ld	l, a
+      0005E2 AF               [ 4] 1266 	xor	a, a
+      0005E3 22               [ 8] 1267 	ld	(hl+), a
+      0005E4 77               [ 8] 1268 	ld	(hl), a
+                                   1269 ;..\modes\explorationmode.c:142: if(photon.isAlive){
+      0005E5 FAr04r00         [16] 1270 	ld	a, (#(_photon + 4) + 0)
+      0005E8 F8 09            [12] 1271 	ldhl	sp,#9
+      0005EA 77               [ 8] 1272 	ld	(hl), a
+      0005EB B7               [ 4] 1273 	or	a, a
+      0005EC 28 40            [12] 1274 	jr	Z, 00104$
+                                   1275 ;..\modes\explorationmode.c:143: photonGraphic.frame++;
+      0005EE 2B               [ 8] 1276 	dec	hl
+      0005EF 11r3Dr00         [12] 1277 	ld	de, #(_photonGraphic + 14)
+      0005F2 1A               [ 8] 1278 	ld	a, (de)
+      0005F3 22               [ 8] 1279 	ld	(hl+), a
+      0005F4 13               [ 8] 1280 	inc	de
+      0005F5 1A               [ 8] 1281 	ld	a, (de)
+      0005F6 32               [ 8] 1282 	ld	(hl-), a
+      0005F7 2A               [ 8] 1283 	ld	a, (hl+)
+      0005F8 4F               [ 4] 1284 	ld	c, a
+      0005F9 46               [ 8] 1285 	ld	b, (hl)
+      0005FA 03               [ 8] 1286 	inc	bc
+      0005FB 21r3Dr00         [12] 1287 	ld	hl, #(_photonGraphic + 14)
+      0005FE 79               [ 4] 1288 	ld	a, c
+      0005FF 22               [ 8] 1289 	ld	(hl+), a
+      000600 70               [ 8] 1290 	ld	(hl), b
+                                   1291 ;..\modes\explorationmode.c:144: if(photonGraphic.frame > 1)photonGraphic.frame = 0;
+      000601 58               [ 4] 1292 	ld	e, b
+      000602 16 00            [ 8] 1293 	ld	d, #0x00
+      000604 3E 01            [ 8] 1294 	ld	a, #0x01
+      000606 B9               [ 4] 1295 	cp	a, c
+      000607 3E 00            [ 8] 1296 	ld	a, #0x00
+      000609 98               [ 4] 1297 	sbc	a, b
+      00060A CB 7B            [ 8] 1298 	bit	7, e
+      00060C 28 07            [12] 1299 	jr	Z, 00187$
+      00060E CB 7A            [ 8] 1300 	bit	7, d
+      000610 20 08            [12] 1301 	jr	NZ, 00188$
+      000612 BF               [ 4] 1302 	cp	a, a
+      000613 18 05            [12] 1303 	jr	00188$
+      000615                       1304 00187$:
+      000615 CB 7A            [ 8] 1305 	bit	7, d
+      000617 28 01            [12] 1306 	jr	Z, 00188$
+      000619 37               [ 4] 1307 	scf
+      00061A                       1308 00188$:
+      00061A 30 06            [12] 1309 	jr	NC, 00102$
+      00061C 21r3Dr00         [12] 1310 	ld	hl, #(_photonGraphic + 14)
+      00061F AF               [ 4] 1311 	xor	a, a
+      000620 22               [ 8] 1312 	ld	(hl+), a
+      000621 77               [ 8] 1313 	ld	(hl), a
+      000622                       1314 00102$:
+                                   1315 ;..\modes\explorationmode.c:145: setFrame(&photonGraphic, photonGraphic.frame);
+      000622 21r3Dr00         [12] 1316 	ld	hl, #(_photonGraphic + 14)
+      000625 2A               [ 8] 1317 	ld	a, (hl+)
+      000626 4F               [ 4] 1318 	ld	c, a
+      000627 46               [ 8] 1319 	ld	b, (hl)
+      000628 11r2Fr00         [12] 1320 	ld	de, #_photonGraphic
+      00062B CDr00r00         [24] 1321 	call	_setFrame
+      00062E                       1322 00104$:
+                                   1323 ;..\modes\explorationmode.c:147: if(asteroid.isAlive == true){
+      00062E FAr0Dr00         [16] 1324 	ld	a, (#(_asteroid + 4) + 0)
+      000631 3D               [ 4] 1325 	dec	a
+      000632 20 41            [12] 1326 	jr	NZ, 00108$
+                                   1327 ;..\modes\explorationmode.c:148: asteroidGraphic.frame++;
+      000634 11r65r00         [12] 1328 	ld	de, #(_asteroidGraphic + 14)
+      000637 1A               [ 8] 1329 	ld	a, (de)
+      000638 F8 08            [12] 1330 	ldhl	sp,	#8
+      00063A 22               [ 8] 1331 	ld	(hl+), a
+      00063B 13               [ 8] 1332 	inc	de
+      00063C 1A               [ 8] 1333 	ld	a, (de)
+      00063D 32               [ 8] 1334 	ld	(hl-), a
+      00063E 2A               [ 8] 1335 	ld	a, (hl+)
+      00063F 4F               [ 4] 1336 	ld	c, a
+      000640 46               [ 8] 1337 	ld	b, (hl)
+      000641 03               [ 8] 1338 	inc	bc
+      000642 21r65r00         [12] 1339 	ld	hl, #(_asteroidGraphic + 14)
+      000645 79               [ 4] 1340 	ld	a, c
+      000646 22               [ 8] 1341 	ld	(hl+), a
+      000647 70               [ 8] 1342 	ld	(hl), b
+                                   1343 ;..\modes\explorationmode.c:149: if(asteroidGraphic.frame > 3) {
+      000648 58               [ 4] 1344 	ld	e, b
+      000649 16 00            [ 8] 1345 	ld	d, #0x00
+      00064B 3E 03            [ 8] 1346 	ld	a, #0x03
+      00064D B9               [ 4] 1347 	cp	a, c
+      00064E 3E 00            [ 8] 1348 	ld	a, #0x00
+      000650 98               [ 4] 1349 	sbc	a, b
+      000651 CB 7B            [ 8] 1350 	bit	7, e
+      000653 28 07            [12] 1351 	jr	Z, 00191$
+      000655 CB 7A            [ 8] 1352 	bit	7, d
+      000657 20 08            [12] 1353 	jr	NZ, 00192$
+      000659 BF               [ 4] 1354 	cp	a, a
+      00065A 18 05            [12] 1355 	jr	00192$
+      00065C                       1356 00191$:
+      00065C CB 7A            [ 8] 1357 	bit	7, d
+      00065E 28 01            [12] 1358 	jr	Z, 00192$
+      000660 37               [ 4] 1359 	scf
+      000661                       1360 00192$:
+      000661 30 06            [12] 1361 	jr	NC, 00106$
+                                   1362 ;..\modes\explorationmode.c:150: asteroidGraphic.frame = 0;
+      000663 21r65r00         [12] 1363 	ld	hl, #(_asteroidGraphic + 14)
+      000666 AF               [ 4] 1364 	xor	a, a
+      000667 22               [ 8] 1365 	ld	(hl+), a
+      000668 77               [ 8] 1366 	ld	(hl), a
+      000669                       1367 00106$:
+                                   1368 ;..\modes\explorationmode.c:152: setFrame(&asteroidGraphic, asteroidGraphic.frame);
+      000669 21r65r00         [12] 1369 	ld	hl, #(_asteroidGraphic + 14)
+      00066C 2A               [ 8] 1370 	ld	a, (hl+)
+      00066D 4F               [ 4] 1371 	ld	c, a
+      00066E 46               [ 8] 1372 	ld	b, (hl)
+      00066F 11r57r00         [12] 1373 	ld	de, #_asteroidGraphic
+      000672 CDr00r00         [24] 1374 	call	_setFrame
+      000675                       1375 00108$:
+                                   1376 ;..\modes\explorationmode.c:154: if(explosion.isAlive == true) {
+      000675 FAr2Ar00         [16] 1377 	ld	a, (#(_explosion + 4) + 0)
+      000678 3D               [ 4] 1378 	dec	a
+      000679 20 4A            [12] 1379 	jr	NZ, 00115$
+                                   1380 ;..\modes\explorationmode.c:155: explosionGraphic.frame++;
+      00067B 21r79r00         [12] 1381 	ld	hl, #(_explosionGraphic + 14)
+      00067E 2A               [ 8] 1382 	ld	a, (hl+)
+      00067F 4F               [ 4] 1383 	ld	c, a
+      000680 46               [ 8] 1384 	ld	b, (hl)
+      000681 03               [ 8] 1385 	inc	bc
+      000682 21r79r00         [12] 1386 	ld	hl, #(_explosionGraphic + 14)
+      000685 79               [ 4] 1387 	ld	a, c
+      000686 22               [ 8] 1388 	ld	(hl+), a
+      000687 70               [ 8] 1389 	ld	(hl), b
+                                   1390 ;..\modes\explorationmode.c:156: if(explosionGraphic.frame > 3) {
+      000688 58               [ 4] 1391 	ld	e, b
+      000689 16 00            [ 8] 1392 	ld	d, #0x00
+      00068B 3E 03            [ 8] 1393 	ld	a, #0x03
+      00068D B9               [ 4] 1394 	cp	a, c
+      00068E 3E 00            [ 8] 1395 	ld	a, #0x00
+      000690 98               [ 4] 1396 	sbc	a, b
+      000691 CB 7B            [ 8] 1397 	bit	7, e
+      000693 28 07            [12] 1398 	jr	Z, 00195$
+      000695 CB 7A            [ 8] 1399 	bit	7, d
+      000697 20 08            [12] 1400 	jr	NZ, 00196$
+      000699 BF               [ 4] 1401 	cp	a, a
+      00069A 18 05            [12] 1402 	jr	00196$
+      00069C                       1403 00195$:
+      00069C CB 7A            [ 8] 1404 	bit	7, d
+      00069E 28 01            [12] 1405 	jr	Z, 00196$
+      0006A0 37               [ 4] 1406 	scf
+      0006A1                       1407 00196$:
+      0006A1 30 16            [12] 1408 	jr	NC, 00110$
+                                   1409 ;..\modes\explorationmode.c:157: explosion.isAlive = false;
+      0006A3 21r2Ar00         [12] 1410 	ld	hl, #(_explosion + 4)
+      0006A6 36 00            [12] 1411 	ld	(hl), #0x00
+                                   1412 ;..\modes\explorationmode.c:158: hide(&explosionGraphic);
+      0006A8 11r6Br00         [12] 1413 	ld	de, #_explosionGraphic
+      0006AB CDr00r00         [24] 1414 	call	_hide
+                                   1415 ;..\modes\explorationmode.c:159: setFrame(&explosionGraphic, 0);
+      0006AE 01 00 00         [12] 1416 	ld	bc, #0x0000
+      0006B1 11r6Br00         [12] 1417 	ld	de, #_explosionGraphic
+      0006B4 CDr00r00         [24] 1418 	call	_setFrame
+      0006B7 18 0C            [12] 1419 	jr	00115$
+      0006B9                       1420 00110$:
+                                   1421 ;..\modes\explorationmode.c:162: setFrame(&explosionGraphic, explosionGraphic.frame);
+      0006B9 21r79r00         [12] 1422 	ld	hl, #(_explosionGraphic + 14)
+      0006BC 2A               [ 8] 1423 	ld	a, (hl+)
+      0006BD 4F               [ 4] 1424 	ld	c, a
+      0006BE 46               [ 8] 1425 	ld	b, (hl)
+      0006BF 11r6Br00         [12] 1426 	ld	de, #_explosionGraphic
+      0006C2 CDr00r00         [24] 1427 	call	_setFrame
+      0006C5                       1428 00115$:
+                                   1429 ;..\modes\explorationmode.c:168: if(photon.isAlive) {
+      0006C5 FAr04r00         [16] 1430 	ld	a, (#(_photon + 4) + 0)
+      0006C8 B7               [ 4] 1431 	or	a, a
+      0006C9 28 2A            [12] 1432 	jr	Z, 00117$
+                                   1433 ;..\modes\explorationmode.c:169: photon.world.x += photon.vector.x;
+      0006CB 21r00r00         [12] 1434 	ld	hl, #_photon
+      0006CE 2A               [ 8] 1435 	ld	a, (hl+)
+      0006CF 4F               [ 4] 1436 	ld	c, a
+      0006D0 46               [ 8] 1437 	ld	b, (hl)
+      0006D1 21r05r00         [12] 1438 	ld	hl, #_photon + 5
+      0006D4 2A               [ 8] 1439 	ld	a,	(hl+)
+      0006D5 66               [ 8] 1440 	ld	h, (hl)
+                                   1441 ;	spillPairReg hl
+      0006D6 6F               [ 4] 1442 	ld	l, a
+                                   1443 ;	spillPairReg hl
+                                   1444 ;	spillPairReg hl
+      0006D7 09               [ 8] 1445 	add	hl, bc
+      0006D8 4D               [ 4] 1446 	ld	c, l
+      0006D9 44               [ 4] 1447 	ld	b, h
+      0006DA 21r00r00         [12] 1448 	ld	hl, #_photon
+      0006DD 79               [ 4] 1449 	ld	a, c
+      0006DE 22               [ 8] 1450 	ld	(hl+), a
+      0006DF 70               [ 8] 1451 	ld	(hl), b
+                                   1452 ;..\modes\explorationmode.c:170: photon.world.y += photon.vector.y;
+      0006E0 21r02r00         [12] 1453 	ld	hl, #(_photon + 2)
+      0006E3 2A               [ 8] 1454 	ld	a, (hl+)
+      0006E4 4F               [ 4] 1455 	ld	c, a
+      0006E5 46               [ 8] 1456 	ld	b, (hl)
+      0006E6 21r07r00         [12] 1457 	ld	hl, #_photon + 7
+      0006E9 2A               [ 8] 1458 	ld	a,	(hl+)
+      0006EA 66               [ 8] 1459 	ld	h, (hl)
+                                   1460 ;	spillPairReg hl
+      0006EB 6F               [ 4] 1461 	ld	l, a
+                                   1462 ;	spillPairReg hl
+                                   1463 ;	spillPairReg hl
+      0006EC 09               [ 8] 1464 	add	hl, bc
+      0006ED 4D               [ 4] 1465 	ld	c, l
+      0006EE 44               [ 4] 1466 	ld	b, h
+      0006EF 21r02r00         [12] 1467 	ld	hl, #(_photon + 2)
+      0006F2 79               [ 4] 1468 	ld	a, c
+      0006F3 22               [ 8] 1469 	ld	(hl+), a
+      0006F4 70               [ 8] 1470 	ld	(hl), b
+      0006F5                       1471 00117$:
+                                   1472 ;..\modes\explorationmode.c:173: struct GameObject* ship = gameobjects(GO_SHIP);
+      0006F5 11 00 00         [12] 1473 	ld	de, #0x0000
+      0006F8 CDr00r00         [24] 1474 	call	_gameobjects
+      0006FB 59               [ 4] 1475 	ld	e, c
+      0006FC 50               [ 4] 1476 	ld	d, b
+                                   1477 ;..\modes\explorationmode.c:174: manage_asteroid(ship);
+      0006FD D5               [16] 1478 	push	de
+      0006FE CDr98r00         [24] 1479 	call	_manage_asteroid
+      000701 D1               [12] 1480 	pop	de
+                                   1481 ;..\modes\explorationmode.c:176: if(explosion.isAlive == true){
+      000702 01r2Ar00         [12] 1482 	ld	bc, #_explosion + 4
+      000705 0A               [ 8] 1483 	ld	a, (bc)
+      000706 3D               [ 4] 1484 	dec	a
+      000707 20 35            [12] 1485 	jr	NZ, 00120$
+                                   1486 ;..\modes\explorationmode.c:178: screen = to_screen(&ship->world, &explosion.world);
+      000709 01r26r00         [12] 1487 	ld	bc, #_explosion
+      00070C F8 04            [12] 1488 	ldhl	sp,	#4
+      00070E E5               [16] 1489 	push	hl
+      00070F CDr29r00         [24] 1490 	call	_to_screen
+      000712 F8 04            [12] 1491 	ldhl	sp,	#4
+      000714 4D               [ 4] 1492 	ld	c, l
+      000715 44               [ 4] 1493 	ld	b, h
+      000716 11 04 00         [12] 1494 	ld	de, #0x0004
+      000719 D5               [16] 1495 	push	de
+      00071A 21 02 00         [12] 1496 	ld	hl, #2
+      00071D 39               [ 8] 1497 	add	hl, sp
+      00071E 5D               [ 4] 1498 	ld	e, l
+      00071F 54               [ 4] 1499 	ld	d, h
+      000720 CDr00r00         [24] 1500 	call	___memcpy
+                                   1501 ;..\modes\explorationmode.c:179: move(&explosionGraphic, screen.x, screen.y);
+      000723 F8 02            [12] 1502 	ldhl	sp,	#2
+      000725 2A               [ 8] 1503 	ld	a, (hl+)
+      000726 4F               [ 4] 1504 	ld	c, a
+      000727 46               [ 8] 1505 	ld	b, (hl)
+      000728 F8 00            [12] 1506 	ldhl	sp,	#0
+      00072A 7E               [ 8] 1507 	ld	a, (hl)
+      00072B F8 08            [12] 1508 	ldhl	sp,	#8
+      00072D 77               [ 8] 1509 	ld	(hl), a
+      00072E F8 01            [12] 1510 	ldhl	sp,	#1
+      000730 7E               [ 8] 1511 	ld	a, (hl)
+      000731 F8 09            [12] 1512 	ldhl	sp,	#9
+      000733 32               [ 8] 1513 	ld	(hl-), a
+      000734 C5               [16] 1514 	push	bc
+      000735 2A               [ 8] 1515 	ld	a, (hl+)
+      000736 4F               [ 4] 1516 	ld	c, a
+      000737 46               [ 8] 1517 	ld	b, (hl)
+      000738 11r6Br00         [12] 1518 	ld	de, #_explosionGraphic
+      00073B CDr00r00         [24] 1519 	call	_move
+      00073E                       1520 00120$:
+                                   1521 ;..\modes\explorationmode.c:182: }
+      00073E E8 0C            [16] 1522 	add	sp, #12
+      000740 C9               [16] 1523 	ret
+                                   1524 ;..\modes\explorationmode.c:185: void ExplorationMode_processInput(struct ExplorationMode* this, byte joypad) {
+                                   1525 ;	---------------------------------
+                                   1526 ; Function ExplorationMode_processInput
+                                   1527 ; ---------------------------------
+      000741                       1528 _ExplorationMode_processInput::
+      000741 E8 ED            [16] 1529 	add	sp, #-19
+      000743 4F               [ 4] 1530 	ld	c, a
+                                   1531 ;..\modes\explorationmode.c:186: int x = 0; int y = 0;
+      000744 AF               [ 4] 1532 	xor	a, a
+      000745 F8 0F            [12] 1533 	ldhl	sp,	#15
+      000747 22               [ 8] 1534 	ld	(hl+), a
+      000748 22               [ 8] 1535 	ld	(hl+), a
+      000749 AF               [ 4] 1536 	xor	a, a
+      00074A 22               [ 8] 1537 	ld	(hl+), a
+      00074B 77               [ 8] 1538 	ld	(hl), a
+                                   1539 ;..\modes\explorationmode.c:187: struct GameObject* ship = gameobjects(GO_SHIP);
+      00074C C5               [16] 1540 	push	bc
+      00074D 11 00 00         [12] 1541 	ld	de, #0x0000
+      000750 CDr00r00         [24] 1542 	call	_gameobjects
+      000753 F8 02            [12] 1543 	ldhl	sp,	#2
+      000755 79               [ 4] 1544 	ld	a, c
+      000756 22               [ 8] 1545 	ld	(hl+), a
+      000757 70               [ 8] 1546 	ld	(hl), b
+      000758 11 01 00         [12] 1547 	ld	de, #0x0001
+      00075B CDr00r00         [24] 1548 	call	_gameobjects
+      00075E F8 04            [12] 1549 	ldhl	sp,	#4
+      000760 79               [ 4] 1550 	ld	a, c
+      000761 22               [ 8] 1551 	ld	(hl+), a
+      000762 70               [ 8] 1552 	ld	(hl), b
+      000763 C1               [12] 1553 	pop	bc
+                                   1554 ;..\modes\explorationmode.c:192: if (joypad & J_RIGHT)
+      000764 CB 41            [ 8] 1555 	bit	0, c
+      000766 28 07            [12] 1556 	jr	Z, 00102$
+                                   1557 ;..\modes\explorationmode.c:194: x++;
+      000768 F8 0F            [12] 1558 	ldhl	sp,	#15
+      00076A 3E 01            [ 8] 1559 	ld	a, #0x01
+      00076C 22               [ 8] 1560 	ld	(hl+), a
+      00076D AF               [ 4] 1561 	xor	a, a
+      00076E 77               [ 8] 1562 	ld	(hl), a
+      00076F                       1563 00102$:
+                                   1564 ;..\modes\explorationmode.c:198: if (joypad & J_LEFT)
+      00076F CB 49            [ 8] 1565 	bit	1, c
+      000771 28 0A            [12] 1566 	jr	Z, 00104$
+                                   1567 ;..\modes\explorationmode.c:200: x--;
+      000773 F8 0F            [12] 1568 	ldhl	sp,#15
+      000775 2A               [ 8] 1569 	ld	a, (hl+)
+      000776 5F               [ 4] 1570 	ld	e, a
+      000777 3A               [ 8] 1571 	ld	a, (hl-)
+      000778 57               [ 4] 1572 	ld	d, a
+      000779 1B               [ 8] 1573 	dec	de
+      00077A 7B               [ 4] 1574 	ld	a, e
+      00077B 22               [ 8] 1575 	ld	(hl+), a
+      00077C 72               [ 8] 1576 	ld	(hl), d
+      00077D                       1577 00104$:
+                                   1578 ;..\modes\explorationmode.c:204: if (joypad & J_DOWN)
+      00077D CB 59            [ 8] 1579 	bit	3, c
+      00077F 28 07            [12] 1580 	jr	Z, 00106$
+                                   1581 ;..\modes\explorationmode.c:206: y++;
+      000781 F8 11            [12] 1582 	ldhl	sp,	#17
+      000783 3E 01            [ 8] 1583 	ld	a, #0x01
+      000785 22               [ 8] 1584 	ld	(hl+), a
+      000786 AF               [ 4] 1585 	xor	a, a
+      000787 77               [ 8] 1586 	ld	(hl), a
+      000788                       1587 00106$:
+                                   1588 ;..\modes\explorationmode.c:210: if (joypad & J_UP)
+      000788 CB 51            [ 8] 1589 	bit	2, c
+      00078A 28 0A            [12] 1590 	jr	Z, 00108$
+                                   1591 ;..\modes\explorationmode.c:212: y--;
+      00078C F8 11            [12] 1592 	ldhl	sp,#17
+      00078E 2A               [ 8] 1593 	ld	a, (hl+)
+      00078F 5F               [ 4] 1594 	ld	e, a
+      000790 3A               [ 8] 1595 	ld	a, (hl-)
+      000791 57               [ 4] 1596 	ld	d, a
+      000792 1B               [ 8] 1597 	dec	de
+      000793 7B               [ 4] 1598 	ld	a, e
+      000794 22               [ 8] 1599 	ld	(hl+), a
+      000795 72               [ 8] 1600 	ld	(hl), d
+      000796                       1601 00108$:
+                                   1602 ;..\modes\explorationmode.c:218: photon.world.y = ship->world.y + 4;
+      000796 D1               [12] 1603 	pop	de
+      000797 D5               [16] 1604 	push	de
+      000798 21 02 00         [12] 1605 	ld	hl, #0x0002
+      00079B 19               [ 8] 1606 	add	hl, de
+      00079C E5               [16] 1607 	push	hl
+      00079D 7D               [ 4] 1608 	ld	a, l
+      00079E F8 06            [12] 1609 	ldhl	sp,	#6
+      0007A0 77               [ 8] 1610 	ld	(hl), a
+      0007A1 E1               [12] 1611 	pop	hl
+      0007A2 7C               [ 4] 1612 	ld	a, h
+      0007A3 F8 05            [12] 1613 	ldhl	sp,	#5
+      0007A5 77               [ 8] 1614 	ld	(hl), a
+                                   1615 ;..\modes\explorationmode.c:221: photon.vector.x = ship->vector.x * 2;
+      0007A6 D1               [12] 1616 	pop	de
+      0007A7 D5               [16] 1617 	push	de
+      0007A8 21 05 00         [12] 1618 	ld	hl, #0x0005
+      0007AB 19               [ 8] 1619 	add	hl, de
+      0007AC E5               [16] 1620 	push	hl
+      0007AD 7D               [ 4] 1621 	ld	a, l
+      0007AE F8 08            [12] 1622 	ldhl	sp,	#8
+      0007B0 77               [ 8] 1623 	ld	(hl), a
+      0007B1 E1               [12] 1624 	pop	hl
+      0007B2 7C               [ 4] 1625 	ld	a, h
+      0007B3 F8 07            [12] 1626 	ldhl	sp,	#7
+                                   1627 ;..\modes\explorationmode.c:222: photon.vector.y = ship->vector.y * 2;
+      0007B5 32               [ 8] 1628 	ld	(hl-), a
+      0007B6 2A               [ 8] 1629 	ld	a, (hl+)
+      0007B7 5F               [ 4] 1630 	ld	e, a
+      0007B8 56               [ 8] 1631 	ld	d, (hl)
+      0007B9 21 02 00         [12] 1632 	ld	hl, #0x0002
+      0007BC 19               [ 8] 1633 	add	hl, de
+      0007BD E5               [16] 1634 	push	hl
+      0007BE 7D               [ 4] 1635 	ld	a, l
+      0007BF F8 0A            [12] 1636 	ldhl	sp,	#10
+      0007C1 77               [ 8] 1637 	ld	(hl), a
+      0007C2 E1               [12] 1638 	pop	hl
+      0007C3 7C               [ 4] 1639 	ld	a, h
+      0007C4 F8 09            [12] 1640 	ldhl	sp,	#9
+      0007C6 77               [ 8] 1641 	ld	(hl), a
+                                   1642 ;..\modes\explorationmode.c:215: if(joypad & J_A) {
+      0007C7 CB 61            [ 8] 1643 	bit	4, c
+      0007C9 28 5E            [12] 1644 	jr	Z, 00112$
+                                   1645 ;..\modes\explorationmode.c:216: if(photon.isAlive == false){
+      0007CB FAr04r00         [16] 1646 	ld	a, (#(_photon + 4) + 0)
+      0007CE B7               [ 4] 1647 	or	a, a
+      0007CF 20 58            [12] 1648 	jr	NZ, 00112$
+                                   1649 ;..\modes\explorationmode.c:217: photon.world.x = ship->world.x + 8;
+      0007D1 D1               [12] 1650 	pop	de
+      0007D2 D5               [16] 1651 	push	de
+      0007D3 1A               [ 8] 1652 	ld	a, (de)
+      0007D4 4F               [ 4] 1653 	ld	c, a
+      0007D5 13               [ 8] 1654 	inc	de
+      0007D6 1A               [ 8] 1655 	ld	a, (de)
+      0007D7 47               [ 4] 1656 	ld	b, a
+      0007D8 21 08 00         [12] 1657 	ld	hl, #0x0008
+      0007DB 09               [ 8] 1658 	add	hl, bc
+      0007DC 4D               [ 4] 1659 	ld	c, l
+      0007DD 44               [ 4] 1660 	ld	b, h
+      0007DE 21r00r00         [12] 1661 	ld	hl, #_photon
+      0007E1 79               [ 4] 1662 	ld	a, c
+      0007E2 22               [ 8] 1663 	ld	(hl+), a
+      0007E3 70               [ 8] 1664 	ld	(hl), b
+                                   1665 ;..\modes\explorationmode.c:218: photon.world.y = ship->world.y + 4;
+      0007E4 F8 04            [12] 1666 	ldhl	sp,#4
+      0007E6 2A               [ 8] 1667 	ld	a, (hl+)
+      0007E7 5F               [ 4] 1668 	ld	e, a
+      0007E8 56               [ 8] 1669 	ld	d, (hl)
+      0007E9 1A               [ 8] 1670 	ld	a, (de)
+      0007EA 4F               [ 4] 1671 	ld	c, a
+      0007EB 13               [ 8] 1672 	inc	de
+      0007EC 1A               [ 8] 1673 	ld	a, (de)
+      0007ED 47               [ 4] 1674 	ld	b, a
+      0007EE 03               [ 8] 1675 	inc	bc
+      0007EF 03               [ 8] 1676 	inc	bc
+      0007F0 03               [ 8] 1677 	inc	bc
+      0007F1 03               [ 8] 1678 	inc	bc
+      0007F2 21r02r00         [12] 1679 	ld	hl, #(_photon + 2)
+      0007F5 79               [ 4] 1680 	ld	a, c
+      0007F6 22               [ 8] 1681 	ld	(hl+), a
+      0007F7 70               [ 8] 1682 	ld	(hl), b
+                                   1683 ;..\modes\explorationmode.c:219: show(&photonGraphic);
+      0007F8 11r2Fr00         [12] 1684 	ld	de, #_photonGraphic
+      0007FB CDr00r00         [24] 1685 	call	_show
+                                   1686 ;..\modes\explorationmode.c:220: photon.isAlive = true;
+      0007FE 21r04r00         [12] 1687 	ld	hl, #(_photon + 4)
+      000801 36 01            [12] 1688 	ld	(hl), #0x01
+                                   1689 ;..\modes\explorationmode.c:221: photon.vector.x = ship->vector.x * 2;
+      000803 F8 06            [12] 1690 	ldhl	sp,#6
+      000805 2A               [ 8] 1691 	ld	a, (hl+)
+      000806 5F               [ 4] 1692 	ld	e, a
+      000807 56               [ 8] 1693 	ld	d, (hl)
+      000808 1A               [ 8] 1694 	ld	a, (de)
+      000809 6F               [ 4] 1695 	ld	l, a
+                                   1696 ;	spillPairReg hl
+                                   1697 ;	spillPairReg hl
+      00080A 13               [ 8] 1698 	inc	de
+      00080B 1A               [ 8] 1699 	ld	a, (de)
+      00080C 67               [ 4] 1700 	ld	h, a
+                                   1701 ;	spillPairReg hl
+                                   1702 ;	spillPairReg hl
+      00080D 29               [ 8] 1703 	add	hl, hl
+      00080E 4D               [ 4] 1704 	ld	c, l
+      00080F 44               [ 4] 1705 	ld	b, h
+      000810 21r05r00         [12] 1706 	ld	hl, #(_photon + 5)
+      000813 79               [ 4] 1707 	ld	a, c
+      000814 22               [ 8] 1708 	ld	(hl+), a
+      000815 70               [ 8] 1709 	ld	(hl), b
+                                   1710 ;..\modes\explorationmode.c:222: photon.vector.y = ship->vector.y * 2;
+      000816 F8 08            [12] 1711 	ldhl	sp,#8
+      000818 2A               [ 8] 1712 	ld	a, (hl+)
+      000819 5F               [ 4] 1713 	ld	e, a
+      00081A 56               [ 8] 1714 	ld	d, (hl)
+      00081B 1A               [ 8] 1715 	ld	a, (de)
+      00081C 6F               [ 4] 1716 	ld	l, a
+                                   1717 ;	spillPairReg hl
+                                   1718 ;	spillPairReg hl
+      00081D 13               [ 8] 1719 	inc	de
+      00081E 1A               [ 8] 1720 	ld	a, (de)
+      00081F 67               [ 4] 1721 	ld	h, a
+                                   1722 ;	spillPairReg hl
+                                   1723 ;	spillPairReg hl
+      000820 29               [ 8] 1724 	add	hl, hl
+      000821 4D               [ 4] 1725 	ld	c, l
+      000822 44               [ 4] 1726 	ld	b, h
+      000823 21r07r00         [12] 1727 	ld	hl, #(_photon + 7)
+      000826 79               [ 4] 1728 	ld	a, c
+      000827 22               [ 8] 1729 	ld	(hl+), a
+      000828 70               [ 8] 1730 	ld	(hl), b
+      000829                       1731 00112$:
+                                   1732 ;..\modes\explorationmode.c:225: if(x == 0 & y < 0)setFrame(&shipGraphic, 0);
+      000829 F8 0F            [12] 1733 	ldhl	sp,	#15
+      00082B 2A               [ 8] 1734 	ld	a, (hl+)
+      00082C B7               [ 4] 1735 	or	a, a
+      00082D B6               [ 8] 1736 	or	a, (hl)
+      00082E 3E 01            [ 8] 1737 	ld	a, #0x01
+      000830 28 01            [12] 1738 	jr	Z, 00256$
+      000832 AF               [ 4] 1739 	xor	a, a
+      000833                       1740 00256$:
+      000833 F8 0E            [12] 1741 	ldhl	sp,	#14
+      000835 77               [ 8] 1742 	ld	(hl), a
+      000836 F8 12            [12] 1743 	ldhl	sp,	#18
+      000838 7E               [ 8] 1744 	ld	a, (hl)
+      000839 07               [ 4] 1745 	rlca
+      00083A E6 01            [ 8] 1746 	and	a,#0x01
+      00083C F8 0A            [12] 1747 	ldhl	sp,	#10
+      00083E 77               [ 8] 1748 	ld	(hl), a
+      00083F F8 0E            [12] 1749 	ldhl	sp,	#14
+      000841 7E               [ 8] 1750 	ld	a, (hl)
+      000842 F8 0A            [12] 1751 	ldhl	sp,	#10
+      000844 A6               [ 8] 1752 	and	a,(hl)
+      000845 28 09            [12] 1753 	jr	Z, 00114$
+      000847 01 00 00         [12] 1754 	ld	bc, #0x0000
+      00084A 11r43r00         [12] 1755 	ld	de, #_shipGraphic
+      00084D CDr00r00         [24] 1756 	call	_setFrame
+      000850                       1757 00114$:
+                                   1758 ;..\modes\explorationmode.c:226: if(x > 0 & y == 0)setFrame(&shipGraphic, 1);
+      000850 F8 0F            [12] 1759 	ldhl	sp,	#15
+      000852 AF               [ 4] 1760 	xor	a, a
+      000853 96               [ 8] 1761 	sub	a, (hl)
+      000854 23               [ 8] 1762 	inc	hl
+      000855 3E 00            [ 8] 1763 	ld	a, #0x00
+      000857 9E               [ 8] 1764 	sbc	a, (hl)
+      000858 3E 00            [ 8] 1765 	ld	a, #0x00
+      00085A 57               [ 4] 1766 	ld	d, a
+      00085B CB 7E            [12] 1767 	bit	7, (hl)
+      00085D 28 07            [12] 1768 	jr	Z, 00257$
+      00085F CB 7A            [ 8] 1769 	bit	7, d
+      000861 20 08            [12] 1770 	jr	NZ, 00258$
+      000863 BF               [ 4] 1771 	cp	a, a
+      000864 18 05            [12] 1772 	jr	00258$
+      000866                       1773 00257$:
+      000866 CB 7A            [ 8] 1774 	bit	7, d
+      000868 28 01            [12] 1775 	jr	Z, 00258$
+      00086A 37               [ 4] 1776 	scf
+      00086B                       1777 00258$:
+      00086B 3E 00            [ 8] 1778 	ld	a, #0x00
+      00086D 17               [ 4] 1779 	rla
+      00086E F8 0B            [12] 1780 	ldhl	sp,	#11
+      000870 77               [ 8] 1781 	ld	(hl), a
+      000871 F8 11            [12] 1782 	ldhl	sp,	#17
+      000873 2A               [ 8] 1783 	ld	a, (hl+)
+      000874 B7               [ 4] 1784 	or	a, a
+      000875 B6               [ 8] 1785 	or	a, (hl)
+      000876 3E 01            [ 8] 1786 	ld	a, #0x01
+      000878 28 01            [12] 1787 	jr	Z, 00260$
+      00087A AF               [ 4] 1788 	xor	a, a
+      00087B                       1789 00260$:
+      00087B F8 0C            [12] 1790 	ldhl	sp,	#12
+      00087D 32               [ 8] 1791 	ld	(hl-), a
+      00087E 2A               [ 8] 1792 	ld	a, (hl+)
+      00087F A6               [ 8] 1793 	and	a, (hl)
+      000880 23               [ 8] 1794 	inc	hl
+      000881 77               [ 8] 1795 	ld	(hl), a
+      000882 7E               [ 8] 1796 	ld	a, (hl)
+      000883 B7               [ 4] 1797 	or	a, a
+      000884 28 09            [12] 1798 	jr	Z, 00116$
+      000886 01 01 00         [12] 1799 	ld	bc, #0x0001
+      000889 11r43r00         [12] 1800 	ld	de, #_shipGraphic
+      00088C CDr00r00         [24] 1801 	call	_setFrame
+      00088F                       1802 00116$:
+                                   1803 ;..\modes\explorationmode.c:227: if(x == 0 & y > 0)setFrame(&shipGraphic, 2);
+      00088F F8 11            [12] 1804 	ldhl	sp,	#17
+      000891 AF               [ 4] 1805 	xor	a, a
+      000892 96               [ 8] 1806 	sub	a, (hl)
+      000893 23               [ 8] 1807 	inc	hl
+      000894 3E 00            [ 8] 1808 	ld	a, #0x00
+      000896 9E               [ 8] 1809 	sbc	a, (hl)
+      000897 3E 00            [ 8] 1810 	ld	a, #0x00
+      000899 57               [ 4] 1811 	ld	d, a
+      00089A CB 7E            [12] 1812 	bit	7, (hl)
+      00089C 28 07            [12] 1813 	jr	Z, 00261$
+      00089E CB 7A            [ 8] 1814 	bit	7, d
+      0008A0 20 08            [12] 1815 	jr	NZ, 00262$
+      0008A2 BF               [ 4] 1816 	cp	a, a
+      0008A3 18 05            [12] 1817 	jr	00262$
+      0008A5                       1818 00261$:
+      0008A5 CB 7A            [ 8] 1819 	bit	7, d
+      0008A7 28 01            [12] 1820 	jr	Z, 00262$
+      0008A9 37               [ 4] 1821 	scf
+      0008AA                       1822 00262$:
+      0008AA 3E 00            [ 8] 1823 	ld	a, #0x00
+      0008AC 17               [ 4] 1824 	rla
+      0008AD F8 0D            [12] 1825 	ldhl	sp,	#13
+      0008AF 22               [ 8] 1826 	ld	(hl+), a
+      0008B0 3A               [ 8] 1827 	ld	a, (hl-)
+      0008B1 A6               [ 8] 1828 	and	a,(hl)
+      0008B2 28 09            [12] 1829 	jr	Z, 00118$
+      0008B4 01 02 00         [12] 1830 	ld	bc, #0x0002
+      0008B7 11r43r00         [12] 1831 	ld	de, #_shipGraphic
+      0008BA CDr00r00         [24] 1832 	call	_setFrame
+      0008BD                       1833 00118$:
+                                   1834 ;..\modes\explorationmode.c:228: if(x < 0 & y == 0)setFrame(&shipGraphic, 3);
+      0008BD F8 10            [12] 1835 	ldhl	sp,	#16
+      0008BF 3A               [ 8] 1836 	ld	a, (hl-)
+      0008C0 2B               [ 8] 1837 	dec	hl
+      0008C1 07               [ 4] 1838 	rlca
+      0008C2 E6 01            [ 8] 1839 	and	a,#0x01
+      0008C4 77               [ 8] 1840 	ld	(hl), a
+      0008C5 3A               [ 8] 1841 	ld	a, (hl-)
+      0008C6 2B               [ 8] 1842 	dec	hl
+      0008C7 A6               [ 8] 1843 	and	a,(hl)
+      0008C8 28 09            [12] 1844 	jr	Z, 00120$
+      0008CA 01 03 00         [12] 1845 	ld	bc, #0x0003
+      0008CD 11r43r00         [12] 1846 	ld	de, #_shipGraphic
+      0008D0 CDr00r00         [24] 1847 	call	_setFrame
+      0008D3                       1848 00120$:
+                                   1849 ;..\modes\explorationmode.c:229: if(x < 0 & y < 0)setFrame(&shipGraphic, 4);
+      0008D3 F8 0E            [12] 1850 	ldhl	sp,	#14
+      0008D5 7E               [ 8] 1851 	ld	a, (hl)
+      0008D6 F8 0A            [12] 1852 	ldhl	sp,	#10
+      0008D8 A6               [ 8] 1853 	and	a,(hl)
+      0008D9 28 09            [12] 1854 	jr	Z, 00122$
+      0008DB 01 04 00         [12] 1855 	ld	bc, #0x0004
+      0008DE 11r43r00         [12] 1856 	ld	de, #_shipGraphic
+      0008E1 CDr00r00         [24] 1857 	call	_setFrame
+      0008E4                       1858 00122$:
+                                   1859 ;..\modes\explorationmode.c:230: if(x > 0 & y < 0)setFrame(&shipGraphic, 5);
+      0008E4 F8 0B            [12] 1860 	ldhl	sp,	#11
+      0008E6 3A               [ 8] 1861 	ld	a, (hl-)
+      0008E7 A6               [ 8] 1862 	and	a,(hl)
+      0008E8 28 09            [12] 1863 	jr	Z, 00124$
+      0008EA 01 05 00         [12] 1864 	ld	bc, #0x0005
+      0008ED 11r43r00         [12] 1865 	ld	de, #_shipGraphic
+      0008F0 CDr00r00         [24] 1866 	call	_setFrame
+      0008F3                       1867 00124$:
+                                   1868 ;..\modes\explorationmode.c:231: if(x > 0 & y > 0)setFrame(&shipGraphic, 6);
+      0008F3 F8 0B            [12] 1869 	ldhl	sp,	#11
+      0008F5 2A               [ 8] 1870 	ld	a, (hl+)
+      0008F6 23               [ 8] 1871 	inc	hl
+      0008F7 A6               [ 8] 1872 	and	a,(hl)
+      0008F8 28 09            [12] 1873 	jr	Z, 00126$
+      0008FA 01 06 00         [12] 1874 	ld	bc, #0x0006
+      0008FD 11r43r00         [12] 1875 	ld	de, #_shipGraphic
+      000900 CDr00r00         [24] 1876 	call	_setFrame
+      000903                       1877 00126$:
+                                   1878 ;..\modes\explorationmode.c:232: if(x < 0 & y > 0)setFrame(&shipGraphic, 7);
+      000903 F8 0E            [12] 1879 	ldhl	sp,	#14
+      000905 3A               [ 8] 1880 	ld	a, (hl-)
+      000906 A6               [ 8] 1881 	and	a,(hl)
+      000907 28 09            [12] 1882 	jr	Z, 00128$
+      000909 01 07 00         [12] 1883 	ld	bc, #0x0007
+      00090C 11r43r00         [12] 1884 	ld	de, #_shipGraphic
+      00090F CDr00r00         [24] 1885 	call	_setFrame
+      000912                       1886 00128$:
+                                   1887 ;..\modes\explorationmode.c:234: ship->world.x += x;
+      000912 D1               [12] 1888 	pop	de
+      000913 D5               [16] 1889 	push	de
+      000914 1A               [ 8] 1890 	ld	a, (de)
+      000915 4F               [ 4] 1891 	ld	c, a
+      000916 13               [ 8] 1892 	inc	de
+      000917 1A               [ 8] 1893 	ld	a, (de)
+      000918 47               [ 4] 1894 	ld	b, a
+      000919 F8 0F            [12] 1895 	ldhl	sp,	#15
+      00091B 2A               [ 8] 1896 	ld	a,	(hl+)
+      00091C 66               [ 8] 1897 	ld	h, (hl)
+      00091D 6F               [ 4] 1898 	ld	l, a
+      00091E 09               [ 8] 1899 	add	hl, bc
+      00091F 4D               [ 4] 1900 	ld	c, l
+      000920 44               [ 4] 1901 	ld	b, h
+      000921 E1               [12] 1902 	pop	hl
+      000922 E5               [16] 1903 	push	hl
+      000923 79               [ 4] 1904 	ld	a, c
+      000924 22               [ 8] 1905 	ld	(hl+), a
+      000925 70               [ 8] 1906 	ld	(hl), b
+                                   1907 ;..\modes\explorationmode.c:235: ship->world.y += y;
+      000926 F8 04            [12] 1908 	ldhl	sp,#4
+      000928 2A               [ 8] 1909 	ld	a, (hl+)
+      000929 5F               [ 4] 1910 	ld	e, a
+      00092A 56               [ 8] 1911 	ld	d, (hl)
+      00092B 1A               [ 8] 1912 	ld	a, (de)
+      00092C 4F               [ 4] 1913 	ld	c, a
+      00092D 13               [ 8] 1914 	inc	de
+      00092E 1A               [ 8] 1915 	ld	a, (de)
+      00092F 47               [ 4] 1916 	ld	b, a
+      000930 F8 11            [12] 1917 	ldhl	sp,	#17
+      000932 2A               [ 8] 1918 	ld	a,	(hl+)
+      000933 66               [ 8] 1919 	ld	h, (hl)
+      000934 6F               [ 4] 1920 	ld	l, a
+      000935 09               [ 8] 1921 	add	hl, bc
+      000936 4D               [ 4] 1922 	ld	c, l
+      000937 44               [ 4] 1923 	ld	b, h
+      000938 F8 04            [12] 1924 	ldhl	sp,	#4
+      00093A 2A               [ 8] 1925 	ld	a,	(hl+)
+      00093B 66               [ 8] 1926 	ld	h, (hl)
+      00093C 6F               [ 4] 1927 	ld	l, a
+      00093D 79               [ 4] 1928 	ld	a, c
+      00093E 22               [ 8] 1929 	ld	(hl+), a
+      00093F 70               [ 8] 1930 	ld	(hl), b
+                                   1931 ;..\modes\explorationmode.c:236: if(x != 0 || y != 0) { //if we pushed something store it as the new vector.
+      000940 F8 10            [12] 1932 	ldhl	sp,	#16
+      000942 3A               [ 8] 1933 	ld	a, (hl-)
+      000943 B6               [ 8] 1934 	or	a, (hl)
+      000944 20 06            [12] 1935 	jr	NZ, 00129$
+      000946 F8 12            [12] 1936 	ldhl	sp,	#18
+      000948 3A               [ 8] 1937 	ld	a, (hl-)
+      000949 B6               [ 8] 1938 	or	a, (hl)
+      00094A 28 18            [12] 1939 	jr	Z, 00130$
+      00094C                       1940 00129$:
+                                   1941 ;..\modes\explorationmode.c:237: ship->vector.x = x;
+      00094C F8 06            [12] 1942 	ldhl	sp,#6
+      00094E 2A               [ 8] 1943 	ld	a, (hl+)
+      00094F 5F               [ 4] 1944 	ld	e, a
+      000950 56               [ 8] 1945 	ld	d, (hl)
+      000951 F8 0F            [12] 1946 	ldhl	sp,	#15
+      000953 2A               [ 8] 1947 	ld	a, (hl+)
+      000954 12               [ 8] 1948 	ld	(de), a
+      000955 13               [ 8] 1949 	inc	de
+      000956 7E               [ 8] 1950 	ld	a, (hl)
+      000957 12               [ 8] 1951 	ld	(de), a
+                                   1952 ;..\modes\explorationmode.c:238: ship->vector.y = y;
+      000958 F8 08            [12] 1953 	ldhl	sp,#8
+      00095A 2A               [ 8] 1954 	ld	a, (hl+)
+      00095B 5F               [ 4] 1955 	ld	e, a
+      00095C 56               [ 8] 1956 	ld	d, (hl)
+      00095D F8 11            [12] 1957 	ldhl	sp,	#17
+      00095F 2A               [ 8] 1958 	ld	a, (hl+)
+      000960 12               [ 8] 1959 	ld	(de), a
+      000961 13               [ 8] 1960 	inc	de
+      000962 7E               [ 8] 1961 	ld	a, (hl)
+      000963 12               [ 8] 1962 	ld	(de), a
+      000964                       1963 00130$:
+                                   1964 ;..\modes\explorationmode.c:241: int screen_x = planet1->world.x - ship->world.x + mid_screen.width;
+      000964 F8 02            [12] 1965 	ldhl	sp,#2
+      000966 2A               [ 8] 1966 	ld	a, (hl+)
+      000967 5F               [ 4] 1967 	ld	e, a
+      000968 56               [ 8] 1968 	ld	d, (hl)
+      000969 1A               [ 8] 1969 	ld	a, (de)
+      00096A 4F               [ 4] 1970 	ld	c, a
+      00096B 13               [ 8] 1971 	inc	de
+      00096C 1A               [ 8] 1972 	ld	a, (de)
+      00096D 47               [ 4] 1973 	ld	b, a
+      00096E D1               [12] 1974 	pop	de
+      00096F D5               [16] 1975 	push	de
+      000970 1A               [ 8] 1976 	ld	a, (de)
+      000971 6F               [ 4] 1977 	ld	l, a
+                                   1978 ;	spillPairReg hl
+                                   1979 ;	spillPairReg hl
+      000972 13               [ 8] 1980 	inc	de
+      000973 1A               [ 8] 1981 	ld	a, (de)
+      000974 67               [ 4] 1982 	ld	h, a
+                                   1983 ;	spillPairReg hl
+                                   1984 ;	spillPairReg hl
+      000975 79               [ 4] 1985 	ld	a, c
+      000976 95               [ 4] 1986 	sub	a, l
+      000977 4F               [ 4] 1987 	ld	c, a
+      000978 78               [ 4] 1988 	ld	a, b
+      000979 9C               [ 4] 1989 	sbc	a, h
+      00097A 47               [ 4] 1990 	ld	b, a
+      00097B 11r00r00         [12] 1991 	ld	de, #_mid_screen
+      00097E 1A               [ 8] 1992 	ld	a, (de)
+      00097F F8 0B            [12] 1993 	ldhl	sp,	#11
+      000981 22               [ 8] 1994 	ld	(hl+), a
+      000982 13               [ 8] 1995 	inc	de
+      000983 1A               [ 8] 1996 	ld	a, (de)
+      000984 32               [ 8] 1997 	ld	(hl-), a
+      000985 2A               [ 8] 1998 	ld	a,	(hl+)
+      000986 66               [ 8] 1999 	ld	h, (hl)
+      000987 6F               [ 4] 2000 	ld	l, a
+      000988 09               [ 8] 2001 	add	hl, bc
+      000989 E5               [16] 2002 	push	hl
+      00098A 7D               [ 4] 2003 	ld	a, l
+      00098B F8 0F            [12] 2004 	ldhl	sp,	#15
+      00098D 77               [ 8] 2005 	ld	(hl), a
+      00098E E1               [12] 2006 	pop	hl
+      00098F 7C               [ 4] 2007 	ld	a, h
+      000990 F8 0E            [12] 2008 	ldhl	sp,	#14
+      000992 77               [ 8] 2009 	ld	(hl), a
+                                   2010 ;..\modes\explorationmode.c:242: int screen_y = planet1->world.y - ship->world.y + mid_screen.height;
+      000993 F8 02            [12] 2011 	ldhl	sp,	#2
+      000995 2A               [ 8] 2012 	ld	a, (hl+)
+      000996 66               [ 8] 2013 	ld	h, (hl)
+                                   2014 ;	spillPairReg hl
+                                   2015 ;	spillPairReg hl
+      000997 6F               [ 4] 2016 	ld	l, a
+                                   2017 ;	spillPairReg hl
+                                   2018 ;	spillPairReg hl
+      000998 23               [ 8] 2019 	inc	hl
+      000999 23               [ 8] 2020 	inc	hl
+      00099A 2A               [ 8] 2021 	ld	a, (hl+)
+      00099B 4F               [ 4] 2022 	ld	c, a
+      00099C 46               [ 8] 2023 	ld	b, (hl)
+      00099D F8 04            [12] 2024 	ldhl	sp,#4
+      00099F 2A               [ 8] 2025 	ld	a, (hl+)
+      0009A0 5F               [ 4] 2026 	ld	e, a
+      0009A1 56               [ 8] 2027 	ld	d, (hl)
+      0009A2 1A               [ 8] 2028 	ld	a, (de)
+      0009A3 6F               [ 4] 2029 	ld	l, a
+                                   2030 ;	spillPairReg hl
+                                   2031 ;	spillPairReg hl
+      0009A4 13               [ 8] 2032 	inc	de
+      0009A5 1A               [ 8] 2033 	ld	a, (de)
+      0009A6 67               [ 4] 2034 	ld	h, a
+                                   2035 ;	spillPairReg hl
+                                   2036 ;	spillPairReg hl
+      0009A7 79               [ 4] 2037 	ld	a, c
+      0009A8 95               [ 4] 2038 	sub	a, l
+      0009A9 4F               [ 4] 2039 	ld	c, a
+      0009AA 78               [ 4] 2040 	ld	a, b
+      0009AB 9C               [ 4] 2041 	sbc	a, h
+      0009AC 47               [ 4] 2042 	ld	b, a
+      0009AD 21r02r00         [12] 2043 	ld	hl, #(_mid_screen + 2)
+      0009B0 2A               [ 8] 2044 	ld	a,	(hl+)
+      0009B1 66               [ 8] 2045 	ld	h, (hl)
+                                   2046 ;	spillPairReg hl
+      0009B2 6F               [ 4] 2047 	ld	l, a
+                                   2048 ;	spillPairReg hl
+                                   2049 ;	spillPairReg hl
+      0009B3 09               [ 8] 2050 	add	hl, bc
+                                   2051 ;..\modes\explorationmode.c:243: move(&saturnGraphic, screen_x, screen_y);
+      0009B4 E5               [16] 2052 	push	hl
+      0009B5 F8 0F            [12] 2053 	ldhl	sp,	#15
+      0009B7 2A               [ 8] 2054 	ld	a, (hl+)
+      0009B8 4F               [ 4] 2055 	ld	c, a
+      0009B9 46               [ 8] 2056 	ld	b, (hl)
+      0009BA 11r12r00         [12] 2057 	ld	de, #_saturnGraphic
+      0009BD CDr00r00         [24] 2058 	call	_move
+                                   2059 ;..\modes\explorationmode.c:245: screen_x = photon.world.x - ship->world.x + mid_screen.width;
+      0009C0 21r00r00         [12] 2060 	ld	hl, #_photon
+      0009C3 2A               [ 8] 2061 	ld	a, (hl+)
+      0009C4 4F               [ 4] 2062 	ld	c, a
+      0009C5 46               [ 8] 2063 	ld	b, (hl)
+      0009C6 D1               [12] 2064 	pop	de
+      0009C7 D5               [16] 2065 	push	de
+      0009C8 1A               [ 8] 2066 	ld	a, (de)
+      0009C9 6F               [ 4] 2067 	ld	l, a
+                                   2068 ;	spillPairReg hl
+                                   2069 ;	spillPairReg hl
+      0009CA 13               [ 8] 2070 	inc	de
+      0009CB 1A               [ 8] 2071 	ld	a, (de)
+      0009CC 67               [ 4] 2072 	ld	h, a
+                                   2073 ;	spillPairReg hl
+                                   2074 ;	spillPairReg hl
+      0009CD 79               [ 4] 2075 	ld	a, c
+      0009CE 95               [ 4] 2076 	sub	a, l
+      0009CF 4F               [ 4] 2077 	ld	c, a
+      0009D0 78               [ 4] 2078 	ld	a, b
+      0009D1 9C               [ 4] 2079 	sbc	a, h
+      0009D2 47               [ 4] 2080 	ld	b, a
+      0009D3 11r00r00         [12] 2081 	ld	de, #_mid_screen
+      0009D6 1A               [ 8] 2082 	ld	a, (de)
+      0009D7 F8 0B            [12] 2083 	ldhl	sp,	#11
+      0009D9 22               [ 8] 2084 	ld	(hl+), a
+      0009DA 13               [ 8] 2085 	inc	de
+      0009DB 1A               [ 8] 2086 	ld	a, (de)
+      0009DC 32               [ 8] 2087 	ld	(hl-), a
+      0009DD 2A               [ 8] 2088 	ld	a,	(hl+)
+      0009DE 66               [ 8] 2089 	ld	h, (hl)
+      0009DF 6F               [ 4] 2090 	ld	l, a
+      0009E0 09               [ 8] 2091 	add	hl, bc
+      0009E1 E5               [16] 2092 	push	hl
+      0009E2 7D               [ 4] 2093 	ld	a, l
+      0009E3 F8 0F            [12] 2094 	ldhl	sp,	#15
+      0009E5 77               [ 8] 2095 	ld	(hl), a
+      0009E6 E1               [12] 2096 	pop	hl
+      0009E7 7C               [ 4] 2097 	ld	a, h
+      0009E8 F8 0E            [12] 2098 	ldhl	sp,	#14
+      0009EA 77               [ 8] 2099 	ld	(hl), a
+                                   2100 ;..\modes\explorationmode.c:246: screen_y = photon.world.y - ship->world.y + mid_screen.height;
+      0009EB 21r02r00         [12] 2101 	ld	hl, #_photon + 2
+      0009EE 2A               [ 8] 2102 	ld	a, (hl+)
+      0009EF 4F               [ 4] 2103 	ld	c, a
+      0009F0 46               [ 8] 2104 	ld	b, (hl)
+      0009F1 F8 04            [12] 2105 	ldhl	sp,#4
+      0009F3 2A               [ 8] 2106 	ld	a, (hl+)
+      0009F4 5F               [ 4] 2107 	ld	e, a
+      0009F5 56               [ 8] 2108 	ld	d, (hl)
+      0009F6 1A               [ 8] 2109 	ld	a, (de)
+      0009F7 6F               [ 4] 2110 	ld	l, a
+                                   2111 ;	spillPairReg hl
+                                   2112 ;	spillPairReg hl
+      0009F8 13               [ 8] 2113 	inc	de
+      0009F9 1A               [ 8] 2114 	ld	a, (de)
+      0009FA 67               [ 4] 2115 	ld	h, a
+                                   2116 ;	spillPairReg hl
+                                   2117 ;	spillPairReg hl
+      0009FB 79               [ 4] 2118 	ld	a, c
+      0009FC 95               [ 4] 2119 	sub	a, l
+      0009FD 4F               [ 4] 2120 	ld	c, a
+      0009FE 78               [ 4] 2121 	ld	a, b
+      0009FF 9C               [ 4] 2122 	sbc	a, h
+      000A00 47               [ 4] 2123 	ld	b, a
+      000A01 21r02r00         [12] 2124 	ld	hl, #(_mid_screen + 2)
+      000A04 2A               [ 8] 2125 	ld	a,	(hl+)
+      000A05 66               [ 8] 2126 	ld	h, (hl)
+                                   2127 ;	spillPairReg hl
+      000A06 6F               [ 4] 2128 	ld	l, a
+                                   2129 ;	spillPairReg hl
+                                   2130 ;	spillPairReg hl
+      000A07 09               [ 8] 2131 	add	hl, bc
+      000A08 5D               [ 4] 2132 	ld	e, l
+      000A09 54               [ 4] 2133 	ld	d, h
+                                   2134 ;..\modes\explorationmode.c:247: if(!isOnScreen(&photonGraphic, screen_x, screen_y)) {
+      000A0A D5               [16] 2135 	push	de
+      000A0B D5               [16] 2136 	push	de
+      000A0C F8 11            [12] 2137 	ldhl	sp,	#17
+      000A0E 4E               [ 8] 2138 	ld	c, (hl)
+      000A0F 23               [ 8] 2139 	inc	hl
+      000A10 46               [ 8] 2140 	ld	b, (hl)
+      000A11 11r2Fr00         [12] 2141 	ld	de, #_photonGraphic
+      000A14 CDr00r00         [24] 2142 	call	_isOnScreen
+      000A17 D1               [12] 2143 	pop	de
+      000A18 B7               [ 4] 2144 	or	a, a
+      000A19 20 0D            [12] 2145 	jr	NZ, 00133$
+                                   2146 ;..\modes\explorationmode.c:248: photon.isAlive = false;
+      000A1B 21r04r00         [12] 2147 	ld	hl, #(_photon + 4)
+      000A1E 36 00            [12] 2148 	ld	(hl), #0x00
+                                   2149 ;..\modes\explorationmode.c:249: hide(&photonGraphic);
+      000A20 11r2Fr00         [12] 2150 	ld	de, #_photonGraphic
+      000A23 CDr00r00         [24] 2151 	call	_hide
+      000A26 18 0C            [12] 2152 	jr	00134$
+      000A28                       2153 00133$:
+                                   2154 ;..\modes\explorationmode.c:250: } else 	move(&photonGraphic, screen_x, screen_y);
+      000A28 D5               [16] 2155 	push	de
+      000A29 F8 0F            [12] 2156 	ldhl	sp,	#15
+      000A2B 2A               [ 8] 2157 	ld	a, (hl+)
+      000A2C 4F               [ 4] 2158 	ld	c, a
+      000A2D 46               [ 8] 2159 	ld	b, (hl)
+      000A2E 11r2Fr00         [12] 2160 	ld	de, #_photonGraphic
+      000A31 CDr00r00         [24] 2161 	call	_move
+      000A34                       2162 00134$:
+                                   2163 ;..\modes\explorationmode.c:251: scroll_bkg(x, y);
+      000A34 F8 11            [12] 2164 	ldhl	sp,	#17
+      000A36 3A               [ 8] 2165 	ld	a, (hl-)
+      000A37 2B               [ 8] 2166 	dec	hl
+      000A38 4F               [ 4] 2167 	ld	c, a
+      000A39 46               [ 8] 2168 	ld	b, (hl)
+                                   2169 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1392: SCX_REG+=x, SCY_REG+=y;
+      000A3A F0r00            [12] 2170 	ldh	a, (_SCX_REG + 0)
+      000A3C 80               [ 4] 2171 	add	a, b
+      000A3D E0r00            [12] 2172 	ldh	(_SCX_REG + 0), a
+      000A3F F0r00            [12] 2173 	ldh	a, (_SCY_REG + 0)
+      000A41 81               [ 4] 2174 	add	a, c
+      000A42 E0r00            [12] 2175 	ldh	(_SCY_REG + 0), a
+                                   2176 ;..\modes\explorationmode.c:251: scroll_bkg(x, y);
+                                   2177 ;..\modes\explorationmode.c:252: }
+      000A44 E8 13            [16] 2178 	add	sp, #19
+      000A46 C9               [16] 2179 	ret
+                                   2180 	.area _CODE
+                                   2181 	.area _INITIALIZER
+      000000                       2182 __xinit__mid_screen:
+      000000 54 00                 2183 	.dw #0x0054
+      000002 54 00                 2184 	.dw #0x0054
+                                   2185 	.area _CABS (ABS)

@@ -1,0 +1,69 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy)                  Page 1
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000000 L
+  0 _ExplorationMode_init                                          00043F GR
+  0 _ExplorationMode_processInput                                  000741 GR
+  0 _ExplorationMode_update                                        0005AA GR
+    _LCDC_REG                                                      ****** GX
+    _SCX_REG                                                       ****** GX
+    _SCY_REG                                                       ****** GX
+    ___memcpy                                                      ****** GX
+    __modsint                                                      ****** GX
+  7 __xinit__mid_screen                                            000000 R
+    _abs                                                           ****** GX
+  1 _asteroid                                                      000009 GR
+  1 _asteroidGraphic                                               000057 GR
+    _asteroid_tiles                                                ****** GX
+    _bckground_map                                                 ****** GX
+    _createPalette                                                 ****** GX
+    _ctor                                                          ****** GX
+  0 _do_explosion                                                  000000 GR
+    _enterprise_tiles                                              ****** GX
+  1 _explosion                                                     000026 GR
+  1 _explosionGraphic                                              00006B GR
+    _explosion_tiles                                               ****** GX
+    _gameobjects                                                   ****** GX
+    _hide                                                          ****** GX
+    _isOnScreen                                                    ****** GX
+  0 _manage_asteroid                                               000098 GR
+  2 _mid_screen                                                    000000 GR
+    _move                                                          ****** GX
+  1 _photon                                                        000000 GR
+  1 _photonGraphic                                                 00002F GR
+    _photon_tiles                                                  ****** GX
+    _rand                                                          ****** GX
+  1 _saturnGraphic                                                 000012 GR
+    _saturn_tiles                                                  ****** GX
+    _setFrame                                                      ****** GX
+    _setPalette                                                    ****** GX
+    _set_bkg_data                                                  ****** GX
+    _set_bkg_palette                                               ****** GX
+    _set_bkg_tiles                                                 ****** GX
+  1 _shipGraphic                                                   000043 GR
+    _show                                                          ****** GX
+    _space1_tile                                                   ****** GX
+  0 _space_pallette                                                000021 GR
+    _sprites_reset                                                 ****** GX
+  0 _to_screen                                                     000029 GR
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy)                  Page 2
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size    A47   flags    0
+   1 _DATA                                      size     7F   flags    0
+   2 _INITIALIZED                               size      4   flags    0
+   3 _DABS                                      size      0   flags    8
+   4 _HOME                                      size      0   flags    0
+   5 _GSINIT                                    size      0   flags    0
+   6 _GSFINAL                                   size      0   flags    0
+   7 _INITIALIZER                               size      4   flags    0
+   8 _CABS                                      size      0   flags    8
+

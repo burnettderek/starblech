@@ -1,0 +1,285 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler 
+                                      3 ; Version 4.3.2 #14228 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module main
+                                      6 	.optsdcc -msm83
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _main
+                                     12 	.globl _init_game
+                                     13 	.globl _gameobjects
+                                     14 	.globl _ExplorationMode_processInput
+                                     15 	.globl _ExplorationMode_update
+                                     16 	.globl _ExplorationMode_init
+                                     17 	.globl _Hud_processInput
+                                     18 	.globl _Hud_drawScreen
+                                     19 	.globl _Hud_init
+                                     20 	.globl _initrand
+                                     21 	.globl _wait_vbl_done
+                                     22 	.globl _joypad
+                                     23 	.globl _joypadCurrent
+                                     24 	.globl _gameState
+                                     25 	.globl _explorationMode
+                                     26 	.globl _hud
+                                     27 ;--------------------------------------------------------
+                                     28 ; special function registers
+                                     29 ;--------------------------------------------------------
+                                     30 ;--------------------------------------------------------
+                                     31 ; ram data
+                                     32 ;--------------------------------------------------------
+                                     33 	.area _DATA
+      000000                         34 _hud::
+      000000                         35 	.ds 6
+      000006                         36 _explorationMode::
+      000006                         37 	.ds 2
+                                     38 ;--------------------------------------------------------
+                                     39 ; ram data
+                                     40 ;--------------------------------------------------------
+                                     41 	.area _INITIALIZED
+      000000                         42 _gameState::
+      000000                         43 	.ds 2
+      000002                         44 _joypadCurrent::
+      000002                         45 	.ds 1
+                                     46 ;--------------------------------------------------------
+                                     47 ; absolute external ram data
+                                     48 ;--------------------------------------------------------
+                                     49 	.area _DABS (ABS)
+                                     50 ;--------------------------------------------------------
+                                     51 ; global & static initialisations
+                                     52 ;--------------------------------------------------------
+                                     53 	.area _HOME
+                                     54 	.area _GSINIT
+                                     55 	.area _GSFINAL
+                                     56 	.area _GSINIT
+                                     57 ;--------------------------------------------------------
+                                     58 ; Home
+                                     59 ;--------------------------------------------------------
+                                     60 	.area _HOME
+                                     61 	.area _HOME
+                                     62 ;--------------------------------------------------------
+                                     63 ; code
+                                     64 ;--------------------------------------------------------
+                                     65 	.area _CODE
+                                     66 ;..\main.c:18: void init_game() {
+                                     67 ;	---------------------------------
+                                     68 ; Function init_game
+                                     69 ; ---------------------------------
+      000000                         70 _init_game::
+                                     71 ;..\main.c:19: initrand(DIV_REG);
+      000000 F0r00            [12]   72 	ldh	a, (_DIV_REG + 0)
+      000002 06 00            [ 8]   73 	ld	b, #0x00
+      000004 4F               [ 4]   74 	ld	c, a
+      000005 C5               [16]   75 	push	bc
+      000006 CDr00r00         [24]   76 	call	_initrand
+      000009 E1               [12]   77 	pop	hl
+                                     78 ;..\main.c:20: struct GameObject* ship = gameobjects(GO_SHIP);
+      00000A 11 00 00         [12]   79 	ld	de, #0x0000
+      00000D CDr00r00         [24]   80 	call	_gameobjects
+                                     81 ;..\main.c:21: ship->world.x = 0;
+      000010 69               [ 4]   82 	ld	l, c
+      000011 60               [ 4]   83 	ld	h, b
+      000012 AF               [ 4]   84 	xor	a, a
+      000013 22               [ 8]   85 	ld	(hl+), a
+      000014 77               [ 8]   86 	ld	(hl), a
+                                     87 ;..\main.c:22: ship->world.y = 0;
+      000015 59               [ 4]   88 	ld	e, c
+      000016 50               [ 4]   89 	ld	d, b
+      000017 13               [ 8]   90 	inc	de
+      000018 13               [ 8]   91 	inc	de
+      000019 AF               [ 4]   92 	xor	a, a
+      00001A 12               [ 8]   93 	ld	(de), a
+      00001B 13               [ 8]   94 	inc	de
+      00001C 12               [ 8]   95 	ld	(de), a
+                                     96 ;..\main.c:23: ship->vector.x = 0;
+      00001D 21 05 00         [12]   97 	ld	hl, #0x0005
+      000020 09               [ 8]   98 	add	hl, bc
+      000021 AF               [ 4]   99 	xor	a, a
+      000022 22               [ 8]  100 	ld	(hl+), a
+      000023 77               [ 8]  101 	ld	(hl), a
+                                    102 ;..\main.c:24: ship->vector.y = 1;
+      000024 21 07 00         [12]  103 	ld	hl, #0x0007
+      000027 09               [ 8]  104 	add	hl, bc
+      000028 3E 01            [ 8]  105 	ld	a, #0x01
+      00002A 22               [ 8]  106 	ld	(hl+), a
+                                    107 ;..\main.c:26: struct GameObject* planet1 = gameobjects(GO_PLANET1);
+      00002B 11 01 00         [12]  108 	ld	de, #0x0001
+      00002E 72               [ 8]  109 	ld	(hl), d
+      00002F CDr00r00         [24]  110 	call	_gameobjects
+                                    111 ;..\main.c:27: planet1->world.x = -64;
+      000032 69               [ 4]  112 	ld	l, c
+      000033 60               [ 4]  113 	ld	h, b
+      000034 3E C0            [ 8]  114 	ld	a, #0xc0
+      000036 22               [ 8]  115 	ld	(hl+), a
+      000037 36 FF            [12]  116 	ld	(hl), #0xff
+                                    117 ;..\main.c:28: planet1->world.y = -64;
+      000039 03               [ 8]  118 	inc	bc
+      00003A 03               [ 8]  119 	inc	bc
+      00003B 3E C0            [ 8]  120 	ld	a, #0xc0
+      00003D 02               [ 8]  121 	ld	(bc), a
+      00003E 03               [ 8]  122 	inc	bc
+      00003F 3E FF            [ 8]  123 	ld	a, #0xff
+      000041 02               [ 8]  124 	ld	(bc), a
+                                    125 ;..\main.c:30: }
+      000042 C9               [16]  126 	ret
+                                    127 ;..\main.c:32: void main(void)
+                                    128 ;	---------------------------------
+                                    129 ; Function main
+                                    130 ; ---------------------------------
+      000043                        131 _main::
+                                    132 ;..\main.c:34: DISPLAY_ON;
+      000043 F0r00            [12]  133 	ldh	a, (_LCDC_REG + 0)
+      000045 F6 80            [ 8]  134 	or	a, #0x80
+      000047 E0r00            [12]  135 	ldh	(_LCDC_REG + 0), a
+                                    136 ;..\main.c:35: init_game();
+      000049 CDr00r00         [24]  137 	call	_init_game
+                                    138 ;..\main.c:37: ExplorationMode_init(&explorationMode);
+      00004C 11r06r00         [12]  139 	ld	de, #_explorationMode
+      00004F CDr00r00         [24]  140 	call	_ExplorationMode_init
+                                    141 ;..\main.c:38: int wait = 0;
+      000052 01 00 00         [12]  142 	ld	bc, #0x0000
+                                    143 ;..\main.c:40: while(1) {
+      000055                        144 00117$:
+                                    145 ;..\main.c:41: if(wait > 0)wait++;
+      000055 58               [ 4]  146 	ld	e, b
+      000056 AF               [ 4]  147 	xor	a, a
+      000057 57               [ 4]  148 	ld	d, a
+      000058 B9               [ 4]  149 	cp	a, c
+      000059 98               [ 4]  150 	sbc	a, b
+      00005A CB 7B            [ 8]  151 	bit	7, e
+      00005C 28 07            [12]  152 	jr	Z, 00184$
+      00005E CB 7A            [ 8]  153 	bit	7, d
+      000060 20 08            [12]  154 	jr	NZ, 00185$
+      000062 BF               [ 4]  155 	cp	a, a
+      000063 18 05            [12]  156 	jr	00185$
+      000065                        157 00184$:
+      000065 CB 7A            [ 8]  158 	bit	7, d
+      000067 28 01            [12]  159 	jr	Z, 00185$
+      000069 37               [ 4]  160 	scf
+      00006A                        161 00185$:
+      00006A 30 01            [12]  162 	jr	NC, 00102$
+      00006C 03               [ 8]  163 	inc	bc
+      00006D                        164 00102$:
+                                    165 ;..\main.c:42: if(wait > 50)wait = 0;
+      00006D 58               [ 4]  166 	ld	e, b
+      00006E 16 00            [ 8]  167 	ld	d, #0x00
+      000070 3E 32            [ 8]  168 	ld	a, #0x32
+      000072 B9               [ 4]  169 	cp	a, c
+      000073 3E 00            [ 8]  170 	ld	a, #0x00
+      000075 98               [ 4]  171 	sbc	a, b
+      000076 CB 7B            [ 8]  172 	bit	7, e
+      000078 28 07            [12]  173 	jr	Z, 00186$
+      00007A CB 7A            [ 8]  174 	bit	7, d
+      00007C 20 08            [12]  175 	jr	NZ, 00187$
+      00007E BF               [ 4]  176 	cp	a, a
+      00007F 18 05            [12]  177 	jr	00187$
+      000081                        178 00186$:
+      000081 CB 7A            [ 8]  179 	bit	7, d
+      000083 28 01            [12]  180 	jr	Z, 00187$
+      000085 37               [ 4]  181 	scf
+      000086                        182 00187$:
+      000086 30 03            [12]  183 	jr	NC, 00104$
+      000088 01 00 00         [12]  184 	ld	bc, #0x0000
+      00008B                        185 00104$:
+                                    186 ;..\main.c:43: joypadCurrent=joypad();
+      00008B CDr00r00         [24]  187 	call	_joypad
+      00008E 21r02r00         [12]  188 	ld	hl, #_joypadCurrent
+      000091 77               [ 8]  189 	ld	(hl), a
+                                    190 ;..\main.c:44: if (joypadCurrent & J_START && wait == 0)
+      000092 7E               [ 8]  191 	ld	a, (hl)
+      000093 07               [ 4]  192 	rlca
+      000094 30 3B            [12]  193 	jr	NC, 00110$
+      000096 78               [ 4]  194 	ld	a, b
+      000097 B1               [ 4]  195 	or	a, c
+      000098 20 37            [12]  196 	jr	NZ, 00110$
+                                    197 ;..\main.c:46: switch (gameState)
+      00009A 21r00r00         [12]  198 	ld	hl, #_gameState
+      00009D 2A               [ 8]  199 	ld	a, (hl+)
+      00009E 3D               [ 4]  200 	dec	a
+      00009F B6               [ 8]  201 	or	a, (hl)
+      0000A0 28 0B            [12]  202 	jr	Z, 00105$
+      0000A2 21r00r00         [12]  203 	ld	hl, #_gameState
+      0000A5 2A               [ 8]  204 	ld	a, (hl+)
+      0000A6 D6 03            [ 8]  205 	sub	a, #0x03
+      0000A8 B6               [ 8]  206 	or	a, (hl)
+      0000A9 28 15            [12]  207 	jr	Z, 00106$
+      0000AB 18 24            [12]  208 	jr	00110$
+                                    209 ;..\main.c:48: case EXPLORATION_MODE:
+      0000AD                        210 00105$:
+                                    211 ;..\main.c:49: gameState = HUD_MODE;
+      0000AD 21r00r00         [12]  212 	ld	hl, #_gameState
+      0000B0 3E 03            [ 8]  213 	ld	a, #0x03
+      0000B2 22               [ 8]  214 	ld	(hl+), a
+      0000B3 AF               [ 4]  215 	xor	a, a
+      0000B4 77               [ 8]  216 	ld	(hl), a
+                                    217 ;..\main.c:50: Hud_init(&hud);
+      0000B5 11r00r00         [12]  218 	ld	de, #_hud
+      0000B8 CDr00r00         [24]  219 	call	_Hud_init
+                                    220 ;..\main.c:51: wait = 1;
+      0000BB 01 01 00         [12]  221 	ld	bc, #0x0001
+                                    222 ;..\main.c:52: break;
+      0000BE 18 11            [12]  223 	jr	00110$
+                                    224 ;..\main.c:53: case HUD_MODE:
+      0000C0                        225 00106$:
+                                    226 ;..\main.c:54: gameState = EXPLORATION_MODE;
+      0000C0 21r00r00         [12]  227 	ld	hl, #_gameState
+      0000C3 3E 01            [ 8]  228 	ld	a, #0x01
+      0000C5 22               [ 8]  229 	ld	(hl+), a
+      0000C6 AF               [ 4]  230 	xor	a, a
+      0000C7 77               [ 8]  231 	ld	(hl), a
+                                    232 ;..\main.c:55: ExplorationMode_init(&explorationMode);
+      0000C8 11r06r00         [12]  233 	ld	de, #_explorationMode
+      0000CB CDr00r00         [24]  234 	call	_ExplorationMode_init
+                                    235 ;..\main.c:56: wait = 1;
+      0000CE 01 01 00         [12]  236 	ld	bc, #0x0001
+                                    237 ;..\main.c:60: }
+      0000D1                        238 00110$:
+                                    239 ;..\main.c:63: switch (gameState)
+      0000D1 21r00r00         [12]  240 	ld	hl, #_gameState
+      0000D4 2A               [ 8]  241 	ld	a, (hl+)
+      0000D5 3D               [ 4]  242 	dec	a
+      0000D6 B6               [ 8]  243 	or	a, (hl)
+      0000D7 28 0B            [12]  244 	jr	Z, 00112$
+      0000D9 21r00r00         [12]  245 	ld	hl, #_gameState
+      0000DC 2A               [ 8]  246 	ld	a, (hl+)
+      0000DD D6 03            [ 8]  247 	sub	a, #0x03
+      0000DF B6               [ 8]  248 	or	a, (hl)
+      0000E0 28 15            [12]  249 	jr	Z, 00113$
+      0000E2 18 24            [12]  250 	jr	00115$
+                                    251 ;..\main.c:65: case EXPLORATION_MODE:
+      0000E4                        252 00112$:
+                                    253 ;..\main.c:66: ExplorationMode_update(&explorationMode);
+      0000E4 C5               [16]  254 	push	bc
+      0000E5 11r06r00         [12]  255 	ld	de, #_explorationMode
+      0000E8 CDr00r00         [24]  256 	call	_ExplorationMode_update
+      0000EB FAr02r00         [16]  257 	ld	a, (#_joypadCurrent)
+      0000EE 11r06r00         [12]  258 	ld	de, #_explorationMode
+      0000F1 CDr00r00         [24]  259 	call	_ExplorationMode_processInput
+      0000F4 C1               [12]  260 	pop	bc
+                                    261 ;..\main.c:68: break;
+      0000F5 18 11            [12]  262 	jr	00115$
+                                    263 ;..\main.c:69: case HUD_MODE:
+      0000F7                        264 00113$:
+                                    265 ;..\main.c:70: Hud_processInput(&hud, joypadCurrent);
+      0000F7 C5               [16]  266 	push	bc
+      0000F8 FAr02r00         [16]  267 	ld	a, (#_joypadCurrent)
+      0000FB 11r00r00         [12]  268 	ld	de, #_hud
+      0000FE CDr00r00         [24]  269 	call	_Hud_processInput
+      000101 11r00r00         [12]  270 	ld	de, #_hud
+      000104 CDr00r00         [24]  271 	call	_Hud_drawScreen
+      000107 C1               [12]  272 	pop	bc
+                                    273 ;..\main.c:75: }
+      000108                        274 00115$:
+                                    275 ;..\main.c:87: wait_vbl_done();
+      000108 CDr00r00         [24]  276 	call	_wait_vbl_done
+                                    277 ;..\main.c:89: }
+      00010B C3r55r00         [16]  278 	jp	00117$
+                                    279 	.area _CODE
+                                    280 	.area _INITIALIZER
+      000000                        281 __xinit__gameState:
+      000000 01 00                  282 	.dw #0x0001
+      000002                        283 __xinit__joypadCurrent:
+      000002 00                     284 	.db #0x00	; 0
+                                    285 	.area _CABS (ABS)

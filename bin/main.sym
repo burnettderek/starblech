@@ -1,0 +1,45 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy)                  Page 1
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000000 L
+    _DIV_REG                                                       ****** GX
+    _ExplorationMode_init                                          ****** GX
+    _ExplorationMode_processInput                                  ****** GX
+    _ExplorationMode_update                                        ****** GX
+    _Hud_drawScreen                                                ****** GX
+    _Hud_init                                                      ****** GX
+    _Hud_processInput                                              ****** GX
+    _LCDC_REG                                                      ****** GX
+  7 __xinit__gameState                                             000000 R
+  7 __xinit__joypadCurrent                                         000002 R
+  1 _explorationMode                                               000006 GR
+  2 _gameState                                                     000000 GR
+    _gameobjects                                                   ****** GX
+  1 _hud                                                           000000 GR
+  0 _init_game                                                     000000 GR
+    _initrand                                                      ****** GX
+    _joypad                                                        ****** GX
+  2 _joypadCurrent                                                 000002 GR
+  0 _main                                                          000043 GR
+    _wait_vbl_done                                                 ****** GX
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy)                  Page 2
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size    10E   flags    0
+   1 _DATA                                      size      8   flags    0
+   2 _INITIALIZED                               size      3   flags    0
+   3 _DABS                                      size      0   flags    8
+   4 _HOME                                      size      0   flags    0
+   5 _GSINIT                                    size      0   flags    0
+   6 _GSFINAL                                   size      0   flags    0
+   7 _INITIALIZER                               size      3   flags    0
+   8 _CABS                                      size      0   flags    8
+

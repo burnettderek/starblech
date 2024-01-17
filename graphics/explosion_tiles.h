@@ -1,16 +1,16 @@
 /*
 
- PHOTON.C
+ EXPLOSION_TILES.H
 
- Tile Source File.
+ Include File.
 
  Info:
   Form                 : All tiles as one unit.
   Format               : Gameboy 4 color.
   Compression          : None.
   Counter              : None.
-  Tile size            : 8 x 8
-  Tiles                : 0 to 1
+  Tile size            : 16 x 16
+  Tiles                : 0 to 3
 
   Palette colors       : None.
   SGB Palette          : None.
@@ -22,13 +22,14 @@
 
 */
 
-/* Start of tile array. */
-const unsigned char photon_tiles[] =
-{
-  0x10,0x10,0x00,0x10,0x28,0x38,0x92,0xEE,
-  0x28,0x38,0x00,0x10,0x10,0x10,0x00,0x00,
-  0x00,0x00,0x44,0x44,0x10,0x38,0x38,0x28,
-  0x10,0x38,0x44,0x44,0x00,0x00,0x00,0x00
-};
+#ifndef __explosion_tiles_h_INCLUDE
+#define __explosion_tiles_h_INCLUDE
 
-/* End of PHOTON.C */
+/* Bank of tiles. */
+#define explosion_tilesBank 0
+/* Start of tile array. */
+extern const unsigned char explosion_tiles[];
+
+#endif
+
+/* End of EXPLOSION_TILES.H */
