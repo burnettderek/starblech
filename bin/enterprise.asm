@@ -66,8 +66,8 @@ _enterprise_tiles:
 	.db #0x00	; 0
 	.db #0x09	; 9
 	.db #0x02	; 2
-	.db #0x09	; 9
-	.db #0x06	; 6
+	.db #0x0b	; 11
+	.db #0x04	; 4
 	.db #0x09	; 9
 	.db #0x04	; 4
 	.db #0x08	; 8
@@ -98,8 +98,8 @@ _enterprise_tiles:
 	.db #0x00	; 0
 	.db #0x90	; 144
 	.db #0x40	; 64
-	.db #0x90	; 144
-	.db #0x60	; 96
+	.db #0xd0	; 208
+	.db #0x20	; 32
 	.db #0x90	; 144
 	.db #0x20	; 32
 	.db #0x10	; 16

@@ -36,6 +36,6 @@ void show(struct Sprite* this);
 
 void hide(struct Sprite* this);
 
-void sprites_reset();
+void sprites_reset(void);
 
 #endif

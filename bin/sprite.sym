@@ -12,21 +12,21 @@ Symbol Table
   7 __xinit__palette_index                                         000004 R
   7 __xinit__spriteIndex                                           000000 R
   7 __xinit__tileIndex                                             000002 R
-  0 _createPalette                                                 0004D6 GR
-  1 _createPalette_palette_65536_186                               000000 R
+  0 _createPalette                                                 0004C9 GR
+  1 _createPalette_palette_65536_188                               000000 R
   0 _ctor                                                          000000 GR
-  0 _getVisible                                                    0003B4 GR
-  0 _hide                                                          0005BD GR
+  0 _getVisible                                                    0003AC GR
+  0 _hide                                                          0005B0 GR
   0 _isOnScreen                                                    0000CA GR
-  0 _move                                                          0003BA GR
+  0 _move                                                          0003B2 GR
   2 _palette_index                                                 000004 R
   0 _setFrame                                                      00019B GR
-  0 _setPalette                                                    000516 GR
-  0 _setVisible                                                    0002C1 GR
+  0 _setPalette                                                    000509 GR
+  0 _setVisible                                                    0002B9 GR
     _set_sprite_data                                               ****** GX
     _set_sprite_palette                                            ****** GX
     _shadow_OAM                                                    ****** GX
-  0 _show                                                          0005B2 GR
+  0 _show                                                          0005A5 GR
   2 _spriteIndex                                                   000000 R
   0 _sprites_reset                                                 0000A0 GR
   2 _tileIndex                                                     000002 R
@@ -36,7 +36,7 @@ Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size    5C7   flags    0
+   0 _CODE                                      size    5BA   flags    0
    1 _DATA                                      size      8   flags    0
    2 _INITIALIZED                               size      5   flags    0
    3 _DABS                                      size      0   flags    8

@@ -19,9 +19,10 @@ C:\source\gameboy\gbdk-win64\gbdk\bin\lcc -c -o sensor_tiles.o ..\graphics\senso
 C:\source\gameboy\gbdk-win64\gbdk\bin\lcc -c -o sensor_sprites.o ..\graphics\sensor_sprites.c
 C:\source\gameboy\gbdk-win64\gbdk\bin\lcc -c -o asteroid_tiles.o ..\graphics\asteroid_tiles.c
 C:\source\gameboy\gbdk-win64\gbdk\bin\lcc -c -o explosion_tiles.o ..\graphics\explosion_tiles.c
+C:\source\gameboy\gbdk-win64\gbdk\bin\lcc -c -o gameover.o ..\graphics\gameover.c
 
 REM Compiling .gb files
-C:\source\gameboy\gbdk-win64\gbdk\bin\lcc -Wm-yC -o startrek.gbc main.o gameobject.o explorationmode.o hudmode.o sprite.o space1.o enterprise.o bckground.o terra.o saturn.o photon.o sensor_screen.o sensor_tiles.o sensor_sprites.o asteroid_tiles.o explosion_tiles.o
+C:\source\gameboy\gbdk-win64\gbdk\bin\lcc -Wm-yC -o startrek.gbc main.o gameobject.o explorationmode.o hudmode.o sprite.o space1.o enterprise.o bckground.o terra.o saturn.o photon.o sensor_screen.o sensor_tiles.o sensor_sprites.o asteroid_tiles.o explosion_tiles.o gameover.o
 
 REM Cleaning up
 ::DEL *.asm

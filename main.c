@@ -15,7 +15,7 @@ byte joypadCurrent=0;
 struct Hud hud;
 struct ExplorationMode explorationMode;
 
-void init_game() {
+void init_game(void) {
 	initrand(DIV_REG);
 	struct GameObject* ship = gameobjects(GO_SHIP);
 	ship->world.x = 0;

@@ -28,7 +28,7 @@
                                      28 ; ram data
                                      29 ;--------------------------------------------------------
                                      30 	.area _DATA
-      000000                         31 _createPalette_palette_65536_186:
+      000000                         31 _createPalette_palette_65536_188:
       000000                         32 	.ds 8
                                      33 ;--------------------------------------------------------
                                      34 ; ram data
@@ -195,7 +195,7 @@
       00009C E1               [12]  195 	pop	hl
       00009D E8 06            [16]  196 	add	sp, #6
       00009F E9               [ 4]  197 	jp	(hl)
-                                    198 ;..\sprite.c:21: void sprites_reset() {
+                                    198 ;..\sprite.c:21: void sprites_reset(void) {
                                     199 ;	---------------------------------
                                     200 ; Function sprites_reset
                                     201 ; ---------------------------------
@@ -462,7 +462,7 @@
       0001C4 77               [ 8]  462 	ld	(hl), a
       0001C5 7E               [ 8]  463 	ld	a, (hl)
       0001C6 B7               [ 4]  464 	or	a, a
-      0001C7 C2rBEr02         [16]  465 	jp	NZ,00109$
+      0001C7 C2rB6r02         [16]  465 	jp	NZ,00109$
       0001CA F8 08            [12]  466 	ldhl	sp,#8
       0001CC 2A               [ 8]  467 	ld	a, (hl+)
       0001CD 5F               [ 4]  468 	ld	e, a
@@ -473,7 +473,7 @@
       0001D4 44               [ 4]  473 	ld	b, h
       0001D5 0A               [ 8]  474 	ld	a, (bc)
       0001D6 B7               [ 4]  475 	or	a, a
-      0001D7 CArBEr02         [16]  476 	jp	Z,00109$
+      0001D7 CArB6r02         [16]  476 	jp	Z,00109$
                                     477 ;..\sprite.c:39: int frameOffset = frame * this->tileDimension.width * this->tileDimension.height;
       0001DA F8 08            [12]  478 	ldhl	sp,#8
       0001DC 2A               [ 8]  479 	ld	a, (hl+)
@@ -481,901 +481,880 @@
       0001DE 56               [ 8]  481 	ld	d, (hl)
       0001DF 21 08 00         [12]  482 	ld	hl, #0x0008
       0001E2 19               [ 8]  483 	add	hl, de
-      0001E3 E5               [16]  484 	push	hl
-      0001E4 7D               [ 4]  485 	ld	a, l
-      0001E5 F8 04            [12]  486 	ldhl	sp,	#4
-      0001E7 77               [ 8]  487 	ld	(hl), a
-      0001E8 E1               [12]  488 	pop	hl
-      0001E9 7C               [ 4]  489 	ld	a, h
-      0001EA F8 03            [12]  490 	ldhl	sp,	#3
-      0001EC 32               [ 8]  491 	ld	(hl-), a
-      0001ED 2A               [ 8]  492 	ld	a, (hl+)
-      0001EE 5F               [ 4]  493 	ld	e, a
-      0001EF 2A               [ 8]  494 	ld	a, (hl+)
-      0001F0 57               [ 4]  495 	ld	d, a
-      0001F1 1A               [ 8]  496 	ld	a, (de)
-      0001F2 22               [ 8]  497 	ld	(hl+), a
-      0001F3 13               [ 8]  498 	inc	de
-      0001F4 1A               [ 8]  499 	ld	a, (de)
-      0001F5 32               [ 8]  500 	ld	(hl-), a
-      0001F6 2A               [ 8]  501 	ld	a, (hl+)
-      0001F7 4F               [ 4]  502 	ld	c, a
-      0001F8 2A               [ 8]  503 	ld	a, (hl+)
-      0001F9 47               [ 4]  504 	ld	b, a
-      0001FA 2A               [ 8]  505 	ld	a, (hl+)
-      0001FB 5F               [ 4]  506 	ld	e, a
-      0001FC 56               [ 8]  507 	ld	d, (hl)
-      0001FD CDr00r00         [24]  508 	call	__mulint
-      000200 F8 04            [12]  509 	ldhl	sp,	#4
-      000202 79               [ 4]  510 	ld	a, c
-      000203 22               [ 8]  511 	ld	(hl+), a
-      000204 70               [ 8]  512 	ld	(hl), b
-      000205 F8 02            [12]  513 	ldhl	sp,	#2
-      000207 2A               [ 8]  514 	ld	a, (hl+)
-      000208 66               [ 8]  515 	ld	h, (hl)
+      0001E3 33               [ 8]  484 	inc	sp
+      0001E4 33               [ 8]  485 	inc	sp
+      0001E5 5D               [ 4]  486 	ld	e, l
+      0001E6 54               [ 4]  487 	ld	d, h
+      0001E7 D5               [16]  488 	push	de
+      0001E8 1A               [ 8]  489 	ld	a, (de)
+      0001E9 F8 02            [12]  490 	ldhl	sp,	#2
+      0001EB 22               [ 8]  491 	ld	(hl+), a
+      0001EC 13               [ 8]  492 	inc	de
+      0001ED 1A               [ 8]  493 	ld	a, (de)
+      0001EE 32               [ 8]  494 	ld	(hl-), a
+      0001EF 2A               [ 8]  495 	ld	a, (hl+)
+      0001F0 4F               [ 4]  496 	ld	c, a
+      0001F1 46               [ 8]  497 	ld	b, (hl)
+      0001F2 F8 06            [12]  498 	ldhl	sp,	#6
+      0001F4 2A               [ 8]  499 	ld	a, (hl+)
+      0001F5 5F               [ 4]  500 	ld	e, a
+      0001F6 56               [ 8]  501 	ld	d, (hl)
+      0001F7 CDr00r00         [24]  502 	call	__mulint
+      0001FA F8 04            [12]  503 	ldhl	sp,	#4
+      0001FC 79               [ 4]  504 	ld	a, c
+      0001FD 22               [ 8]  505 	ld	(hl+), a
+      0001FE 70               [ 8]  506 	ld	(hl), b
+      0001FF E1               [12]  507 	pop	hl
+      000200 E5               [16]  508 	push	hl
+      000201 23               [ 8]  509 	inc	hl
+      000202 23               [ 8]  510 	inc	hl
+      000203 2A               [ 8]  511 	ld	a,	(hl+)
+      000204 66               [ 8]  512 	ld	h, (hl)
+                                    513 ;	spillPairReg hl
+      000205 6F               [ 4]  514 	ld	l, a
+                                    515 ;	spillPairReg hl
                                     516 ;	spillPairReg hl
-                                    517 ;	spillPairReg hl
-      000209 6F               [ 4]  518 	ld	l, a
-                                    519 ;	spillPairReg hl
-                                    520 ;	spillPairReg hl
-      00020A 23               [ 8]  521 	inc	hl
-      00020B 23               [ 8]  522 	inc	hl
-      00020C 2A               [ 8]  523 	ld	a,	(hl+)
-      00020D 66               [ 8]  524 	ld	h, (hl)
-                                    525 ;	spillPairReg hl
-      00020E 6F               [ 4]  526 	ld	l, a
-                                    527 ;	spillPairReg hl
-                                    528 ;	spillPairReg hl
-      00020F E5               [16]  529 	push	hl
-      000210 4D               [ 4]  530 	ld	c, l
-      000211 44               [ 4]  531 	ld	b, h
-      000212 E5               [16]  532 	push	hl
-      000213 F8 08            [12]  533 	ldhl	sp,	#8
-      000215 5E               [ 8]  534 	ld	e, (hl)
-      000216 F8 09            [12]  535 	ldhl	sp,	#9
-      000218 56               [ 8]  536 	ld	d, (hl)
-      000219 E1               [12]  537 	pop	hl
-                                    538 ;..\sprite.c:40: int totalTiles = this->tileDimension.height * this->tileDimension.height;
-      00021A CDr00r00         [24]  539 	call	__mulint
-      00021D F8 06            [12]  540 	ldhl	sp,	#6
-      00021F 79               [ 4]  541 	ld	a, c
-      000220 22               [ 8]  542 	ld	(hl+), a
-      000221 70               [ 8]  543 	ld	(hl), b
-      000222 E1               [12]  544 	pop	hl
-      000223 4D               [ 4]  545 	ld	c, l
-      000224 44               [ 4]  546 	ld	b, h
-      000225 5D               [ 4]  547 	ld	e, l
-      000226 54               [ 4]  548 	ld	d, h
-                                    549 ;..\sprite.c:41: set_sprite_data(this->tileIndex, totalTiles, this->data + (frameOffset * 16));
-      000227 CDr00r00         [24]  550 	call	__mulint
-      00022A E1               [12]  551 	pop	hl
-      00022B C5               [16]  552 	push	bc
-      00022C F8 08            [12]  553 	ldhl	sp,#8
-      00022E 2A               [ 8]  554 	ld	a, (hl+)
-      00022F 5F               [ 4]  555 	ld	e, a
-      000230 56               [ 8]  556 	ld	d, (hl)
-      000231 21 12 00         [12]  557 	ld	hl, #0x0012
-      000234 19               [ 8]  558 	add	hl, de
-      000235 2A               [ 8]  559 	ld	a, (hl+)
-      000236 4F               [ 4]  560 	ld	c, a
-      000237 46               [ 8]  561 	ld	b, (hl)
-      000238 F8 04            [12]  562 	ldhl	sp,	#4
-      00023A 2A               [ 8]  563 	ld	a, (hl+)
-      00023B 5E               [ 8]  564 	ld	e, (hl)
-      00023C 87               [ 4]  565 	add	a, a
-      00023D CB 13            [ 8]  566 	rl	e
-      00023F 87               [ 4]  567 	add	a, a
-      000240 CB 13            [ 8]  568 	rl	e
-      000242 87               [ 4]  569 	add	a, a
-      000243 CB 13            [ 8]  570 	rl	e
-      000245 87               [ 4]  571 	add	a, a
-      000246 CB 13            [ 8]  572 	rl	e
-      000248 81               [ 4]  573 	add	a, c
-      000249 4F               [ 4]  574 	ld	c, a
-      00024A 7B               [ 4]  575 	ld	a, e
-      00024B 88               [ 4]  576 	adc	a, b
-      00024C 47               [ 4]  577 	ld	b, a
-      00024D F8 00            [12]  578 	ldhl	sp,	#0
-      00024F 7E               [ 8]  579 	ld	a, (hl)
-      000250 F8 05            [12]  580 	ldhl	sp,	#5
-      000252 77               [ 8]  581 	ld	(hl), a
-      000253 F8 08            [12]  582 	ldhl	sp,#8
-      000255 2A               [ 8]  583 	ld	a, (hl+)
-      000256 5F               [ 4]  584 	ld	e, a
-      000257 56               [ 8]  585 	ld	d, (hl)
-      000258 21 02 00         [12]  586 	ld	hl, #0x0002
-      00025B 19               [ 8]  587 	add	hl, de
-      00025C E5               [16]  588 	push	hl
-      00025D 7D               [ 4]  589 	ld	a, l
-      00025E F8 04            [12]  590 	ldhl	sp,	#4
-      000260 77               [ 8]  591 	ld	(hl), a
-      000261 E1               [12]  592 	pop	hl
-      000262 7C               [ 4]  593 	ld	a, h
-      000263 F8 03            [12]  594 	ldhl	sp,	#3
-      000265 32               [ 8]  595 	ld	(hl-), a
-      000266 2A               [ 8]  596 	ld	a, (hl+)
-      000267 5F               [ 4]  597 	ld	e, a
-      000268 2A               [ 8]  598 	ld	a, (hl+)
-      000269 23               [ 8]  599 	inc	hl
-      00026A 57               [ 4]  600 	ld	d, a
-      00026B 1A               [ 8]  601 	ld	a, (de)
-      00026C C5               [16]  602 	push	bc
-      00026D 66               [ 8]  603 	ld	h, (hl)
-                                    604 ;	spillPairReg hl
-                                    605 ;	spillPairReg hl
-      00026E E5               [16]  606 	push	hl
-      00026F 33               [ 8]  607 	inc	sp
-      000270 F5               [16]  608 	push	af
-      000271 33               [ 8]  609 	inc	sp
-      000272 CDr00r00         [24]  610 	call	_set_sprite_data
-      000275 E8 04            [16]  611 	add	sp, #4
-                                    612 ;..\sprite.c:42: for(int i = 0; i < totalTiles; i++)
-      000277 01 00 00         [12]  613 	ld	bc, #0x0000
-      00027A                        614 00107$:
-      00027A F8 00            [12]  615 	ldhl	sp,	#0
-      00027C 79               [ 4]  616 	ld	a, c
-      00027D 96               [ 8]  617 	sub	a, (hl)
-      00027E 23               [ 8]  618 	inc	hl
-      00027F 78               [ 4]  619 	ld	a, b
-      000280 9E               [ 8]  620 	sbc	a, (hl)
-      000281 78               [ 4]  621 	ld	a, b
-      000282 57               [ 4]  622 	ld	d, a
-      000283 5E               [ 8]  623 	ld	e, (hl)
-      000284 CB 7B            [ 8]  624 	bit	7, e
-      000286 28 07            [12]  625 	jr	Z, 00134$
-      000288 CB 7A            [ 8]  626 	bit	7, d
-      00028A 20 08            [12]  627 	jr	NZ, 00135$
-      00028C BF               [ 4]  628 	cp	a, a
-      00028D 18 05            [12]  629 	jr	00135$
-      00028F                        630 00134$:
-      00028F CB 7A            [ 8]  631 	bit	7, d
-      000291 28 01            [12]  632 	jr	Z, 00135$
-      000293 37               [ 4]  633 	scf
-      000294                        634 00135$:
-      000294 30 28            [12]  635 	jr	NC, 00109$
-                                    636 ;..\sprite.c:44: set_sprite_tile(this->spriteIndex + i, this->tileIndex + i);
-      000296 F8 02            [12]  637 	ldhl	sp,#2
-      000298 2A               [ 8]  638 	ld	a, (hl+)
-      000299 5F               [ 4]  639 	ld	e, a
-      00029A 2A               [ 8]  640 	ld	a, (hl+)
-      00029B 57               [ 4]  641 	ld	d, a
-      00029C 1A               [ 8]  642 	ld	a, (de)
-      00029D 71               [ 8]  643 	ld	(hl), c
-      00029E 86               [ 8]  644 	add	a, (hl)
-      00029F 23               [ 8]  645 	inc	hl
-      0002A0 77               [ 8]  646 	ld	(hl), a
-      0002A1 F8 08            [12]  647 	ldhl	sp,#8
-      0002A3 2A               [ 8]  648 	ld	a, (hl+)
-      0002A4 5F               [ 4]  649 	ld	e, a
-      0002A5 56               [ 8]  650 	ld	d, (hl)
-      0002A6 1A               [ 8]  651 	ld	a, (de)
-      0002A7 F8 04            [12]  652 	ldhl	sp,	#4
-      0002A9 86               [ 8]  653 	add	a, (hl)
-                                    654 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1804: shadow_OAM[nb].tile=tile;
-      0002AA 6F               [ 4]  655 	ld	l, a
-                                    656 ;	spillPairReg hl
-                                    657 ;	spillPairReg hl
-      0002AB 26 00            [ 8]  658 	ld	h, #0x00
-                                    659 ;	spillPairReg hl
-                                    660 ;	spillPairReg hl
-      0002AD 29               [ 8]  661 	add	hl, hl
-      0002AE 29               [ 8]  662 	add	hl, hl
-      0002AF 11r00r00         [12]  663 	ld	de, #_shadow_OAM
-      0002B2 19               [ 8]  664 	add	hl, de
-      0002B3 23               [ 8]  665 	inc	hl
-      0002B4 23               [ 8]  666 	inc	hl
-      0002B5 5D               [ 4]  667 	ld	e, l
-      0002B6 54               [ 4]  668 	ld	d, h
-      0002B7 F8 05            [12]  669 	ldhl	sp,	#5
-      0002B9 7E               [ 8]  670 	ld	a, (hl)
-      0002BA 12               [ 8]  671 	ld	(de), a
-                                    672 ;..\sprite.c:42: for(int i = 0; i < totalTiles; i++)
-      0002BB 03               [ 8]  673 	inc	bc
-      0002BC 18 BC            [12]  674 	jr	00107$
-      0002BE                        675 00109$:
-                                    676 ;..\sprite.c:46: }
-      0002BE E8 0A            [16]  677 	add	sp, #10
-      0002C0 C9               [16]  678 	ret
-                                    679 ;..\sprite.c:48: void setVisible(struct Sprite* this, bool visible) {
-                                    680 ;	---------------------------------
-                                    681 ; Function setVisible
-                                    682 ; ---------------------------------
-      0002C1                        683 _setVisible::
-      0002C1 E8 F7            [16]  684 	add	sp, #-9
-      0002C3 F8 07            [12]  685 	ldhl	sp,	#7
-      0002C5 73               [ 8]  686 	ld	(hl), e
-      0002C6 23               [ 8]  687 	inc	hl
-      0002C7 72               [ 8]  688 	ld	(hl), d
-      0002C8 2B               [ 8]  689 	dec	hl
-      0002C9 2B               [ 8]  690 	dec	hl
-                                    691 ;..\sprite.c:49: if(visible == this->visible) return; // no op;
-      0002CA 22               [ 8]  692 	ld	(hl+), a
-      0002CB 2A               [ 8]  693 	ld	a, (hl+)
-      0002CC 5F               [ 4]  694 	ld	e, a
-      0002CD 56               [ 8]  695 	ld	d, (hl)
-      0002CE 21 10 00         [12]  696 	ld	hl, #0x0010
-      0002D1 19               [ 8]  697 	add	hl, de
-      0002D2 4D               [ 4]  698 	ld	c, l
-      0002D3 44               [ 4]  699 	ld	b, h
-      0002D4 0A               [ 8]  700 	ld	a, (bc)
-      0002D5 57               [ 4]  701 	ld	d, a
-      0002D6 F8 06            [12]  702 	ldhl	sp,	#6
-      0002D8 7E               [ 8]  703 	ld	a, (hl)
-      0002D9 92               [ 4]  704 	sub	a, d
-      0002DA CArB1r03         [16]  705 	jp	Z,00116$
-                                    706 ;..\sprite.c:50: this->visible = visible;
-      0002DD F8 06            [12]  707 	ldhl	sp,	#6
-                                    708 ;..\sprite.c:51: int totalTiles = this->tileDimension.width * this->tileDimension.height;
-      0002DF 2A               [ 8]  709 	ld	a, (hl+)
-      0002E0 02               [ 8]  710 	ld	(bc), a
-      0002E1 2A               [ 8]  711 	ld	a, (hl+)
-      0002E2 5F               [ 4]  712 	ld	e, a
-      0002E3 56               [ 8]  713 	ld	d, (hl)
-      0002E4 21 08 00         [12]  714 	ld	hl, #0x0008
-      0002E7 19               [ 8]  715 	add	hl, de
-      0002E8 4D               [ 4]  716 	ld	c, l
-      0002E9 44               [ 4]  717 	ld	b, h
-      0002EA 59               [ 4]  718 	ld	e, c
-      0002EB 50               [ 4]  719 	ld	d, b
-      0002EC 1A               [ 8]  720 	ld	a, (de)
-      0002ED F8 04            [12]  721 	ldhl	sp,	#4
-      0002EF 22               [ 8]  722 	ld	(hl+), a
-      0002F0 13               [ 8]  723 	inc	de
-      0002F1 1A               [ 8]  724 	ld	a, (de)
-      0002F2 77               [ 8]  725 	ld	(hl), a
-      0002F3 69               [ 4]  726 	ld	l, c
-      0002F4 60               [ 4]  727 	ld	h, b
-      0002F5 23               [ 8]  728 	inc	hl
-      0002F6 23               [ 8]  729 	inc	hl
-      0002F7 2A               [ 8]  730 	ld	a, (hl+)
-      0002F8 4F               [ 4]  731 	ld	c, a
-      0002F9 46               [ 8]  732 	ld	b, (hl)
-      0002FA F8 04            [12]  733 	ldhl	sp,	#4
-      0002FC 2A               [ 8]  734 	ld	a, (hl+)
-      0002FD 5F               [ 4]  735 	ld	e, a
-      0002FE 56               [ 8]  736 	ld	d, (hl)
-                                    737 ;..\sprite.c:52: if(!visible) {
-      0002FF CDr00r00         [24]  738 	call	__mulint
-      000302 E1               [12]  739 	pop	hl
-      000303 C5               [16]  740 	push	bc
-      000304 F8 06            [12]  741 	ldhl	sp,	#6
-      000306 7E               [ 8]  742 	ld	a, (hl)
-      000307 B7               [ 4]  743 	or	a, a
-      000308 20 4D            [12]  744 	jr	NZ, 00123$
-                                    745 ;..\sprite.c:54: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
-      00030A 23               [ 8]  746 	inc	hl
-      00030B 2A               [ 8]  747 	ld	a, (hl+)
-      00030C 5F               [ 4]  748 	ld	e, a
-      00030D 56               [ 8]  749 	ld	d, (hl)
-      00030E 1A               [ 8]  750 	ld	a, (de)
-      00030F F8 04            [12]  751 	ldhl	sp,	#4
-      000311 22               [ 8]  752 	ld	(hl+), a
-      000312 13               [ 8]  753 	inc	de
-      000313 1A               [ 8]  754 	ld	a, (de)
-      000314 77               [ 8]  755 	ld	(hl), a
-      000315                        756 00111$:
-      000315 F8 07            [12]  757 	ldhl	sp,#7
-      000317 2A               [ 8]  758 	ld	a, (hl+)
-      000318 5F               [ 4]  759 	ld	e, a
-      000319 56               [ 8]  760 	ld	d, (hl)
-      00031A 1A               [ 8]  761 	ld	a, (de)
-      00031B 4F               [ 4]  762 	ld	c, a
-      00031C 13               [ 8]  763 	inc	de
-      00031D 1A               [ 8]  764 	ld	a, (de)
-      00031E 47               [ 4]  765 	ld	b, a
-      00031F E1               [12]  766 	pop	hl
-      000320 E5               [16]  767 	push	hl
-      000321 09               [ 8]  768 	add	hl, bc
-      000322 4D               [ 4]  769 	ld	c, l
-      000323 44               [ 4]  770 	ld	b, h
-      000324 F8 04            [12]  771 	ldhl	sp,	#4
-      000326 2A               [ 8]  772 	ld	a, (hl+)
-      000327 91               [ 4]  773 	sub	a, c
-      000328 7E               [ 8]  774 	ld	a, (hl)
-      000329 98               [ 4]  775 	sbc	a, b
-      00032A 56               [ 8]  776 	ld	d, (hl)
-      00032B 78               [ 4]  777 	ld	a, b
-      00032C 5F               [ 4]  778 	ld	e, a
-      00032D CB 7B            [ 8]  779 	bit	7, e
-      00032F 28 07            [12]  780 	jr	Z, 00164$
-      000331 CB 7A            [ 8]  781 	bit	7, d
-      000333 20 08            [12]  782 	jr	NZ, 00165$
-      000335 BF               [ 4]  783 	cp	a, a
-      000336 18 05            [12]  784 	jr	00165$
-      000338                        785 00164$:
-      000338 CB 7A            [ 8]  786 	bit	7, d
-      00033A 28 01            [12]  787 	jr	Z, 00165$
-      00033C 37               [ 4]  788 	scf
-      00033D                        789 00165$:
-      00033D 30 72            [12]  790 	jr	NC, 00116$
-                                    791 ;..\sprite.c:55: set_sprite_tile(i, 0);
-      00033F F8 04            [12]  792 	ldhl	sp,	#4
-                                    793 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1804: shadow_OAM[nb].tile=tile;
-      000341 6E               [ 8]  794 	ld	l, (hl)
-      000342 01r00r00         [12]  795 	ld	bc, #_shadow_OAM+0
-                                    796 ;	spillPairReg hl
-                                    797 ;	spillPairReg hl
-      000345 26 00            [ 8]  798 	ld	h, #0x00
-                                    799 ;	spillPairReg hl
-                                    800 ;	spillPairReg hl
-      000347 29               [ 8]  801 	add	hl, hl
-      000348 29               [ 8]  802 	add	hl, hl
-      000349 09               [ 8]  803 	add	hl, bc
-      00034A 23               [ 8]  804 	inc	hl
-      00034B 23               [ 8]  805 	inc	hl
-      00034C 36 00            [12]  806 	ld	(hl), #0x00
-                                    807 ;..\sprite.c:54: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
-      00034E F8 04            [12]  808 	ldhl	sp,	#4
-      000350 34               [12]  809 	inc	(hl)
-      000351 20 C2            [12]  810 	jr	NZ, 00111$
-      000353 23               [ 8]  811 	inc	hl
-      000354 34               [12]  812 	inc	(hl)
-      000355 18 BE            [12]  813 	jr	00111$
-                                    814 ;..\sprite.c:59: for(int i = 0; i < totalTiles; i++)
-      000357                        815 00123$:
-      000357 F8 07            [12]  816 	ldhl	sp,#7
-      000359 2A               [ 8]  817 	ld	a, (hl+)
-      00035A 5F               [ 4]  818 	ld	e, a
-      00035B 56               [ 8]  819 	ld	d, (hl)
-      00035C 21 02 00         [12]  820 	ld	hl, #0x0002
-      00035F 19               [ 8]  821 	add	hl, de
-      000360 E5               [16]  822 	push	hl
-      000361 7D               [ 4]  823 	ld	a, l
-      000362 F8 04            [12]  824 	ldhl	sp,	#4
-      000364 77               [ 8]  825 	ld	(hl), a
-      000365 E1               [12]  826 	pop	hl
-      000366 7C               [ 4]  827 	ld	a, h
-      000367 F8 03            [12]  828 	ldhl	sp,	#3
-      000369 77               [ 8]  829 	ld	(hl), a
-      00036A 01 00 00         [12]  830 	ld	bc, #0x0000
-      00036D                        831 00114$:
-      00036D F8 00            [12]  832 	ldhl	sp,	#0
-      00036F 79               [ 4]  833 	ld	a, c
-      000370 96               [ 8]  834 	sub	a, (hl)
-      000371 23               [ 8]  835 	inc	hl
-      000372 78               [ 4]  836 	ld	a, b
-      000373 9E               [ 8]  837 	sbc	a, (hl)
-      000374 78               [ 4]  838 	ld	a, b
-      000375 57               [ 4]  839 	ld	d, a
-      000376 5E               [ 8]  840 	ld	e, (hl)
-      000377 CB 7B            [ 8]  841 	bit	7, e
-      000379 28 07            [12]  842 	jr	Z, 00167$
-      00037B CB 7A            [ 8]  843 	bit	7, d
-      00037D 20 08            [12]  844 	jr	NZ, 00168$
-      00037F BF               [ 4]  845 	cp	a, a
-      000380 18 05            [12]  846 	jr	00168$
-      000382                        847 00167$:
-      000382 CB 7A            [ 8]  848 	bit	7, d
-      000384 28 01            [12]  849 	jr	Z, 00168$
-      000386 37               [ 4]  850 	scf
-      000387                        851 00168$:
-      000387 30 28            [12]  852 	jr	NC, 00116$
-                                    853 ;..\sprite.c:61: set_sprite_tile(this->spriteIndex + i, this->tileIndex + i);
-      000389 F8 02            [12]  854 	ldhl	sp,#2
-      00038B 2A               [ 8]  855 	ld	a, (hl+)
-      00038C 5F               [ 4]  856 	ld	e, a
-      00038D 2A               [ 8]  857 	ld	a, (hl+)
-      00038E 57               [ 4]  858 	ld	d, a
-      00038F 1A               [ 8]  859 	ld	a, (de)
-      000390 71               [ 8]  860 	ld	(hl), c
-      000391 86               [ 8]  861 	add	a, (hl)
-      000392 23               [ 8]  862 	inc	hl
-      000393 77               [ 8]  863 	ld	(hl), a
-      000394 F8 07            [12]  864 	ldhl	sp,#7
-      000396 2A               [ 8]  865 	ld	a, (hl+)
-      000397 5F               [ 4]  866 	ld	e, a
-      000398 56               [ 8]  867 	ld	d, (hl)
-      000399 1A               [ 8]  868 	ld	a, (de)
-      00039A F8 04            [12]  869 	ldhl	sp,	#4
-      00039C 86               [ 8]  870 	add	a, (hl)
-                                    871 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1804: shadow_OAM[nb].tile=tile;
-      00039D 6F               [ 4]  872 	ld	l, a
-                                    873 ;	spillPairReg hl
-                                    874 ;	spillPairReg hl
-      00039E 26 00            [ 8]  875 	ld	h, #0x00
-                                    876 ;	spillPairReg hl
-                                    877 ;	spillPairReg hl
-      0003A0 29               [ 8]  878 	add	hl, hl
-      0003A1 29               [ 8]  879 	add	hl, hl
-      0003A2 11r00r00         [12]  880 	ld	de, #_shadow_OAM
-      0003A5 19               [ 8]  881 	add	hl, de
-      0003A6 23               [ 8]  882 	inc	hl
-      0003A7 23               [ 8]  883 	inc	hl
-      0003A8 5D               [ 4]  884 	ld	e, l
-      0003A9 54               [ 4]  885 	ld	d, h
-      0003AA F8 05            [12]  886 	ldhl	sp,	#5
-      0003AC 7E               [ 8]  887 	ld	a, (hl)
-      0003AD 12               [ 8]  888 	ld	(de), a
-                                    889 ;..\sprite.c:59: for(int i = 0; i < totalTiles; i++)
-      0003AE 03               [ 8]  890 	inc	bc
-      0003AF 18 BC            [12]  891 	jr	00114$
-      0003B1                        892 00116$:
-                                    893 ;..\sprite.c:64: }
-      0003B1 E8 09            [16]  894 	add	sp, #9
-      0003B3 C9               [16]  895 	ret
-                                    896 ;..\sprite.c:66: bool getVisible(struct Sprite* this) {
-                                    897 ;	---------------------------------
-                                    898 ; Function getVisible
-                                    899 ; ---------------------------------
-      0003B4                        900 _getVisible::
-                                    901 ;..\sprite.c:67: return this->visible;
-      0003B4 21 10 00         [12]  902 	ld	hl, #0x0010
-      0003B7 19               [ 8]  903 	add	hl, de
-      0003B8 7E               [ 8]  904 	ld	a, (hl)
-                                    905 ;..\sprite.c:68: }
-      0003B9 C9               [16]  906 	ret
-                                    907 ;..\sprite.c:70: void move(struct Sprite* this, int screen_x, int screen_y) {
-                                    908 ;	---------------------------------
-                                    909 ; Function move
-                                    910 ; ---------------------------------
-      0003BA                        911 _move::
-      0003BA E8 EF            [16]  912 	add	sp, #-17
-      0003BC F8 0D            [12]  913 	ldhl	sp,	#13
-      0003BE 7B               [ 4]  914 	ld	a, e
-      0003BF 22               [ 8]  915 	ld	(hl+), a
-      0003C0 72               [ 8]  916 	ld	(hl), d
-      0003C1 F8 0B            [12]  917 	ldhl	sp,	#11
-      0003C3 79               [ 4]  918 	ld	a, c
-      0003C4 22               [ 8]  919 	ld	(hl+), a
-                                    920 ;..\sprite.c:72: if(this->hidden == false && isOnScreen(this, screen_x, screen_y)) {
-      0003C5 78               [ 4]  921 	ld	a, b
-      0003C6 22               [ 8]  922 	ld	(hl+), a
-      0003C7 2A               [ 8]  923 	ld	a, (hl+)
-      0003C8 5F               [ 4]  924 	ld	e, a
-      0003C9 56               [ 8]  925 	ld	d, (hl)
-      0003CA 21 11 00         [12]  926 	ld	hl, #0x0011
-      0003CD 19               [ 8]  927 	add	hl, de
-      0003CE 4D               [ 4]  928 	ld	c, l
-      0003CF 44               [ 4]  929 	ld	b, h
-      0003D0 0A               [ 8]  930 	ld	a, (bc)
-      0003D1 B7               [ 4]  931 	or	a, a
-      0003D2 20 21            [12]  932 	jr	NZ, 00102$
-      0003D4 F8 13            [12]  933 	ldhl	sp,	#19
-      0003D6 5E               [ 8]  934 	ld	e, (hl)
-      0003D7 23               [ 8]  935 	inc	hl
-      0003D8 56               [ 8]  936 	ld	d, (hl)
-      0003D9 D5               [16]  937 	push	de
-      0003DA F8 0D            [12]  938 	ldhl	sp,	#13
-      0003DC 4E               [ 8]  939 	ld	c, (hl)
-      0003DD 23               [ 8]  940 	inc	hl
-      0003DE 46               [ 8]  941 	ld	b, (hl)
-      0003DF 23               [ 8]  942 	inc	hl
-      0003E0 5E               [ 8]  943 	ld	e, (hl)
-      0003E1 23               [ 8]  944 	inc	hl
-      0003E2 56               [ 8]  945 	ld	d, (hl)
-      0003E3 CDrCAr00         [24]  946 	call	_isOnScreen
-      0003E6 B7               [ 4]  947 	or	a, a
-      0003E7 28 0C            [12]  948 	jr	Z, 00102$
-                                    949 ;..\sprite.c:73: setVisible(this, true);
-      0003E9 3E 01            [ 8]  950 	ld	a, #0x01
-      0003EB F8 0D            [12]  951 	ldhl	sp,	#13
-      0003ED 5E               [ 8]  952 	ld	e, (hl)
-      0003EE 23               [ 8]  953 	inc	hl
-      0003EF 56               [ 8]  954 	ld	d, (hl)
-      0003F0 CDrC1r02         [24]  955 	call	_setVisible
-      0003F3 18 09            [12]  956 	jr	00121$
-      0003F5                        957 00102$:
-                                    958 ;..\sprite.c:76: setVisible(this, false);
-      0003F5 AF               [ 4]  959 	xor	a, a
-      0003F6 F8 0D            [12]  960 	ldhl	sp,	#13
-      0003F8 5E               [ 8]  961 	ld	e, (hl)
-      0003F9 23               [ 8]  962 	inc	hl
-      0003FA 56               [ 8]  963 	ld	d, (hl)
-      0003FB CDrC1r02         [24]  964 	call	_setVisible
-                                    965 ;..\sprite.c:78: for(int x = 0; x < this->tileDimension.width; x++)
-      0003FE                        966 00121$:
-      0003FE F8 0D            [12]  967 	ldhl	sp,#13
-      000400 2A               [ 8]  968 	ld	a, (hl+)
-      000401 5F               [ 4]  969 	ld	e, a
-      000402 56               [ 8]  970 	ld	d, (hl)
-      000403 21 08 00         [12]  971 	ld	hl, #0x0008
-      000406 19               [ 8]  972 	add	hl, de
-      000407 4D               [ 4]  973 	ld	c, l
-      000408 44               [ 4]  974 	ld	b, h
-      000409 33               [ 8]  975 	inc	sp
-      00040A 33               [ 8]  976 	inc	sp
-      00040B C5               [16]  977 	push	bc
-      00040C 21 02 00         [12]  978 	ld	hl, #0x0002
-      00040F 09               [ 8]  979 	add	hl, bc
-      000410 E5               [16]  980 	push	hl
-      000411 7D               [ 4]  981 	ld	a, l
-      000412 F8 04            [12]  982 	ldhl	sp,	#4
-      000414 77               [ 8]  983 	ld	(hl), a
-      000415 E1               [12]  984 	pop	hl
-      000416 7C               [ 4]  985 	ld	a, h
-      000417 F8 03            [12]  986 	ldhl	sp,	#3
-      000419 22               [ 8]  987 	ld	(hl+), a
-      00041A 79               [ 4]  988 	ld	a, c
-      00041B 22               [ 8]  989 	ld	(hl+), a
-      00041C 70               [ 8]  990 	ld	(hl), b
-      00041D 01 00 00         [12]  991 	ld	bc, #0x0000
-      000420                        992 00112$:
-      000420 F8 04            [12]  993 	ldhl	sp,#4
-      000422 2A               [ 8]  994 	ld	a, (hl+)
-      000423 5F               [ 4]  995 	ld	e, a
-      000424 56               [ 8]  996 	ld	d, (hl)
-      000425 1A               [ 8]  997 	ld	a, (de)
-      000426 6F               [ 4]  998 	ld	l, a
-                                    999 ;	spillPairReg hl
-                                   1000 ;	spillPairReg hl
-      000427 13               [ 8] 1001 	inc	de
-      000428 1A               [ 8] 1002 	ld	a, (de)
-      000429 67               [ 4] 1003 	ld	h, a
-                                   1004 ;	spillPairReg hl
-                                   1005 ;	spillPairReg hl
-      00042A 5C               [ 4] 1006 	ld	e, h
-      00042B 50               [ 4] 1007 	ld	d, b
-      00042C 79               [ 4] 1008 	ld	a, c
-      00042D 95               [ 4] 1009 	sub	a, l
-      00042E 78               [ 4] 1010 	ld	a, b
-      00042F 9C               [ 4] 1011 	sbc	a, h
-      000430 CB 7B            [ 8] 1012 	bit	7, e
-      000432 28 07            [12] 1013 	jr	Z, 00160$
-      000434 CB 7A            [ 8] 1014 	bit	7, d
-      000436 20 08            [12] 1015 	jr	NZ, 00161$
-      000438 BF               [ 4] 1016 	cp	a, a
-      000439 18 05            [12] 1017 	jr	00161$
-      00043B                       1018 00160$:
-      00043B CB 7A            [ 8] 1019 	bit	7, d
-      00043D 28 01            [12] 1020 	jr	Z, 00161$
-      00043F 37               [ 4] 1021 	scf
-      000440                       1022 00161$:
-      000440 D2rD1r04         [16] 1023 	jp	NC, 00114$
-                                   1024 ;..\sprite.c:80: for(int y = 0; y < this->tileDimension.height; y++)
-      000443 AF               [ 4] 1025 	xor	a, a
-      000444 F8 0F            [12] 1026 	ldhl	sp,	#15
-      000446 22               [ 8] 1027 	ld	(hl+), a
-      000447 77               [ 8] 1028 	ld	(hl), a
-      000448                       1029 00109$:
-      000448 F8 02            [12] 1030 	ldhl	sp,#2
-      00044A 2A               [ 8] 1031 	ld	a, (hl+)
-      00044B 5F               [ 4] 1032 	ld	e, a
-      00044C 56               [ 8] 1033 	ld	d, (hl)
-      00044D 1A               [ 8] 1034 	ld	a, (de)
-      00044E F8 09            [12] 1035 	ldhl	sp,	#9
-      000450 22               [ 8] 1036 	ld	(hl+), a
-      000451 13               [ 8] 1037 	inc	de
-      000452 1A               [ 8] 1038 	ld	a, (de)
-      000453 77               [ 8] 1039 	ld	(hl), a
-      000454 F8 0F            [12] 1040 	ldhl	sp,	#15
-      000456 5D               [ 4] 1041 	ld	e, l
-      000457 54               [ 4] 1042 	ld	d, h
-      000458 F8 09            [12] 1043 	ldhl	sp,	#9
-      00045A 1A               [ 8] 1044 	ld	a, (de)
-      00045B 13               [ 8] 1045 	inc	de
-      00045C 96               [ 8] 1046 	sub	a, (hl)
-      00045D 23               [ 8] 1047 	inc	hl
-      00045E 1A               [ 8] 1048 	ld	a, (de)
-      00045F 9E               [ 8] 1049 	sbc	a, (hl)
-      000460 1A               [ 8] 1050 	ld	a, (de)
-      000461 57               [ 4] 1051 	ld	d, a
-      000462 CB 7E            [12] 1052 	bit	7, (hl)
-      000464 28 07            [12] 1053 	jr	Z, 00162$
-      000466 CB 7A            [ 8] 1054 	bit	7, d
-      000468 20 08            [12] 1055 	jr	NZ, 00163$
-      00046A BF               [ 4] 1056 	cp	a, a
-      00046B 18 05            [12] 1057 	jr	00163$
-      00046D                       1058 00162$:
-      00046D CB 7A            [ 8] 1059 	bit	7, d
-      00046F 28 01            [12] 1060 	jr	Z, 00163$
-      000471 37               [ 4] 1061 	scf
-      000472                       1062 00163$:
-      000472 30 59            [12] 1063 	jr	NC, 00113$
-                                   1064 ;..\sprite.c:82: move_sprite(this->spriteIndex + (y + this->tileDimension.width * x), screen_x + x * 8, screen_y + y * 8);
-      000474 F8 13            [12] 1065 	ldhl	sp,	#19
-      000476 5E               [ 8] 1066 	ld	e, (hl)
-      000477 F8 0F            [12] 1067 	ldhl	sp,	#15
-      000479 7E               [ 8] 1068 	ld	a, (hl)
-      00047A F8 06            [12] 1069 	ldhl	sp,	#6
-      00047C 77               [ 8] 1070 	ld	(hl), a
-      00047D 2A               [ 8] 1071 	ld	a, (hl+)
-      00047E 87               [ 4] 1072 	add	a, a
-      00047F 87               [ 4] 1073 	add	a, a
-      000480 87               [ 4] 1074 	add	a, a
-      000481 83               [ 4] 1075 	add	a, e
-      000482 77               [ 8] 1076 	ld	(hl), a
-      000483 F8 0B            [12] 1077 	ldhl	sp,	#11
-      000485 5E               [ 8] 1078 	ld	e, (hl)
-      000486 F8 08            [12] 1079 	ldhl	sp,	#8
-      000488 71               [ 8] 1080 	ld	(hl), c
-      000489 2A               [ 8] 1081 	ld	a, (hl+)
-      00048A 87               [ 4] 1082 	add	a, a
-      00048B 87               [ 4] 1083 	add	a, a
-      00048C 87               [ 4] 1084 	add	a, a
-      00048D 83               [ 4] 1085 	add	a, e
-      00048E 77               [ 8] 1086 	ld	(hl), a
-      00048F F8 0D            [12] 1087 	ldhl	sp,#13
-      000491 2A               [ 8] 1088 	ld	a, (hl+)
-      000492 5F               [ 4] 1089 	ld	e, a
-      000493 56               [ 8] 1090 	ld	d, (hl)
-      000494 1A               [ 8] 1091 	ld	a, (de)
-      000495 F8 0A            [12] 1092 	ldhl	sp,	#10
-      000497 77               [ 8] 1093 	ld	(hl), a
-      000498 D1               [12] 1094 	pop	de
-      000499 D5               [16] 1095 	push	de
-      00049A 1A               [ 8] 1096 	ld	a, (de)
-      00049B 6F               [ 4] 1097 	ld	l, a
-                                   1098 ;	spillPairReg hl
-                                   1099 ;	spillPairReg hl
-      00049C C5               [16] 1100 	push	bc
-      00049D E5               [16] 1101 	push	hl
-      00049E F8 0C            [12] 1102 	ldhl	sp,	#12
-      0004A0 5E               [ 8] 1103 	ld	e, (hl)
-      0004A1 E1               [12] 1104 	pop	hl
-      0004A2 7D               [ 4] 1105 	ld	a, l
-      0004A3 CDr00r00         [24] 1106 	call	__mulschar
-      0004A6 79               [ 4] 1107 	ld	a, c
-      0004A7 C1               [12] 1108 	pop	bc
-      0004A8 F8 06            [12] 1109 	ldhl	sp,	#6
-      0004AA 86               [ 8] 1110 	add	a, (hl)
-      0004AB F8 0A            [12] 1111 	ldhl	sp,	#10
-      0004AD 86               [ 8] 1112 	add	a, (hl)
-      0004AE 5F               [ 4] 1113 	ld	e, a
-                                   1114 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1877: OAM_item_t * itm = &shadow_OAM[nb];
-      0004AF 26 00            [ 8] 1115 	ld	h, #0x00
-                                   1116 ;	spillPairReg hl
-                                   1117 ;	spillPairReg hl
-      0004B1 6B               [ 4] 1118 	ld	l, e
-      0004B2 29               [ 8] 1119 	add	hl, hl
-      0004B3 29               [ 8] 1120 	add	hl, hl
-      0004B4 11r00r00         [12] 1121 	ld	de, #_shadow_OAM
-      0004B7 19               [ 8] 1122 	add	hl, de
-      0004B8 5D               [ 4] 1123 	ld	e, l
-      0004B9 54               [ 4] 1124 	ld	d, h
-                                   1125 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1878: itm->y=y, itm->x=x;
-      0004BA F8 07            [12] 1126 	ldhl	sp,	#7
-      0004BC 2A               [ 8] 1127 	ld	a, (hl+)
-      0004BD 23               [ 8] 1128 	inc	hl
-      0004BE 12               [ 8] 1129 	ld	(de), a
-      0004BF 13               [ 8] 1130 	inc	de
-      0004C0 7E               [ 8] 1131 	ld	a, (hl)
-      0004C1 12               [ 8] 1132 	ld	(de), a
-                                   1133 ;..\sprite.c:80: for(int y = 0; y < this->tileDimension.height; y++)
-      0004C2 F8 0F            [12] 1134 	ldhl	sp,	#15
-      0004C4 34               [12] 1135 	inc	(hl)
-      0004C5 C2r48r04         [16] 1136 	jp	NZ,00109$
-      0004C8 23               [ 8] 1137 	inc	hl
-      0004C9 34               [12] 1138 	inc	(hl)
-      0004CA C3r48r04         [16] 1139 	jp	00109$
-      0004CD                       1140 00113$:
-                                   1141 ;..\sprite.c:78: for(int x = 0; x < this->tileDimension.width; x++)
-      0004CD 03               [ 8] 1142 	inc	bc
-      0004CE C3r20r04         [16] 1143 	jp	00112$
-      0004D1                       1144 00114$:
-                                   1145 ;..\sprite.c:85: }
-      0004D1 E8 11            [16] 1146 	add	sp, #17
-      0004D3 E1               [12] 1147 	pop	hl
-      0004D4 F1               [12] 1148 	pop	af
-      0004D5 E9               [ 4] 1149 	jp	(hl)
-                                   1150 ;..\sprite.c:87: byte createPalette(UWORD first, UWORD second, UWORD third, UWORD fourth) {
-                                   1151 ;	---------------------------------
-                                   1152 ; Function createPalette
-                                   1153 ; ---------------------------------
-      0004D6                       1154 _createPalette::
-      0004D6 C5               [16] 1155 	push	bc
-                                   1156 ;..\sprite.c:89: palette[0] = first;
-      0004D7 01r00r00         [12] 1157 	ld	bc, #_createPalette_palette_65536_186+0
-      0004DA 69               [ 4] 1158 	ld	l, c
-      0004DB 60               [ 4] 1159 	ld	h, b
-      0004DC 7B               [ 4] 1160 	ld	a, e
-      0004DD 22               [ 8] 1161 	ld	(hl+), a
-      0004DE 72               [ 8] 1162 	ld	(hl), d
-                                   1163 ;..\sprite.c:90: palette[1] = second;
-      0004DF 11r02r00         [12] 1164 	ld	de, #(_createPalette_palette_65536_186 + 2)
-      0004E2 F8 00            [12] 1165 	ldhl	sp,	#0
-      0004E4 2A               [ 8] 1166 	ld	a, (hl+)
-      0004E5 12               [ 8] 1167 	ld	(de), a
-      0004E6 13               [ 8] 1168 	inc	de
-      0004E7 7E               [ 8] 1169 	ld	a, (hl)
-      0004E8 12               [ 8] 1170 	ld	(de), a
-                                   1171 ;..\sprite.c:91: palette[2] = third;
-      0004E9 11r04r00         [12] 1172 	ld	de, #(_createPalette_palette_65536_186 + 4)
-      0004EC F8 04            [12] 1173 	ldhl	sp,	#4
-      0004EE 2A               [ 8] 1174 	ld	a, (hl+)
-      0004EF 12               [ 8] 1175 	ld	(de), a
-      0004F0 13               [ 8] 1176 	inc	de
-                                   1177 ;..\sprite.c:92: palette[3] = fourth;
-      0004F1 2A               [ 8] 1178 	ld	a, (hl+)
-      0004F2 12               [ 8] 1179 	ld	(de), a
-      0004F3 11r06r00         [12] 1180 	ld	de, #(_createPalette_palette_65536_186 + 6)
-      0004F6 2A               [ 8] 1181 	ld	a, (hl+)
-      0004F7 12               [ 8] 1182 	ld	(de), a
-      0004F8 13               [ 8] 1183 	inc	de
-      0004F9 7E               [ 8] 1184 	ld	a, (hl)
-      0004FA 12               [ 8] 1185 	ld	(de), a
-                                   1186 ;..\sprite.c:93: set_sprite_palette(palette_index, 1, palette);
-      0004FB C5               [16] 1187 	push	bc
-      0004FC 3E 01            [ 8] 1188 	ld	a, #0x01
-      0004FE F5               [16] 1189 	push	af
-      0004FF 33               [ 8] 1190 	inc	sp
-      000500 FAr04r00         [16] 1191 	ld	a, (#_palette_index)
-      000503 F5               [16] 1192 	push	af
-      000504 33               [ 8] 1193 	inc	sp
-      000505 CDr00r00         [24] 1194 	call	_set_sprite_palette
-      000508 E8 04            [16] 1195 	add	sp, #4
-                                   1196 ;..\sprite.c:94: byte oldIdex = palette_index;
-      00050A 21r04r00         [12] 1197 	ld	hl, #_palette_index
-      00050D 4E               [ 8] 1198 	ld	c, (hl)
-                                   1199 ;..\sprite.c:95: palette_index++;
-      00050E 34               [12] 1200 	inc	(hl)
-                                   1201 ;..\sprite.c:96: return oldIdex;
-      00050F 79               [ 4] 1202 	ld	a, c
-                                   1203 ;..\sprite.c:97: }
-      000510 33               [ 8] 1204 	inc	sp
-      000511 33               [ 8] 1205 	inc	sp
-      000512 E1               [12] 1206 	pop	hl
-      000513 E8 04            [16] 1207 	add	sp, #4
-      000515 E9               [ 4] 1208 	jp	(hl)
-                                   1209 ;..\sprite.c:99: void setPalette(struct Sprite* this, byte paletteIndex) {
-                                   1210 ;	---------------------------------
-                                   1211 ; Function setPalette
-                                   1212 ; ---------------------------------
-      000516                       1213 _setPalette::
-      000516 E8 F9            [16] 1214 	add	sp, #-7
-      000518 F8 03            [12] 1215 	ldhl	sp,	#3
-      00051A 73               [ 8] 1216 	ld	(hl), e
-      00051B 23               [ 8] 1217 	inc	hl
-      00051C 72               [ 8] 1218 	ld	(hl), d
-      00051D 2B               [ 8] 1219 	dec	hl
-      00051E 2B               [ 8] 1220 	dec	hl
-                                   1221 ;..\sprite.c:100: int totalTiles = this->tileDimension.width * this->tileDimension.height * this->frames;
-      00051F 22               [ 8] 1222 	ld	(hl+), a
-      000520 2A               [ 8] 1223 	ld	a, (hl+)
-      000521 5F               [ 4] 1224 	ld	e, a
-      000522 56               [ 8] 1225 	ld	d, (hl)
-      000523 21 08 00         [12] 1226 	ld	hl, #0x0008
-      000526 19               [ 8] 1227 	add	hl, de
-      000527 4D               [ 4] 1228 	ld	c, l
-      000528 44               [ 4] 1229 	ld	b, h
-      000529 59               [ 4] 1230 	ld	e, c
-      00052A 50               [ 4] 1231 	ld	d, b
-      00052B 1A               [ 8] 1232 	ld	a, (de)
-      00052C F8 05            [12] 1233 	ldhl	sp,	#5
-      00052E 22               [ 8] 1234 	ld	(hl+), a
-      00052F 13               [ 8] 1235 	inc	de
-      000530 1A               [ 8] 1236 	ld	a, (de)
-      000531 77               [ 8] 1237 	ld	(hl), a
-      000532 69               [ 4] 1238 	ld	l, c
-      000533 60               [ 4] 1239 	ld	h, b
-      000534 23               [ 8] 1240 	inc	hl
-      000535 23               [ 8] 1241 	inc	hl
-      000536 2A               [ 8] 1242 	ld	a, (hl+)
-      000537 4F               [ 4] 1243 	ld	c, a
-      000538 46               [ 8] 1244 	ld	b, (hl)
-      000539 F8 05            [12] 1245 	ldhl	sp,	#5
-      00053B 2A               [ 8] 1246 	ld	a, (hl+)
-      00053C 5F               [ 4] 1247 	ld	e, a
-      00053D 56               [ 8] 1248 	ld	d, (hl)
-      00053E CDr00r00         [24] 1249 	call	__mulint
-      000541 F8 05            [12] 1250 	ldhl	sp,	#5
-      000543 79               [ 4] 1251 	ld	a, c
-      000544 22               [ 8] 1252 	ld	(hl+), a
-      000545 70               [ 8] 1253 	ld	(hl), b
-      000546 F8 03            [12] 1254 	ldhl	sp,#3
-      000548 2A               [ 8] 1255 	ld	a, (hl+)
-      000549 5F               [ 4] 1256 	ld	e, a
-      00054A 56               [ 8] 1257 	ld	d, (hl)
-      00054B 21 0C 00         [12] 1258 	ld	hl, #0x000c
-      00054E 19               [ 8] 1259 	add	hl, de
-      00054F 2A               [ 8] 1260 	ld	a, (hl+)
-      000550 4F               [ 4] 1261 	ld	c, a
-      000551 46               [ 8] 1262 	ld	b, (hl)
-      000552 F8 05            [12] 1263 	ldhl	sp,	#5
-      000554 2A               [ 8] 1264 	ld	a, (hl+)
-      000555 5F               [ 4] 1265 	ld	e, a
-      000556 56               [ 8] 1266 	ld	d, (hl)
-                                   1267 ;..\sprite.c:101: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
-      000557 CDr00r00         [24] 1268 	call	__mulint
-      00055A E1               [12] 1269 	pop	hl
-      00055B C5               [16] 1270 	push	bc
-      00055C F8 03            [12] 1271 	ldhl	sp,#3
-      00055E 2A               [ 8] 1272 	ld	a, (hl+)
-      00055F 5F               [ 4] 1273 	ld	e, a
-      000560 2A               [ 8] 1274 	ld	a, (hl+)
-      000561 57               [ 4] 1275 	ld	d, a
-      000562 1A               [ 8] 1276 	ld	a, (de)
-      000563 22               [ 8] 1277 	ld	(hl+), a
-      000564 13               [ 8] 1278 	inc	de
-      000565 1A               [ 8] 1279 	ld	a, (de)
-      000566 77               [ 8] 1280 	ld	(hl), a
-      000567                       1281 00104$:
-      000567 F8 03            [12] 1282 	ldhl	sp,#3
-      000569 2A               [ 8] 1283 	ld	a, (hl+)
-      00056A 5F               [ 4] 1284 	ld	e, a
-      00056B 56               [ 8] 1285 	ld	d, (hl)
-      00056C 1A               [ 8] 1286 	ld	a, (de)
-      00056D 4F               [ 4] 1287 	ld	c, a
-      00056E 13               [ 8] 1288 	inc	de
-      00056F 1A               [ 8] 1289 	ld	a, (de)
-      000570 47               [ 4] 1290 	ld	b, a
-      000571 E1               [12] 1291 	pop	hl
-      000572 E5               [16] 1292 	push	hl
-      000573 09               [ 8] 1293 	add	hl, bc
-      000574 4D               [ 4] 1294 	ld	c, l
-      000575 44               [ 4] 1295 	ld	b, h
-      000576 F8 05            [12] 1296 	ldhl	sp,	#5
-      000578 2A               [ 8] 1297 	ld	a, (hl+)
-      000579 91               [ 4] 1298 	sub	a, c
-      00057A 7E               [ 8] 1299 	ld	a, (hl)
-      00057B 98               [ 4] 1300 	sbc	a, b
-      00057C 56               [ 8] 1301 	ld	d, (hl)
-      00057D 78               [ 4] 1302 	ld	a, b
-      00057E 5F               [ 4] 1303 	ld	e, a
-      00057F CB 7B            [ 8] 1304 	bit	7, e
-      000581 28 07            [12] 1305 	jr	Z, 00123$
-      000583 CB 7A            [ 8] 1306 	bit	7, d
-      000585 20 08            [12] 1307 	jr	NZ, 00124$
-      000587 BF               [ 4] 1308 	cp	a, a
-      000588 18 05            [12] 1309 	jr	00124$
-      00058A                       1310 00123$:
-      00058A CB 7A            [ 8] 1311 	bit	7, d
-      00058C 28 01            [12] 1312 	jr	Z, 00124$
-      00058E 37               [ 4] 1313 	scf
-      00058F                       1314 00124$:
-      00058F 30 1E            [12] 1315 	jr	NC, 00106$
-                                   1316 ;..\sprite.c:102: set_sprite_prop(i, paletteIndex);
-      000591 F8 05            [12] 1317 	ldhl	sp,	#5
-      000593 4E               [ 8] 1318 	ld	c, (hl)
-                                   1319 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1850: shadow_OAM[nb].prop=prop;
-      000594 26 00            [ 8] 1320 	ld	h, #0x00
-                                   1321 ;	spillPairReg hl
-                                   1322 ;	spillPairReg hl
-      000596 69               [ 4] 1323 	ld	l, c
-      000597 29               [ 8] 1324 	add	hl, hl
-      000598 29               [ 8] 1325 	add	hl, hl
-      000599 11r00r00         [12] 1326 	ld	de, #_shadow_OAM
-      00059C 19               [ 8] 1327 	add	hl, de
-      00059D 23               [ 8] 1328 	inc	hl
-      00059E 23               [ 8] 1329 	inc	hl
-      00059F 23               [ 8] 1330 	inc	hl
-      0005A0 4D               [ 4] 1331 	ld	c, l
-      0005A1 44               [ 4] 1332 	ld	b, h
-      0005A2 F8 02            [12] 1333 	ldhl	sp,	#2
-      0005A4 7E               [ 8] 1334 	ld	a, (hl)
-      0005A5 02               [ 8] 1335 	ld	(bc), a
-                                   1336 ;..\sprite.c:101: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
-      0005A6 F8 05            [12] 1337 	ldhl	sp,	#5
-      0005A8 34               [12] 1338 	inc	(hl)
-      0005A9 20 BC            [12] 1339 	jr	NZ, 00104$
-      0005AB 23               [ 8] 1340 	inc	hl
-      0005AC 34               [12] 1341 	inc	(hl)
-      0005AD 18 B8            [12] 1342 	jr	00104$
-      0005AF                       1343 00106$:
-                                   1344 ;..\sprite.c:103: }
-      0005AF E8 07            [16] 1345 	add	sp, #7
-      0005B1 C9               [16] 1346 	ret
-                                   1347 ;..\sprite.c:107: void show(struct Sprite* this) {
-                                   1348 ;	---------------------------------
-                                   1349 ; Function show
-                                   1350 ; ---------------------------------
-      0005B2                       1351 _show::
-                                   1352 ;..\sprite.c:108: this->hidden = false;
-      0005B2 21 11 00         [12] 1353 	ld	hl, #0x0011
-      0005B5 19               [ 8] 1354 	add	hl, de
-      0005B6 36 00            [12] 1355 	ld	(hl), #0x00
-                                   1356 ;..\sprite.c:109: setVisible(this, true);
-      0005B8 3E 01            [ 8] 1357 	ld	a, #0x01
-                                   1358 ;..\sprite.c:110: }
-      0005BA C3rC1r02         [16] 1359 	jp	_setVisible
-                                   1360 ;..\sprite.c:112: void hide(struct Sprite* this){
-                                   1361 ;	---------------------------------
-                                   1362 ; Function hide
-                                   1363 ; ---------------------------------
-      0005BD                       1364 _hide::
-                                   1365 ;..\sprite.c:113: this->hidden = true;
-      0005BD 21 11 00         [12] 1366 	ld	hl, #0x0011
-      0005C0 19               [ 8] 1367 	add	hl, de
-      0005C1 36 01            [12] 1368 	ld	(hl), #0x01
-                                   1369 ;..\sprite.c:114: setVisible(this, false);
-      0005C3 AF               [ 4] 1370 	xor	a, a
-                                   1371 ;..\sprite.c:115: }
-      0005C4 C3rC1r02         [16] 1372 	jp	_setVisible
-                                   1373 	.area _CODE
-                                   1374 	.area _INITIALIZER
-      000000                       1375 __xinit__spriteIndex:
-      000000 00 00                 1376 	.dw #0x0000
-      000002                       1377 __xinit__tileIndex:
-      000002 01 00                 1378 	.dw #0x0001
-      000004                       1379 __xinit__palette_index:
-      000004 00                    1380 	.db #0x00	; 0
-                                   1381 	.area _CABS (ABS)
+      000206 E5               [16]  517 	push	hl
+      000207 4D               [ 4]  518 	ld	c, l
+      000208 44               [ 4]  519 	ld	b, h
+      000209 E5               [16]  520 	push	hl
+      00020A F8 08            [12]  521 	ldhl	sp,	#8
+      00020C 5E               [ 8]  522 	ld	e, (hl)
+      00020D F8 09            [12]  523 	ldhl	sp,	#9
+      00020F 56               [ 8]  524 	ld	d, (hl)
+      000210 E1               [12]  525 	pop	hl
+                                    526 ;..\sprite.c:40: int totalTiles = this->tileDimension.width * this->tileDimension.height;
+      000211 CDr00r00         [24]  527 	call	__mulint
+      000214 F8 06            [12]  528 	ldhl	sp,	#6
+      000216 79               [ 4]  529 	ld	a, c
+      000217 22               [ 8]  530 	ld	(hl+), a
+      000218 70               [ 8]  531 	ld	(hl), b
+      000219 C1               [12]  532 	pop	bc
+      00021A F8 02            [12]  533 	ldhl	sp,	#2
+      00021C 2A               [ 8]  534 	ld	a, (hl+)
+      00021D 5F               [ 4]  535 	ld	e, a
+      00021E 56               [ 8]  536 	ld	d, (hl)
+                                    537 ;..\sprite.c:41: set_sprite_data(this->tileIndex, totalTiles, this->data + (frameOffset * 16));
+      00021F CDr00r00         [24]  538 	call	__mulint
+      000222 E1               [12]  539 	pop	hl
+      000223 C5               [16]  540 	push	bc
+      000224 F8 08            [12]  541 	ldhl	sp,#8
+      000226 2A               [ 8]  542 	ld	a, (hl+)
+      000227 5F               [ 4]  543 	ld	e, a
+      000228 56               [ 8]  544 	ld	d, (hl)
+      000229 21 12 00         [12]  545 	ld	hl, #0x0012
+      00022C 19               [ 8]  546 	add	hl, de
+      00022D 2A               [ 8]  547 	ld	a, (hl+)
+      00022E 4F               [ 4]  548 	ld	c, a
+      00022F 46               [ 8]  549 	ld	b, (hl)
+      000230 F8 04            [12]  550 	ldhl	sp,	#4
+      000232 2A               [ 8]  551 	ld	a, (hl+)
+      000233 5E               [ 8]  552 	ld	e, (hl)
+      000234 87               [ 4]  553 	add	a, a
+      000235 CB 13            [ 8]  554 	rl	e
+      000237 87               [ 4]  555 	add	a, a
+      000238 CB 13            [ 8]  556 	rl	e
+      00023A 87               [ 4]  557 	add	a, a
+      00023B CB 13            [ 8]  558 	rl	e
+      00023D 87               [ 4]  559 	add	a, a
+      00023E CB 13            [ 8]  560 	rl	e
+      000240 81               [ 4]  561 	add	a, c
+      000241 4F               [ 4]  562 	ld	c, a
+      000242 7B               [ 4]  563 	ld	a, e
+      000243 88               [ 4]  564 	adc	a, b
+      000244 47               [ 4]  565 	ld	b, a
+      000245 F8 00            [12]  566 	ldhl	sp,	#0
+      000247 7E               [ 8]  567 	ld	a, (hl)
+      000248 F8 05            [12]  568 	ldhl	sp,	#5
+      00024A 77               [ 8]  569 	ld	(hl), a
+      00024B F8 08            [12]  570 	ldhl	sp,#8
+      00024D 2A               [ 8]  571 	ld	a, (hl+)
+      00024E 5F               [ 4]  572 	ld	e, a
+      00024F 56               [ 8]  573 	ld	d, (hl)
+      000250 21 02 00         [12]  574 	ld	hl, #0x0002
+      000253 19               [ 8]  575 	add	hl, de
+      000254 E5               [16]  576 	push	hl
+      000255 7D               [ 4]  577 	ld	a, l
+      000256 F8 04            [12]  578 	ldhl	sp,	#4
+      000258 77               [ 8]  579 	ld	(hl), a
+      000259 E1               [12]  580 	pop	hl
+      00025A 7C               [ 4]  581 	ld	a, h
+      00025B F8 03            [12]  582 	ldhl	sp,	#3
+      00025D 32               [ 8]  583 	ld	(hl-), a
+      00025E 2A               [ 8]  584 	ld	a, (hl+)
+      00025F 5F               [ 4]  585 	ld	e, a
+      000260 2A               [ 8]  586 	ld	a, (hl+)
+      000261 23               [ 8]  587 	inc	hl
+      000262 57               [ 4]  588 	ld	d, a
+      000263 1A               [ 8]  589 	ld	a, (de)
+      000264 C5               [16]  590 	push	bc
+      000265 66               [ 8]  591 	ld	h, (hl)
+                                    592 ;	spillPairReg hl
+                                    593 ;	spillPairReg hl
+      000266 E5               [16]  594 	push	hl
+      000267 33               [ 8]  595 	inc	sp
+      000268 F5               [16]  596 	push	af
+      000269 33               [ 8]  597 	inc	sp
+      00026A CDr00r00         [24]  598 	call	_set_sprite_data
+      00026D E8 04            [16]  599 	add	sp, #4
+                                    600 ;..\sprite.c:42: for(int i = 0; i < totalTiles; i++)
+      00026F 01 00 00         [12]  601 	ld	bc, #0x0000
+      000272                        602 00107$:
+      000272 F8 00            [12]  603 	ldhl	sp,	#0
+      000274 79               [ 4]  604 	ld	a, c
+      000275 96               [ 8]  605 	sub	a, (hl)
+      000276 23               [ 8]  606 	inc	hl
+      000277 78               [ 4]  607 	ld	a, b
+      000278 9E               [ 8]  608 	sbc	a, (hl)
+      000279 78               [ 4]  609 	ld	a, b
+      00027A 57               [ 4]  610 	ld	d, a
+      00027B 5E               [ 8]  611 	ld	e, (hl)
+      00027C CB 7B            [ 8]  612 	bit	7, e
+      00027E 28 07            [12]  613 	jr	Z, 00134$
+      000280 CB 7A            [ 8]  614 	bit	7, d
+      000282 20 08            [12]  615 	jr	NZ, 00135$
+      000284 BF               [ 4]  616 	cp	a, a
+      000285 18 05            [12]  617 	jr	00135$
+      000287                        618 00134$:
+      000287 CB 7A            [ 8]  619 	bit	7, d
+      000289 28 01            [12]  620 	jr	Z, 00135$
+      00028B 37               [ 4]  621 	scf
+      00028C                        622 00135$:
+      00028C 30 28            [12]  623 	jr	NC, 00109$
+                                    624 ;..\sprite.c:44: set_sprite_tile(this->spriteIndex + i, this->tileIndex + i);
+      00028E F8 02            [12]  625 	ldhl	sp,#2
+      000290 2A               [ 8]  626 	ld	a, (hl+)
+      000291 5F               [ 4]  627 	ld	e, a
+      000292 2A               [ 8]  628 	ld	a, (hl+)
+      000293 57               [ 4]  629 	ld	d, a
+      000294 1A               [ 8]  630 	ld	a, (de)
+      000295 71               [ 8]  631 	ld	(hl), c
+      000296 86               [ 8]  632 	add	a, (hl)
+      000297 23               [ 8]  633 	inc	hl
+      000298 77               [ 8]  634 	ld	(hl), a
+      000299 F8 08            [12]  635 	ldhl	sp,#8
+      00029B 2A               [ 8]  636 	ld	a, (hl+)
+      00029C 5F               [ 4]  637 	ld	e, a
+      00029D 56               [ 8]  638 	ld	d, (hl)
+      00029E 1A               [ 8]  639 	ld	a, (de)
+      00029F F8 04            [12]  640 	ldhl	sp,	#4
+      0002A1 86               [ 8]  641 	add	a, (hl)
+                                    642 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1804: shadow_OAM[nb].tile=tile;
+      0002A2 6F               [ 4]  643 	ld	l, a
+                                    644 ;	spillPairReg hl
+                                    645 ;	spillPairReg hl
+      0002A3 26 00            [ 8]  646 	ld	h, #0x00
+                                    647 ;	spillPairReg hl
+                                    648 ;	spillPairReg hl
+      0002A5 29               [ 8]  649 	add	hl, hl
+      0002A6 29               [ 8]  650 	add	hl, hl
+      0002A7 11r00r00         [12]  651 	ld	de, #_shadow_OAM
+      0002AA 19               [ 8]  652 	add	hl, de
+      0002AB 23               [ 8]  653 	inc	hl
+      0002AC 23               [ 8]  654 	inc	hl
+      0002AD 5D               [ 4]  655 	ld	e, l
+      0002AE 54               [ 4]  656 	ld	d, h
+      0002AF F8 05            [12]  657 	ldhl	sp,	#5
+      0002B1 7E               [ 8]  658 	ld	a, (hl)
+      0002B2 12               [ 8]  659 	ld	(de), a
+                                    660 ;..\sprite.c:42: for(int i = 0; i < totalTiles; i++)
+      0002B3 03               [ 8]  661 	inc	bc
+      0002B4 18 BC            [12]  662 	jr	00107$
+      0002B6                        663 00109$:
+                                    664 ;..\sprite.c:46: }
+      0002B6 E8 0A            [16]  665 	add	sp, #10
+      0002B8 C9               [16]  666 	ret
+                                    667 ;..\sprite.c:48: void setVisible(struct Sprite* this, bool visible) {
+                                    668 ;	---------------------------------
+                                    669 ; Function setVisible
+                                    670 ; ---------------------------------
+      0002B9                        671 _setVisible::
+      0002B9 E8 F7            [16]  672 	add	sp, #-9
+      0002BB F8 07            [12]  673 	ldhl	sp,	#7
+      0002BD 73               [ 8]  674 	ld	(hl), e
+      0002BE 23               [ 8]  675 	inc	hl
+      0002BF 72               [ 8]  676 	ld	(hl), d
+      0002C0 2B               [ 8]  677 	dec	hl
+      0002C1 2B               [ 8]  678 	dec	hl
+                                    679 ;..\sprite.c:49: if(visible == this->visible) return; // no op;
+      0002C2 22               [ 8]  680 	ld	(hl+), a
+      0002C3 2A               [ 8]  681 	ld	a, (hl+)
+      0002C4 5F               [ 4]  682 	ld	e, a
+      0002C5 56               [ 8]  683 	ld	d, (hl)
+      0002C6 21 10 00         [12]  684 	ld	hl, #0x0010
+      0002C9 19               [ 8]  685 	add	hl, de
+      0002CA 4D               [ 4]  686 	ld	c, l
+      0002CB 44               [ 4]  687 	ld	b, h
+      0002CC 0A               [ 8]  688 	ld	a, (bc)
+      0002CD 57               [ 4]  689 	ld	d, a
+      0002CE F8 06            [12]  690 	ldhl	sp,	#6
+      0002D0 7E               [ 8]  691 	ld	a, (hl)
+      0002D1 92               [ 4]  692 	sub	a, d
+      0002D2 CArA9r03         [16]  693 	jp	Z,00116$
+                                    694 ;..\sprite.c:50: this->visible = visible;
+      0002D5 F8 06            [12]  695 	ldhl	sp,	#6
+                                    696 ;..\sprite.c:51: int totalTiles = this->tileDimension.width * this->tileDimension.height;
+      0002D7 2A               [ 8]  697 	ld	a, (hl+)
+      0002D8 02               [ 8]  698 	ld	(bc), a
+      0002D9 2A               [ 8]  699 	ld	a, (hl+)
+      0002DA 5F               [ 4]  700 	ld	e, a
+      0002DB 56               [ 8]  701 	ld	d, (hl)
+      0002DC 21 08 00         [12]  702 	ld	hl, #0x0008
+      0002DF 19               [ 8]  703 	add	hl, de
+      0002E0 4D               [ 4]  704 	ld	c, l
+      0002E1 44               [ 4]  705 	ld	b, h
+      0002E2 59               [ 4]  706 	ld	e, c
+      0002E3 50               [ 4]  707 	ld	d, b
+      0002E4 1A               [ 8]  708 	ld	a, (de)
+      0002E5 F8 04            [12]  709 	ldhl	sp,	#4
+      0002E7 22               [ 8]  710 	ld	(hl+), a
+      0002E8 13               [ 8]  711 	inc	de
+      0002E9 1A               [ 8]  712 	ld	a, (de)
+      0002EA 77               [ 8]  713 	ld	(hl), a
+      0002EB 69               [ 4]  714 	ld	l, c
+      0002EC 60               [ 4]  715 	ld	h, b
+      0002ED 23               [ 8]  716 	inc	hl
+      0002EE 23               [ 8]  717 	inc	hl
+      0002EF 2A               [ 8]  718 	ld	a, (hl+)
+      0002F0 4F               [ 4]  719 	ld	c, a
+      0002F1 46               [ 8]  720 	ld	b, (hl)
+      0002F2 F8 04            [12]  721 	ldhl	sp,	#4
+      0002F4 2A               [ 8]  722 	ld	a, (hl+)
+      0002F5 5F               [ 4]  723 	ld	e, a
+      0002F6 56               [ 8]  724 	ld	d, (hl)
+                                    725 ;..\sprite.c:52: if(!visible) {
+      0002F7 CDr00r00         [24]  726 	call	__mulint
+      0002FA E1               [12]  727 	pop	hl
+      0002FB C5               [16]  728 	push	bc
+      0002FC F8 06            [12]  729 	ldhl	sp,	#6
+      0002FE 7E               [ 8]  730 	ld	a, (hl)
+      0002FF B7               [ 4]  731 	or	a, a
+      000300 20 4D            [12]  732 	jr	NZ, 00123$
+                                    733 ;..\sprite.c:54: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
+      000302 23               [ 8]  734 	inc	hl
+      000303 2A               [ 8]  735 	ld	a, (hl+)
+      000304 5F               [ 4]  736 	ld	e, a
+      000305 56               [ 8]  737 	ld	d, (hl)
+      000306 1A               [ 8]  738 	ld	a, (de)
+      000307 F8 04            [12]  739 	ldhl	sp,	#4
+      000309 22               [ 8]  740 	ld	(hl+), a
+      00030A 13               [ 8]  741 	inc	de
+      00030B 1A               [ 8]  742 	ld	a, (de)
+      00030C 77               [ 8]  743 	ld	(hl), a
+      00030D                        744 00111$:
+      00030D F8 07            [12]  745 	ldhl	sp,#7
+      00030F 2A               [ 8]  746 	ld	a, (hl+)
+      000310 5F               [ 4]  747 	ld	e, a
+      000311 56               [ 8]  748 	ld	d, (hl)
+      000312 1A               [ 8]  749 	ld	a, (de)
+      000313 4F               [ 4]  750 	ld	c, a
+      000314 13               [ 8]  751 	inc	de
+      000315 1A               [ 8]  752 	ld	a, (de)
+      000316 47               [ 4]  753 	ld	b, a
+      000317 E1               [12]  754 	pop	hl
+      000318 E5               [16]  755 	push	hl
+      000319 09               [ 8]  756 	add	hl, bc
+      00031A 4D               [ 4]  757 	ld	c, l
+      00031B 44               [ 4]  758 	ld	b, h
+      00031C F8 04            [12]  759 	ldhl	sp,	#4
+      00031E 2A               [ 8]  760 	ld	a, (hl+)
+      00031F 91               [ 4]  761 	sub	a, c
+      000320 7E               [ 8]  762 	ld	a, (hl)
+      000321 98               [ 4]  763 	sbc	a, b
+      000322 56               [ 8]  764 	ld	d, (hl)
+      000323 78               [ 4]  765 	ld	a, b
+      000324 5F               [ 4]  766 	ld	e, a
+      000325 CB 7B            [ 8]  767 	bit	7, e
+      000327 28 07            [12]  768 	jr	Z, 00164$
+      000329 CB 7A            [ 8]  769 	bit	7, d
+      00032B 20 08            [12]  770 	jr	NZ, 00165$
+      00032D BF               [ 4]  771 	cp	a, a
+      00032E 18 05            [12]  772 	jr	00165$
+      000330                        773 00164$:
+      000330 CB 7A            [ 8]  774 	bit	7, d
+      000332 28 01            [12]  775 	jr	Z, 00165$
+      000334 37               [ 4]  776 	scf
+      000335                        777 00165$:
+      000335 30 72            [12]  778 	jr	NC, 00116$
+                                    779 ;..\sprite.c:55: set_sprite_tile(i, 0);
+      000337 F8 04            [12]  780 	ldhl	sp,	#4
+                                    781 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1804: shadow_OAM[nb].tile=tile;
+      000339 6E               [ 8]  782 	ld	l, (hl)
+      00033A 01r00r00         [12]  783 	ld	bc, #_shadow_OAM+0
+                                    784 ;	spillPairReg hl
+                                    785 ;	spillPairReg hl
+      00033D 26 00            [ 8]  786 	ld	h, #0x00
+                                    787 ;	spillPairReg hl
+                                    788 ;	spillPairReg hl
+      00033F 29               [ 8]  789 	add	hl, hl
+      000340 29               [ 8]  790 	add	hl, hl
+      000341 09               [ 8]  791 	add	hl, bc
+      000342 23               [ 8]  792 	inc	hl
+      000343 23               [ 8]  793 	inc	hl
+      000344 36 00            [12]  794 	ld	(hl), #0x00
+                                    795 ;..\sprite.c:54: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
+      000346 F8 04            [12]  796 	ldhl	sp,	#4
+      000348 34               [12]  797 	inc	(hl)
+      000349 20 C2            [12]  798 	jr	NZ, 00111$
+      00034B 23               [ 8]  799 	inc	hl
+      00034C 34               [12]  800 	inc	(hl)
+      00034D 18 BE            [12]  801 	jr	00111$
+                                    802 ;..\sprite.c:59: for(int i = 0; i < totalTiles; i++)
+      00034F                        803 00123$:
+      00034F F8 07            [12]  804 	ldhl	sp,#7
+      000351 2A               [ 8]  805 	ld	a, (hl+)
+      000352 5F               [ 4]  806 	ld	e, a
+      000353 56               [ 8]  807 	ld	d, (hl)
+      000354 21 02 00         [12]  808 	ld	hl, #0x0002
+      000357 19               [ 8]  809 	add	hl, de
+      000358 E5               [16]  810 	push	hl
+      000359 7D               [ 4]  811 	ld	a, l
+      00035A F8 04            [12]  812 	ldhl	sp,	#4
+      00035C 77               [ 8]  813 	ld	(hl), a
+      00035D E1               [12]  814 	pop	hl
+      00035E 7C               [ 4]  815 	ld	a, h
+      00035F F8 03            [12]  816 	ldhl	sp,	#3
+      000361 77               [ 8]  817 	ld	(hl), a
+      000362 01 00 00         [12]  818 	ld	bc, #0x0000
+      000365                        819 00114$:
+      000365 F8 00            [12]  820 	ldhl	sp,	#0
+      000367 79               [ 4]  821 	ld	a, c
+      000368 96               [ 8]  822 	sub	a, (hl)
+      000369 23               [ 8]  823 	inc	hl
+      00036A 78               [ 4]  824 	ld	a, b
+      00036B 9E               [ 8]  825 	sbc	a, (hl)
+      00036C 78               [ 4]  826 	ld	a, b
+      00036D 57               [ 4]  827 	ld	d, a
+      00036E 5E               [ 8]  828 	ld	e, (hl)
+      00036F CB 7B            [ 8]  829 	bit	7, e
+      000371 28 07            [12]  830 	jr	Z, 00167$
+      000373 CB 7A            [ 8]  831 	bit	7, d
+      000375 20 08            [12]  832 	jr	NZ, 00168$
+      000377 BF               [ 4]  833 	cp	a, a
+      000378 18 05            [12]  834 	jr	00168$
+      00037A                        835 00167$:
+      00037A CB 7A            [ 8]  836 	bit	7, d
+      00037C 28 01            [12]  837 	jr	Z, 00168$
+      00037E 37               [ 4]  838 	scf
+      00037F                        839 00168$:
+      00037F 30 28            [12]  840 	jr	NC, 00116$
+                                    841 ;..\sprite.c:61: set_sprite_tile(this->spriteIndex + i, this->tileIndex + i);
+      000381 F8 02            [12]  842 	ldhl	sp,#2
+      000383 2A               [ 8]  843 	ld	a, (hl+)
+      000384 5F               [ 4]  844 	ld	e, a
+      000385 2A               [ 8]  845 	ld	a, (hl+)
+      000386 57               [ 4]  846 	ld	d, a
+      000387 1A               [ 8]  847 	ld	a, (de)
+      000388 71               [ 8]  848 	ld	(hl), c
+      000389 86               [ 8]  849 	add	a, (hl)
+      00038A 23               [ 8]  850 	inc	hl
+      00038B 77               [ 8]  851 	ld	(hl), a
+      00038C F8 07            [12]  852 	ldhl	sp,#7
+      00038E 2A               [ 8]  853 	ld	a, (hl+)
+      00038F 5F               [ 4]  854 	ld	e, a
+      000390 56               [ 8]  855 	ld	d, (hl)
+      000391 1A               [ 8]  856 	ld	a, (de)
+      000392 F8 04            [12]  857 	ldhl	sp,	#4
+      000394 86               [ 8]  858 	add	a, (hl)
+                                    859 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1804: shadow_OAM[nb].tile=tile;
+      000395 6F               [ 4]  860 	ld	l, a
+                                    861 ;	spillPairReg hl
+                                    862 ;	spillPairReg hl
+      000396 26 00            [ 8]  863 	ld	h, #0x00
+                                    864 ;	spillPairReg hl
+                                    865 ;	spillPairReg hl
+      000398 29               [ 8]  866 	add	hl, hl
+      000399 29               [ 8]  867 	add	hl, hl
+      00039A 11r00r00         [12]  868 	ld	de, #_shadow_OAM
+      00039D 19               [ 8]  869 	add	hl, de
+      00039E 23               [ 8]  870 	inc	hl
+      00039F 23               [ 8]  871 	inc	hl
+      0003A0 5D               [ 4]  872 	ld	e, l
+      0003A1 54               [ 4]  873 	ld	d, h
+      0003A2 F8 05            [12]  874 	ldhl	sp,	#5
+      0003A4 7E               [ 8]  875 	ld	a, (hl)
+      0003A5 12               [ 8]  876 	ld	(de), a
+                                    877 ;..\sprite.c:59: for(int i = 0; i < totalTiles; i++)
+      0003A6 03               [ 8]  878 	inc	bc
+      0003A7 18 BC            [12]  879 	jr	00114$
+      0003A9                        880 00116$:
+                                    881 ;..\sprite.c:64: }
+      0003A9 E8 09            [16]  882 	add	sp, #9
+      0003AB C9               [16]  883 	ret
+                                    884 ;..\sprite.c:66: bool getVisible(struct Sprite* this) {
+                                    885 ;	---------------------------------
+                                    886 ; Function getVisible
+                                    887 ; ---------------------------------
+      0003AC                        888 _getVisible::
+                                    889 ;..\sprite.c:67: return this->visible;
+      0003AC 21 10 00         [12]  890 	ld	hl, #0x0010
+      0003AF 19               [ 8]  891 	add	hl, de
+      0003B0 7E               [ 8]  892 	ld	a, (hl)
+                                    893 ;..\sprite.c:68: }
+      0003B1 C9               [16]  894 	ret
+                                    895 ;..\sprite.c:70: void move(struct Sprite* this, int screen_x, int screen_y) {
+                                    896 ;	---------------------------------
+                                    897 ; Function move
+                                    898 ; ---------------------------------
+      0003B2                        899 _move::
+      0003B2 E8 EF            [16]  900 	add	sp, #-17
+      0003B4 F8 0B            [12]  901 	ldhl	sp,	#11
+      0003B6 7B               [ 4]  902 	ld	a, e
+      0003B7 22               [ 8]  903 	ld	(hl+), a
+      0003B8 72               [ 8]  904 	ld	(hl), d
+      0003B9 F8 09            [12]  905 	ldhl	sp,	#9
+      0003BB 79               [ 4]  906 	ld	a, c
+      0003BC 22               [ 8]  907 	ld	(hl+), a
+                                    908 ;..\sprite.c:72: if(this->hidden == false && isOnScreen(this, screen_x, screen_y)) {
+      0003BD 78               [ 4]  909 	ld	a, b
+      0003BE 22               [ 8]  910 	ld	(hl+), a
+      0003BF 2A               [ 8]  911 	ld	a, (hl+)
+      0003C0 5F               [ 4]  912 	ld	e, a
+      0003C1 56               [ 8]  913 	ld	d, (hl)
+      0003C2 21 11 00         [12]  914 	ld	hl, #0x0011
+      0003C5 19               [ 8]  915 	add	hl, de
+      0003C6 4D               [ 4]  916 	ld	c, l
+      0003C7 44               [ 4]  917 	ld	b, h
+      0003C8 0A               [ 8]  918 	ld	a, (bc)
+      0003C9 B7               [ 4]  919 	or	a, a
+      0003CA 20 21            [12]  920 	jr	NZ, 00102$
+      0003CC F8 13            [12]  921 	ldhl	sp,	#19
+      0003CE 5E               [ 8]  922 	ld	e, (hl)
+      0003CF 23               [ 8]  923 	inc	hl
+      0003D0 56               [ 8]  924 	ld	d, (hl)
+      0003D1 D5               [16]  925 	push	de
+      0003D2 F8 0B            [12]  926 	ldhl	sp,	#11
+      0003D4 4E               [ 8]  927 	ld	c, (hl)
+      0003D5 23               [ 8]  928 	inc	hl
+      0003D6 46               [ 8]  929 	ld	b, (hl)
+      0003D7 23               [ 8]  930 	inc	hl
+      0003D8 5E               [ 8]  931 	ld	e, (hl)
+      0003D9 23               [ 8]  932 	inc	hl
+      0003DA 56               [ 8]  933 	ld	d, (hl)
+      0003DB CDrCAr00         [24]  934 	call	_isOnScreen
+      0003DE B7               [ 4]  935 	or	a, a
+      0003DF 28 0C            [12]  936 	jr	Z, 00102$
+                                    937 ;..\sprite.c:73: setVisible(this, true);
+      0003E1 3E 01            [ 8]  938 	ld	a, #0x01
+      0003E3 F8 0B            [12]  939 	ldhl	sp,	#11
+      0003E5 5E               [ 8]  940 	ld	e, (hl)
+      0003E6 23               [ 8]  941 	inc	hl
+      0003E7 56               [ 8]  942 	ld	d, (hl)
+      0003E8 CDrB9r02         [24]  943 	call	_setVisible
+      0003EB 18 09            [12]  944 	jr	00121$
+      0003ED                        945 00102$:
+                                    946 ;..\sprite.c:76: setVisible(this, false);
+      0003ED AF               [ 4]  947 	xor	a, a
+      0003EE F8 0B            [12]  948 	ldhl	sp,	#11
+      0003F0 5E               [ 8]  949 	ld	e, (hl)
+      0003F1 23               [ 8]  950 	inc	hl
+      0003F2 56               [ 8]  951 	ld	d, (hl)
+      0003F3 CDrB9r02         [24]  952 	call	_setVisible
+                                    953 ;..\sprite.c:79: for(int y = 0; y < this->tileDimension.height; y++)
+      0003F6                        954 00121$:
+      0003F6 F8 0B            [12]  955 	ldhl	sp,#11
+      0003F8 2A               [ 8]  956 	ld	a, (hl+)
+      0003F9 5F               [ 4]  957 	ld	e, a
+      0003FA 56               [ 8]  958 	ld	d, (hl)
+      0003FB 21 08 00         [12]  959 	ld	hl, #0x0008
+      0003FE 19               [ 8]  960 	add	hl, de
+      0003FF 33               [ 8]  961 	inc	sp
+      000400 33               [ 8]  962 	inc	sp
+      000401 5D               [ 4]  963 	ld	e, l
+      000402 54               [ 4]  964 	ld	d, h
+      000403 D5               [16]  965 	push	de
+      000404 21 02 00         [12]  966 	ld	hl, #0x0002
+      000407 19               [ 8]  967 	add	hl, de
+      000408 E5               [16]  968 	push	hl
+      000409 7D               [ 4]  969 	ld	a, l
+      00040A F8 04            [12]  970 	ldhl	sp,	#4
+      00040C 77               [ 8]  971 	ld	(hl), a
+      00040D E1               [12]  972 	pop	hl
+      00040E 7C               [ 4]  973 	ld	a, h
+      00040F F8 03            [12]  974 	ldhl	sp,	#3
+      000411 77               [ 8]  975 	ld	(hl), a
+      000412 AF               [ 4]  976 	xor	a, a
+      000413 F8 0D            [12]  977 	ldhl	sp,	#13
+      000415 22               [ 8]  978 	ld	(hl+), a
+      000416 77               [ 8]  979 	ld	(hl), a
+      000417                        980 00112$:
+      000417 F8 02            [12]  981 	ldhl	sp,#2
+      000419 2A               [ 8]  982 	ld	a, (hl+)
+      00041A 5F               [ 4]  983 	ld	e, a
+      00041B 56               [ 8]  984 	ld	d, (hl)
+      00041C 1A               [ 8]  985 	ld	a, (de)
+      00041D 4F               [ 4]  986 	ld	c, a
+      00041E 13               [ 8]  987 	inc	de
+      00041F 1A               [ 8]  988 	ld	a, (de)
+      000420 47               [ 4]  989 	ld	b, a
+      000421 F8 0D            [12]  990 	ldhl	sp,	#13
+      000423 2A               [ 8]  991 	ld	a, (hl+)
+      000424 91               [ 4]  992 	sub	a, c
+      000425 7E               [ 8]  993 	ld	a, (hl)
+      000426 98               [ 4]  994 	sbc	a, b
+      000427 56               [ 8]  995 	ld	d, (hl)
+      000428 78               [ 4]  996 	ld	a, b
+      000429 5F               [ 4]  997 	ld	e, a
+      00042A CB 7B            [ 8]  998 	bit	7, e
+      00042C 28 07            [12]  999 	jr	Z, 00160$
+      00042E CB 7A            [ 8] 1000 	bit	7, d
+      000430 20 08            [12] 1001 	jr	NZ, 00161$
+      000432 BF               [ 4] 1002 	cp	a, a
+      000433 18 05            [12] 1003 	jr	00161$
+      000435                       1004 00160$:
+      000435 CB 7A            [ 8] 1005 	bit	7, d
+      000437 28 01            [12] 1006 	jr	Z, 00161$
+      000439 37               [ 4] 1007 	scf
+      00043A                       1008 00161$:
+      00043A D2rC4r04         [16] 1009 	jp	NC, 00114$
+                                   1010 ;..\sprite.c:82: for(int x = 0; x < this->tileDimension.width; x++)
+      00043D AF               [ 4] 1011 	xor	a, a
+      00043E F8 0F            [12] 1012 	ldhl	sp,	#15
+      000440 22               [ 8] 1013 	ld	(hl+), a
+      000441 77               [ 8] 1014 	ld	(hl), a
+      000442                       1015 00109$:
+      000442 D1               [12] 1016 	pop	de
+      000443 D5               [16] 1017 	push	de
+      000444 1A               [ 8] 1018 	ld	a, (de)
+      000445 F8 04            [12] 1019 	ldhl	sp,	#4
+      000447 22               [ 8] 1020 	ld	(hl+), a
+      000448 13               [ 8] 1021 	inc	de
+      000449 1A               [ 8] 1022 	ld	a, (de)
+      00044A 77               [ 8] 1023 	ld	(hl), a
+      00044B F8 0F            [12] 1024 	ldhl	sp,	#15
+      00044D 5D               [ 4] 1025 	ld	e, l
+      00044E 54               [ 4] 1026 	ld	d, h
+      00044F F8 04            [12] 1027 	ldhl	sp,	#4
+      000451 1A               [ 8] 1028 	ld	a, (de)
+      000452 13               [ 8] 1029 	inc	de
+      000453 96               [ 8] 1030 	sub	a, (hl)
+      000454 23               [ 8] 1031 	inc	hl
+      000455 1A               [ 8] 1032 	ld	a, (de)
+      000456 9E               [ 8] 1033 	sbc	a, (hl)
+      000457 1A               [ 8] 1034 	ld	a, (de)
+      000458 57               [ 4] 1035 	ld	d, a
+      000459 CB 7E            [12] 1036 	bit	7, (hl)
+      00045B 28 07            [12] 1037 	jr	Z, 00162$
+      00045D CB 7A            [ 8] 1038 	bit	7, d
+      00045F 20 08            [12] 1039 	jr	NZ, 00163$
+      000461 BF               [ 4] 1040 	cp	a, a
+      000462 18 05            [12] 1041 	jr	00163$
+      000464                       1042 00162$:
+      000464 CB 7A            [ 8] 1043 	bit	7, d
+      000466 28 01            [12] 1044 	jr	Z, 00163$
+      000468 37               [ 4] 1045 	scf
+      000469                       1046 00163$:
+      000469 30 4E            [12] 1047 	jr	NC, 00113$
+                                   1048 ;..\sprite.c:84: move_sprite(this->spriteIndex + (y + this->tileDimension.width * x), screen_x + x * 8, screen_y + y * 8);
+      00046B F8 13            [12] 1049 	ldhl	sp,	#19
+      00046D 4E               [ 8] 1050 	ld	c, (hl)
+      00046E F8 0D            [12] 1051 	ldhl	sp,	#13
+      000470 7E               [ 8] 1052 	ld	a, (hl)
+      000471 F8 06            [12] 1053 	ldhl	sp,	#6
+      000473 77               [ 8] 1054 	ld	(hl), a
+      000474 2A               [ 8] 1055 	ld	a, (hl+)
+      000475 87               [ 4] 1056 	add	a, a
+      000476 87               [ 4] 1057 	add	a, a
+      000477 87               [ 4] 1058 	add	a, a
+      000478 81               [ 4] 1059 	add	a, c
+      000479 22               [ 8] 1060 	ld	(hl+), a
+      00047A 23               [ 8] 1061 	inc	hl
+      00047B 4E               [ 8] 1062 	ld	c, (hl)
+      00047C F8 0F            [12] 1063 	ldhl	sp,	#15
+      00047E 46               [ 8] 1064 	ld	b, (hl)
+      00047F 78               [ 4] 1065 	ld	a, b
+      000480 87               [ 4] 1066 	add	a, a
+      000481 87               [ 4] 1067 	add	a, a
+      000482 87               [ 4] 1068 	add	a, a
+      000483 81               [ 4] 1069 	add	a, c
+      000484 F8 08            [12] 1070 	ldhl	sp,	#8
+      000486 77               [ 8] 1071 	ld	(hl), a
+      000487 F8 0B            [12] 1072 	ldhl	sp,#11
+      000489 2A               [ 8] 1073 	ld	a, (hl+)
+      00048A 5F               [ 4] 1074 	ld	e, a
+      00048B 56               [ 8] 1075 	ld	d, (hl)
+      00048C 1A               [ 8] 1076 	ld	a, (de)
+      00048D 4F               [ 4] 1077 	ld	c, a
+      00048E F8 04            [12] 1078 	ldhl	sp,	#4
+      000490 56               [ 8] 1079 	ld	d, (hl)
+      000491 C5               [16] 1080 	push	bc
+      000492 58               [ 4] 1081 	ld	e, b
+      000493 7A               [ 4] 1082 	ld	a, d
+      000494 CDr00r00         [24] 1083 	call	__mulschar
+      000497 79               [ 4] 1084 	ld	a, c
+      000498 C1               [12] 1085 	pop	bc
+      000499 F8 06            [12] 1086 	ldhl	sp,	#6
+      00049B 86               [ 8] 1087 	add	a, (hl)
+      00049C 81               [ 4] 1088 	add	a, c
+      00049D 4F               [ 4] 1089 	ld	c, a
+                                   1090 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1877: OAM_item_t * itm = &shadow_OAM[nb];
+      00049E 11r00r00         [12] 1091 	ld	de, #_shadow_OAM+0
+      0004A1 26 00            [ 8] 1092 	ld	h, #0x00
+                                   1093 ;	spillPairReg hl
+                                   1094 ;	spillPairReg hl
+      0004A3 69               [ 4] 1095 	ld	l, c
+      0004A4 29               [ 8] 1096 	add	hl, hl
+      0004A5 29               [ 8] 1097 	add	hl, hl
+      0004A6 19               [ 8] 1098 	add	hl, de
+      0004A7 4D               [ 4] 1099 	ld	c, l
+      0004A8 44               [ 4] 1100 	ld	b, h
+                                   1101 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1878: itm->y=y, itm->x=x;
+      0004A9 F8 07            [12] 1102 	ldhl	sp,	#7
+      0004AB 2A               [ 8] 1103 	ld	a, (hl+)
+      0004AC 02               [ 8] 1104 	ld	(bc), a
+      0004AD 03               [ 8] 1105 	inc	bc
+      0004AE 7E               [ 8] 1106 	ld	a, (hl)
+      0004AF 02               [ 8] 1107 	ld	(bc), a
+                                   1108 ;..\sprite.c:82: for(int x = 0; x < this->tileDimension.width; x++)
+      0004B0 F8 0F            [12] 1109 	ldhl	sp,	#15
+      0004B2 34               [12] 1110 	inc	(hl)
+      0004B3 20 8D            [12] 1111 	jr	NZ, 00109$
+      0004B5 23               [ 8] 1112 	inc	hl
+      0004B6 34               [12] 1113 	inc	(hl)
+      0004B7 18 89            [12] 1114 	jr	00109$
+      0004B9                       1115 00113$:
+                                   1116 ;..\sprite.c:79: for(int y = 0; y < this->tileDimension.height; y++)
+      0004B9 F8 0D            [12] 1117 	ldhl	sp,	#13
+      0004BB 34               [12] 1118 	inc	(hl)
+      0004BC C2r17r04         [16] 1119 	jp	NZ,00112$
+      0004BF 23               [ 8] 1120 	inc	hl
+      0004C0 34               [12] 1121 	inc	(hl)
+      0004C1 C3r17r04         [16] 1122 	jp	00112$
+      0004C4                       1123 00114$:
+                                   1124 ;..\sprite.c:87: }
+      0004C4 E8 11            [16] 1125 	add	sp, #17
+      0004C6 E1               [12] 1126 	pop	hl
+      0004C7 F1               [12] 1127 	pop	af
+      0004C8 E9               [ 4] 1128 	jp	(hl)
+                                   1129 ;..\sprite.c:89: byte createPalette(UWORD first, UWORD second, UWORD third, UWORD fourth) {
+                                   1130 ;	---------------------------------
+                                   1131 ; Function createPalette
+                                   1132 ; ---------------------------------
+      0004C9                       1133 _createPalette::
+      0004C9 C5               [16] 1134 	push	bc
+                                   1135 ;..\sprite.c:91: palette[0] = first;
+      0004CA 01r00r00         [12] 1136 	ld	bc, #_createPalette_palette_65536_188+0
+      0004CD 69               [ 4] 1137 	ld	l, c
+      0004CE 60               [ 4] 1138 	ld	h, b
+      0004CF 7B               [ 4] 1139 	ld	a, e
+      0004D0 22               [ 8] 1140 	ld	(hl+), a
+      0004D1 72               [ 8] 1141 	ld	(hl), d
+                                   1142 ;..\sprite.c:92: palette[1] = second;
+      0004D2 11r02r00         [12] 1143 	ld	de, #(_createPalette_palette_65536_188 + 2)
+      0004D5 F8 00            [12] 1144 	ldhl	sp,	#0
+      0004D7 2A               [ 8] 1145 	ld	a, (hl+)
+      0004D8 12               [ 8] 1146 	ld	(de), a
+      0004D9 13               [ 8] 1147 	inc	de
+      0004DA 7E               [ 8] 1148 	ld	a, (hl)
+      0004DB 12               [ 8] 1149 	ld	(de), a
+                                   1150 ;..\sprite.c:93: palette[2] = third;
+      0004DC 11r04r00         [12] 1151 	ld	de, #(_createPalette_palette_65536_188 + 4)
+      0004DF F8 04            [12] 1152 	ldhl	sp,	#4
+      0004E1 2A               [ 8] 1153 	ld	a, (hl+)
+      0004E2 12               [ 8] 1154 	ld	(de), a
+      0004E3 13               [ 8] 1155 	inc	de
+                                   1156 ;..\sprite.c:94: palette[3] = fourth;
+      0004E4 2A               [ 8] 1157 	ld	a, (hl+)
+      0004E5 12               [ 8] 1158 	ld	(de), a
+      0004E6 11r06r00         [12] 1159 	ld	de, #(_createPalette_palette_65536_188 + 6)
+      0004E9 2A               [ 8] 1160 	ld	a, (hl+)
+      0004EA 12               [ 8] 1161 	ld	(de), a
+      0004EB 13               [ 8] 1162 	inc	de
+      0004EC 7E               [ 8] 1163 	ld	a, (hl)
+      0004ED 12               [ 8] 1164 	ld	(de), a
+                                   1165 ;..\sprite.c:95: set_sprite_palette(palette_index, 1, palette);
+      0004EE C5               [16] 1166 	push	bc
+      0004EF 3E 01            [ 8] 1167 	ld	a, #0x01
+      0004F1 F5               [16] 1168 	push	af
+      0004F2 33               [ 8] 1169 	inc	sp
+      0004F3 FAr04r00         [16] 1170 	ld	a, (#_palette_index)
+      0004F6 F5               [16] 1171 	push	af
+      0004F7 33               [ 8] 1172 	inc	sp
+      0004F8 CDr00r00         [24] 1173 	call	_set_sprite_palette
+      0004FB E8 04            [16] 1174 	add	sp, #4
+                                   1175 ;..\sprite.c:96: byte oldIdex = palette_index;
+      0004FD 21r04r00         [12] 1176 	ld	hl, #_palette_index
+      000500 4E               [ 8] 1177 	ld	c, (hl)
+                                   1178 ;..\sprite.c:97: palette_index++;
+      000501 34               [12] 1179 	inc	(hl)
+                                   1180 ;..\sprite.c:98: return oldIdex;
+      000502 79               [ 4] 1181 	ld	a, c
+                                   1182 ;..\sprite.c:99: }
+      000503 33               [ 8] 1183 	inc	sp
+      000504 33               [ 8] 1184 	inc	sp
+      000505 E1               [12] 1185 	pop	hl
+      000506 E8 04            [16] 1186 	add	sp, #4
+      000508 E9               [ 4] 1187 	jp	(hl)
+                                   1188 ;..\sprite.c:101: void setPalette(struct Sprite* this, byte paletteIndex) {
+                                   1189 ;	---------------------------------
+                                   1190 ; Function setPalette
+                                   1191 ; ---------------------------------
+      000509                       1192 _setPalette::
+      000509 E8 F9            [16] 1193 	add	sp, #-7
+      00050B F8 03            [12] 1194 	ldhl	sp,	#3
+      00050D 73               [ 8] 1195 	ld	(hl), e
+      00050E 23               [ 8] 1196 	inc	hl
+      00050F 72               [ 8] 1197 	ld	(hl), d
+      000510 2B               [ 8] 1198 	dec	hl
+      000511 2B               [ 8] 1199 	dec	hl
+                                   1200 ;..\sprite.c:102: int totalTiles = this->tileDimension.width * this->tileDimension.height * this->frames;
+      000512 22               [ 8] 1201 	ld	(hl+), a
+      000513 2A               [ 8] 1202 	ld	a, (hl+)
+      000514 5F               [ 4] 1203 	ld	e, a
+      000515 56               [ 8] 1204 	ld	d, (hl)
+      000516 21 08 00         [12] 1205 	ld	hl, #0x0008
+      000519 19               [ 8] 1206 	add	hl, de
+      00051A 4D               [ 4] 1207 	ld	c, l
+      00051B 44               [ 4] 1208 	ld	b, h
+      00051C 59               [ 4] 1209 	ld	e, c
+      00051D 50               [ 4] 1210 	ld	d, b
+      00051E 1A               [ 8] 1211 	ld	a, (de)
+      00051F F8 05            [12] 1212 	ldhl	sp,	#5
+      000521 22               [ 8] 1213 	ld	(hl+), a
+      000522 13               [ 8] 1214 	inc	de
+      000523 1A               [ 8] 1215 	ld	a, (de)
+      000524 77               [ 8] 1216 	ld	(hl), a
+      000525 69               [ 4] 1217 	ld	l, c
+      000526 60               [ 4] 1218 	ld	h, b
+      000527 23               [ 8] 1219 	inc	hl
+      000528 23               [ 8] 1220 	inc	hl
+      000529 2A               [ 8] 1221 	ld	a, (hl+)
+      00052A 4F               [ 4] 1222 	ld	c, a
+      00052B 46               [ 8] 1223 	ld	b, (hl)
+      00052C F8 05            [12] 1224 	ldhl	sp,	#5
+      00052E 2A               [ 8] 1225 	ld	a, (hl+)
+      00052F 5F               [ 4] 1226 	ld	e, a
+      000530 56               [ 8] 1227 	ld	d, (hl)
+      000531 CDr00r00         [24] 1228 	call	__mulint
+      000534 F8 05            [12] 1229 	ldhl	sp,	#5
+      000536 79               [ 4] 1230 	ld	a, c
+      000537 22               [ 8] 1231 	ld	(hl+), a
+      000538 70               [ 8] 1232 	ld	(hl), b
+      000539 F8 03            [12] 1233 	ldhl	sp,#3
+      00053B 2A               [ 8] 1234 	ld	a, (hl+)
+      00053C 5F               [ 4] 1235 	ld	e, a
+      00053D 56               [ 8] 1236 	ld	d, (hl)
+      00053E 21 0C 00         [12] 1237 	ld	hl, #0x000c
+      000541 19               [ 8] 1238 	add	hl, de
+      000542 2A               [ 8] 1239 	ld	a, (hl+)
+      000543 4F               [ 4] 1240 	ld	c, a
+      000544 46               [ 8] 1241 	ld	b, (hl)
+      000545 F8 05            [12] 1242 	ldhl	sp,	#5
+      000547 2A               [ 8] 1243 	ld	a, (hl+)
+      000548 5F               [ 4] 1244 	ld	e, a
+      000549 56               [ 8] 1245 	ld	d, (hl)
+                                   1246 ;..\sprite.c:103: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
+      00054A CDr00r00         [24] 1247 	call	__mulint
+      00054D E1               [12] 1248 	pop	hl
+      00054E C5               [16] 1249 	push	bc
+      00054F F8 03            [12] 1250 	ldhl	sp,#3
+      000551 2A               [ 8] 1251 	ld	a, (hl+)
+      000552 5F               [ 4] 1252 	ld	e, a
+      000553 2A               [ 8] 1253 	ld	a, (hl+)
+      000554 57               [ 4] 1254 	ld	d, a
+      000555 1A               [ 8] 1255 	ld	a, (de)
+      000556 22               [ 8] 1256 	ld	(hl+), a
+      000557 13               [ 8] 1257 	inc	de
+      000558 1A               [ 8] 1258 	ld	a, (de)
+      000559 77               [ 8] 1259 	ld	(hl), a
+      00055A                       1260 00104$:
+      00055A F8 03            [12] 1261 	ldhl	sp,#3
+      00055C 2A               [ 8] 1262 	ld	a, (hl+)
+      00055D 5F               [ 4] 1263 	ld	e, a
+      00055E 56               [ 8] 1264 	ld	d, (hl)
+      00055F 1A               [ 8] 1265 	ld	a, (de)
+      000560 4F               [ 4] 1266 	ld	c, a
+      000561 13               [ 8] 1267 	inc	de
+      000562 1A               [ 8] 1268 	ld	a, (de)
+      000563 47               [ 4] 1269 	ld	b, a
+      000564 E1               [12] 1270 	pop	hl
+      000565 E5               [16] 1271 	push	hl
+      000566 09               [ 8] 1272 	add	hl, bc
+      000567 4D               [ 4] 1273 	ld	c, l
+      000568 44               [ 4] 1274 	ld	b, h
+      000569 F8 05            [12] 1275 	ldhl	sp,	#5
+      00056B 2A               [ 8] 1276 	ld	a, (hl+)
+      00056C 91               [ 4] 1277 	sub	a, c
+      00056D 7E               [ 8] 1278 	ld	a, (hl)
+      00056E 98               [ 4] 1279 	sbc	a, b
+      00056F 56               [ 8] 1280 	ld	d, (hl)
+      000570 78               [ 4] 1281 	ld	a, b
+      000571 5F               [ 4] 1282 	ld	e, a
+      000572 CB 7B            [ 8] 1283 	bit	7, e
+      000574 28 07            [12] 1284 	jr	Z, 00123$
+      000576 CB 7A            [ 8] 1285 	bit	7, d
+      000578 20 08            [12] 1286 	jr	NZ, 00124$
+      00057A BF               [ 4] 1287 	cp	a, a
+      00057B 18 05            [12] 1288 	jr	00124$
+      00057D                       1289 00123$:
+      00057D CB 7A            [ 8] 1290 	bit	7, d
+      00057F 28 01            [12] 1291 	jr	Z, 00124$
+      000581 37               [ 4] 1292 	scf
+      000582                       1293 00124$:
+      000582 30 1E            [12] 1294 	jr	NC, 00106$
+                                   1295 ;..\sprite.c:104: set_sprite_prop(i, paletteIndex);
+      000584 F8 05            [12] 1296 	ldhl	sp,	#5
+      000586 4E               [ 8] 1297 	ld	c, (hl)
+                                   1298 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1850: shadow_OAM[nb].prop=prop;
+      000587 26 00            [ 8] 1299 	ld	h, #0x00
+                                   1300 ;	spillPairReg hl
+                                   1301 ;	spillPairReg hl
+      000589 69               [ 4] 1302 	ld	l, c
+      00058A 29               [ 8] 1303 	add	hl, hl
+      00058B 29               [ 8] 1304 	add	hl, hl
+      00058C 11r00r00         [12] 1305 	ld	de, #_shadow_OAM
+      00058F 19               [ 8] 1306 	add	hl, de
+      000590 23               [ 8] 1307 	inc	hl
+      000591 23               [ 8] 1308 	inc	hl
+      000592 23               [ 8] 1309 	inc	hl
+      000593 4D               [ 4] 1310 	ld	c, l
+      000594 44               [ 4] 1311 	ld	b, h
+      000595 F8 02            [12] 1312 	ldhl	sp,	#2
+      000597 7E               [ 8] 1313 	ld	a, (hl)
+      000598 02               [ 8] 1314 	ld	(bc), a
+                                   1315 ;..\sprite.c:103: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
+      000599 F8 05            [12] 1316 	ldhl	sp,	#5
+      00059B 34               [12] 1317 	inc	(hl)
+      00059C 20 BC            [12] 1318 	jr	NZ, 00104$
+      00059E 23               [ 8] 1319 	inc	hl
+      00059F 34               [12] 1320 	inc	(hl)
+      0005A0 18 B8            [12] 1321 	jr	00104$
+      0005A2                       1322 00106$:
+                                   1323 ;..\sprite.c:105: }
+      0005A2 E8 07            [16] 1324 	add	sp, #7
+      0005A4 C9               [16] 1325 	ret
+                                   1326 ;..\sprite.c:109: void show(struct Sprite* this) {
+                                   1327 ;	---------------------------------
+                                   1328 ; Function show
+                                   1329 ; ---------------------------------
+      0005A5                       1330 _show::
+                                   1331 ;..\sprite.c:110: this->hidden = false;
+      0005A5 21 11 00         [12] 1332 	ld	hl, #0x0011
+      0005A8 19               [ 8] 1333 	add	hl, de
+      0005A9 36 00            [12] 1334 	ld	(hl), #0x00
+                                   1335 ;..\sprite.c:111: setVisible(this, true);
+      0005AB 3E 01            [ 8] 1336 	ld	a, #0x01
+                                   1337 ;..\sprite.c:112: }
+      0005AD C3rB9r02         [16] 1338 	jp	_setVisible
+                                   1339 ;..\sprite.c:114: void hide(struct Sprite* this){
+                                   1340 ;	---------------------------------
+                                   1341 ; Function hide
+                                   1342 ; ---------------------------------
+      0005B0                       1343 _hide::
+                                   1344 ;..\sprite.c:115: this->hidden = true;
+      0005B0 21 11 00         [12] 1345 	ld	hl, #0x0011
+      0005B3 19               [ 8] 1346 	add	hl, de
+      0005B4 36 01            [12] 1347 	ld	(hl), #0x01
+                                   1348 ;..\sprite.c:116: setVisible(this, false);
+      0005B6 AF               [ 4] 1349 	xor	a, a
+                                   1350 ;..\sprite.c:117: }
+      0005B7 C3rB9r02         [16] 1351 	jp	_setVisible
+                                   1352 	.area _CODE
+                                   1353 	.area _INITIALIZER
+      000000                       1354 __xinit__spriteIndex:
+      000000 00 00                 1355 	.dw #0x0000
+      000002                       1356 __xinit__tileIndex:
+      000002 01 00                 1357 	.dw #0x0001
+      000004                       1358 __xinit__palette_index:
+      000004 00                    1359 	.db #0x00	; 0
+                                   1360 	.area _CABS (ABS)

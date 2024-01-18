@@ -1,8 +1,8 @@
 /*
 
- SPACE1.H
+ FONT.C
 
- Include File.
+ Tile Source File.
 
  Info:
   Form                 : All tiles as one unit.
@@ -10,7 +10,7 @@
   Compression          : None.
   Counter              : None.
   Tile size            : 8 x 8
-  Tiles                : 0 to 48
+  Tiles                : 0 to 1
 
   Palette colors       : None.
   SGB Palette          : None.
@@ -22,14 +22,13 @@
 
 */
 
-#ifndef __space1_h_INCLUDE
-#define __space1_h_INCLUDE
-
-/* Bank of tiles. */
-#define space1_tileBank 0
 /* Start of tile array. */
-extern const unsigned char space1_tile[];
+const unsigned char font_tiles[] =
+{
+  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+  0x00,0x00,0x10,0x10,0x28,0x28,0x44,0x44,
+  0x44,0x44,0x7C,0x7C,0x44,0x44,0x00,0x00
+};
 
-#endif
-
-/* End of SPACE1.H */
+/* End of FONT.C */

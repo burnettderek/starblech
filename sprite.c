@@ -18,7 +18,7 @@ void ctor(struct Sprite* this, byte* data, int tileWidth, int tileHeight, int fr
     this->hidden = false;
 }
 
-void sprites_reset() {
+void sprites_reset(void) {
     spriteIndex = 0;
     tileIndex = 1;
     palette_index = 0;
@@ -37,7 +37,7 @@ void setFrame(struct Sprite* this, int frame) {
     this->frame = frame;
     if(this->hidden || !this->visible)return;
 	int frameOffset = frame * this->tileDimension.width * this->tileDimension.height;
-	int totalTiles = this->tileDimension.height * this->tileDimension.height;
+	int totalTiles = this->tileDimension.width * this->tileDimension.height;
     set_sprite_data(this->tileIndex, totalTiles, this->data + (frameOffset * 16));
 	for(int i = 0; i < totalTiles; i++)
 	{
@@ -75,9 +75,11 @@ void move(struct Sprite* this, int screen_x, int screen_y) {
     else {
         setVisible(this, false);
     }
-    for(int x = 0; x < this->tileDimension.width; x++)
+    //for(int x = 0; x < this->tileDimension.width; x++)
+    for(int y = 0; y < this->tileDimension.height; y++)
     {
-        for(int y = 0; y < this->tileDimension.height; y++)
+        //for(int y = 0; y < this->tileDimension.height; y++)
+        for(int x = 0; x < this->tileDimension.width; x++)
         {
             move_sprite(this->spriteIndex + (y + this->tileDimension.width * x), screen_x + x * 8, screen_y + y * 8);
         }

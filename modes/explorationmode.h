@@ -4,6 +4,7 @@
 
 typedef struct ExplorationMode {
     int counter;
+    struct GameObject* exploration_objects;
 };
 
 void ExplorationMode_init(struct ExplorationMode* this);
