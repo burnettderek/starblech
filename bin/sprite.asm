@@ -12,12 +12,13 @@
 	.globl _setVisible
 	.globl _set_sprite_palette
 	.globl _set_sprite_data
-	.globl _ctor
+	.globl _sprite_init
 	.globl _sprites_reset
 	.globl _isOnScreen
 	.globl _setFrame
 	.globl _move
-	.globl _createPalette
+	.globl _create_palette
+	.globl _update_palette
 	.globl _setPalette
 	.globl _show
 	.globl _hide
@@ -28,7 +29,7 @@
 ; ram data
 ;--------------------------------------------------------
 	.area _DATA
-_createPalette_palette_65536_188:
+_update_palette_palette_65536_201:
 	.ds 8
 ;--------------------------------------------------------
 ; ram data
@@ -60,11 +61,11 @@ _palette_index:
 ; code
 ;--------------------------------------------------------
 	.area _CODE
-;..\sprite.c:7: void ctor(struct Sprite* this, byte* data, int tileWidth, int tileHeight, int frames) {
+;..\sprite.c:7: void sprite_init(struct Sprite* this, byte* data, RENDER_MODE renderMode, int tileWidth, int tileHeight, int frames) {
 ;	---------------------------------
-; Function ctor
+; Function sprite_init
 ; ---------------------------------
-_ctor::
+_sprite_init::
 	add	sp, #-4
 	ldhl	sp,	#2
 	ld	a, c
@@ -72,11 +73,11 @@ _ctor::
 	ld	(hl), b
 ;..\sprite.c:8: int totalTiles = tileWidth * tileHeight;
 	push	de
-	ldhl	sp,	#10
+	ldhl	sp,	#11
 	ld	a, (hl+)
 	ld	c, a
 	ld	b, (hl)
-	ldhl	sp,	#8
+	ldhl	sp,	#9
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
@@ -106,14 +107,14 @@ _ctor::
 	ld	a, (hl)
 	ld	(bc), a
 ;..\sprite.c:11: this->tileDimension.width = tileWidth;
-	ld	hl, #0x0008
+	ld	hl, #0x0009
 	add	hl, de
 	ld	c, l
 	ld	b, h
 	push	de
 	ld	e, c
 	ld	d, b
-	ldhl	sp,	#8
+	ldhl	sp,	#9
 	ld	a, (hl+)
 	ld	(de), a
 	inc	de
@@ -128,19 +129,27 @@ _ctor::
 	inc	bc
 	ld	a, (hl)
 	ld	(bc), a
-;..\sprite.c:13: this->frames = frames;
-	ld	hl, #0x000c
+;..\sprite.c:13: this->renderMode = renderMode;
+	ld	hl, #0x0004
 	add	hl, de
 	ld	c, l
 	ld	b, h
-	ldhl	sp,	#10
+	ldhl	sp,	#6
+	ld	a, (hl)
+	ld	(bc), a
+;..\sprite.c:14: this->frames = frames;
+	ld	hl, #0x000d
+	add	hl, de
+	ld	c, l
+	ld	b, h
+	ldhl	sp,	#11
 	ld	a, (hl+)
 	ld	(bc), a
 	inc	bc
 	ld	a, (hl)
 	ld	(bc), a
-;..\sprite.c:14: this->data = data;
-	ld	hl, #0x0012
+;..\sprite.c:15: this->data = data;
+	ld	hl, #0x0013
 	add	hl, de
 	ld	c, l
 	ld	b, h
@@ -150,7 +159,7 @@ _ctor::
 	inc	bc
 	ld	a, (hl)
 	ld	(bc), a
-;..\sprite.c:15: spriteIndex += totalTiles;
+;..\sprite.c:16: spriteIndex += totalTiles;
 	push	de
 	ld	hl, #_spriteIndex
 	ld	a, (hl+)
@@ -166,7 +175,7 @@ _ctor::
 	ld	(_spriteIndex), a
 	ld	a, h
 	ld	(_spriteIndex + 1), a
-;..\sprite.c:16: tileIndex += totalTiles;
+;..\sprite.c:17: tileIndex += totalTiles;
 	push	de
 	ld	hl, #_tileIndex
 	ld	a, (hl+)
@@ -182,45 +191,45 @@ _ctor::
 	ld	(_tileIndex), a
 	ld	a, h
 	ld	(_tileIndex + 1), a
-;..\sprite.c:17: this->visible = true;
-	ld	hl, #0x0010
-	add	hl, de
-	ld	(hl), #0x01
-;..\sprite.c:18: this->hidden = false;
+;..\sprite.c:18: this->visible = true;
 	ld	hl, #0x0011
 	add	hl, de
+	ld	(hl), #0x01
+;..\sprite.c:19: this->hidden = false;
+	ld	hl, #0x0012
+	add	hl, de
 	ld	(hl), #0x00
-;..\sprite.c:19: }
+;..\sprite.c:20: }
 	add	sp, #4
 	pop	hl
-	add	sp, #6
+	add	sp, #7
 	jp	(hl)
-;..\sprite.c:21: void sprites_reset(void) {
+;..\sprite.c:22: void sprites_reset(void) {
 ;	---------------------------------
 ; Function sprites_reset
 ; ---------------------------------
 _sprites_reset::
-;..\sprite.c:22: spriteIndex = 0;
+;..\sprite.c:23: spriteIndex = 0;
 	xor	a, a
 	ld	hl, #_spriteIndex
 	ld	(hl+), a
 	ld	(hl), a
-;..\sprite.c:23: tileIndex = 1;
+;..\sprite.c:24: tileIndex = 1;
 	ld	hl, #_tileIndex
 	ld	a, #0x01
 	ld	(hl+), a
 	xor	a, a
 	ld	(hl), a
-;..\sprite.c:24: palette_index = 0;
+;..\sprite.c:25: palette_index = 0;
 	ld	hl, #_palette_index
 	ld	(hl), #0x00
-;..\sprite.c:25: for(int i = 0; i < MAX_HARDWARE_SPRITES; i++)
+;..\sprite.c:26: for(int i = 0; i < MAX_HARDWARE_SPRITES; i++)
 	ld	c, #0x00
 00104$:
 	ld	a, c
 	sub	a, #0x28
 	ret	NC
-;..\sprite.c:26: set_sprite_tile(i, 0);
+;..\sprite.c:27: set_sprite_tile(i, 0);
 	ld	b, c
 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1804: shadow_OAM[nb].tile=tile;
 	ld	h, #0x00
@@ -234,11 +243,11 @@ _sprites_reset::
 	inc	hl
 	inc	hl
 	ld	(hl), #0x00
-;..\sprite.c:25: for(int i = 0; i < MAX_HARDWARE_SPRITES; i++)
+;..\sprite.c:26: for(int i = 0; i < MAX_HARDWARE_SPRITES; i++)
 	inc	c
-;..\sprite.c:27: }
+;..\sprite.c:28: }
 	jr	00104$
-;..\sprite.c:30: bool isOnScreen(struct Sprite* this, int screen_x, int screen_y) {
+;..\sprite.c:31: bool isOnScreen(struct Sprite* this, int screen_x, int screen_y) {
 ;	---------------------------------
 ; Function isOnScreen
 ; ---------------------------------
@@ -248,8 +257,8 @@ _isOnScreen::
 	ld	a, c
 	ld	(hl+), a
 	ld	(hl), b
-;..\sprite.c:31: if(screen_x < -(this->tileDimension.width * 8)  || screen_x > SCREENWIDTH + (this->tileDimension.width * 8))return false;
-	ld	hl, #0x0008
+;..\sprite.c:32: if(screen_x < -(this->tileDimension.width * 8)  || screen_x > SCREENWIDTH + (this->tileDimension.width * 8))return false;
+	ld	hl, #0x0009
 	add	hl, de
 	inc	sp
 	inc	sp
@@ -333,7 +342,7 @@ _isOnScreen::
 	xor	a, a
 	jr	00107$
 00102$:
-;..\sprite.c:32: if(screen_y < -(this->tileDimension.height * 8) || screen_y > SCREENHEIGHT + (this->tileDimension.height * 8))return false;
+;..\sprite.c:33: if(screen_y < -(this->tileDimension.height * 8) || screen_y > SCREENHEIGHT + (this->tileDimension.height * 8))return false;
 	pop	hl
 	push	hl
 	inc	hl
@@ -412,15 +421,15 @@ _isOnScreen::
 	xor	a, a
 	jr	00107$
 00105$:
-;..\sprite.c:33: return true;
+;..\sprite.c:34: return true;
 	ld	a, #0x01
 00107$:
-;..\sprite.c:34: }
+;..\sprite.c:35: }
 	add	sp, #6
 	pop	hl
 	pop	bc
 	jp	(hl)
-;..\sprite.c:36: void setFrame(struct Sprite* this, int frame) {
+;..\sprite.c:37: void setFrame(struct Sprite* this, int frame) {
 ;	---------------------------------
 ; Function setFrame
 ; ---------------------------------
@@ -433,13 +442,13 @@ _setFrame::
 	ldhl	sp,	#6
 	ld	a, c
 	ld	(hl+), a
-;..\sprite.c:37: this->frame = frame;
+;..\sprite.c:38: this->frame = frame;
 	ld	a, b
 	ld	(hl+), a
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #0x000e
+	ld	hl, #0x000f
 	add	hl, de
 	ld	c, l
 	ld	b, h
@@ -447,13 +456,13 @@ _setFrame::
 	ld	a, (hl+)
 	ld	(bc), a
 	inc	bc
-;..\sprite.c:38: if(this->hidden || !this->visible)return;
+;..\sprite.c:39: if(this->hidden || !this->visible)return;
 	ld	a, (hl+)
 	ld	(bc), a
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #0x0011
+	ld	hl, #0x0012
 	add	hl, de
 	ld	c, l
 	ld	b, h
@@ -467,19 +476,19 @@ _setFrame::
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #0x0010
+	ld	hl, #0x0011
 	add	hl, de
 	ld	c, l
 	ld	b, h
 	ld	a, (bc)
 	or	a, a
 	jp	Z,00109$
-;..\sprite.c:39: int frameOffset = frame * this->tileDimension.width * this->tileDimension.height;
+;..\sprite.c:40: int frameOffset = frame * this->tileDimension.width * this->tileDimension.height;
 	ldhl	sp,#8
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #0x0008
+	ld	hl, #0x0009
 	add	hl, de
 	inc	sp
 	inc	sp
@@ -523,7 +532,7 @@ _setFrame::
 	ldhl	sp,	#9
 	ld	d, (hl)
 	pop	hl
-;..\sprite.c:40: int totalTiles = this->tileDimension.width * this->tileDimension.height;
+;..\sprite.c:41: int totalTiles = this->tileDimension.width * this->tileDimension.height;
 	call	__mulint
 	ldhl	sp,	#6
 	ld	a, c
@@ -534,7 +543,7 @@ _setFrame::
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-;..\sprite.c:41: set_sprite_data(this->tileIndex, totalTiles, this->data + (frameOffset * 16));
+;..\sprite.c:42: set_sprite_data(this->tileIndex, totalTiles, this->data + (frameOffset * 16));
 	call	__mulint
 	pop	hl
 	push	bc
@@ -542,7 +551,7 @@ _setFrame::
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #0x0012
+	ld	hl, #0x0013
 	add	hl, de
 	ld	a, (hl+)
 	ld	c, a
@@ -597,7 +606,7 @@ _setFrame::
 	inc	sp
 	call	_set_sprite_data
 	add	sp, #4
-;..\sprite.c:42: for(int i = 0; i < totalTiles; i++)
+;..\sprite.c:43: for(int i = 0; i < totalTiles; i++)
 	ld	bc, #0x0000
 00107$:
 	ldhl	sp,	#0
@@ -621,7 +630,7 @@ _setFrame::
 	scf
 00135$:
 	jr	NC, 00109$
-;..\sprite.c:44: set_sprite_tile(this->spriteIndex + i, this->tileIndex + i);
+;..\sprite.c:45: set_sprite_tile(this->spriteIndex + i, this->tileIndex + i);
 	ldhl	sp,#2
 	ld	a, (hl+)
 	ld	e, a
@@ -657,14 +666,14 @@ _setFrame::
 	ldhl	sp,	#5
 	ld	a, (hl)
 	ld	(de), a
-;..\sprite.c:42: for(int i = 0; i < totalTiles; i++)
+;..\sprite.c:43: for(int i = 0; i < totalTiles; i++)
 	inc	bc
 	jr	00107$
 00109$:
-;..\sprite.c:46: }
+;..\sprite.c:47: }
 	add	sp, #10
 	ret
-;..\sprite.c:48: void setVisible(struct Sprite* this, bool visible) {
+;..\sprite.c:49: void setVisible(struct Sprite* this, bool visible) {
 ;	---------------------------------
 ; Function setVisible
 ; ---------------------------------
@@ -676,12 +685,12 @@ _setVisible::
 	ld	(hl), d
 	dec	hl
 	dec	hl
-;..\sprite.c:49: if(visible == this->visible) return; // no op;
+;..\sprite.c:50: if(visible == this->visible) return; // no op;
 	ld	(hl+), a
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #0x0010
+	ld	hl, #0x0011
 	add	hl, de
 	ld	c, l
 	ld	b, h
@@ -691,15 +700,15 @@ _setVisible::
 	ld	a, (hl)
 	sub	a, d
 	jp	Z,00116$
-;..\sprite.c:50: this->visible = visible;
+;..\sprite.c:51: this->visible = visible;
 	ldhl	sp,	#6
-;..\sprite.c:51: int totalTiles = this->tileDimension.width * this->tileDimension.height;
+;..\sprite.c:52: int totalTiles = this->tileDimension.width * this->tileDimension.height;
 	ld	a, (hl+)
 	ld	(bc), a
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #0x0008
+	ld	hl, #0x0009
 	add	hl, de
 	ld	c, l
 	ld	b, h
@@ -722,7 +731,7 @@ _setVisible::
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-;..\sprite.c:52: if(!visible) {
+;..\sprite.c:53: if(!visible) {
 	call	__mulint
 	pop	hl
 	push	bc
@@ -730,7 +739,7 @@ _setVisible::
 	ld	a, (hl)
 	or	a, a
 	jr	NZ, 00123$
-;..\sprite.c:54: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
+;..\sprite.c:55: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
 	inc	hl
 	ld	a, (hl+)
 	ld	e, a
@@ -776,7 +785,7 @@ _setVisible::
 	scf
 00165$:
 	jr	NC, 00116$
-;..\sprite.c:55: set_sprite_tile(i, 0);
+;..\sprite.c:56: set_sprite_tile(i, 0);
 	ldhl	sp,	#4
 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1804: shadow_OAM[nb].tile=tile;
 	ld	l, (hl)
@@ -792,14 +801,14 @@ _setVisible::
 	inc	hl
 	inc	hl
 	ld	(hl), #0x00
-;..\sprite.c:54: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
+;..\sprite.c:55: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
 	ldhl	sp,	#4
 	inc	(hl)
 	jr	NZ, 00111$
 	inc	hl
 	inc	(hl)
 	jr	00111$
-;..\sprite.c:59: for(int i = 0; i < totalTiles; i++)
+;..\sprite.c:60: for(int i = 0; i < totalTiles; i++)
 00123$:
 	ldhl	sp,#7
 	ld	a, (hl+)
@@ -838,7 +847,7 @@ _setVisible::
 	scf
 00168$:
 	jr	NC, 00116$
-;..\sprite.c:61: set_sprite_tile(this->spriteIndex + i, this->tileIndex + i);
+;..\sprite.c:62: set_sprite_tile(this->spriteIndex + i, this->tileIndex + i);
 	ldhl	sp,#2
 	ld	a, (hl+)
 	ld	e, a
@@ -874,44 +883,44 @@ _setVisible::
 	ldhl	sp,	#5
 	ld	a, (hl)
 	ld	(de), a
-;..\sprite.c:59: for(int i = 0; i < totalTiles; i++)
+;..\sprite.c:60: for(int i = 0; i < totalTiles; i++)
 	inc	bc
 	jr	00114$
 00116$:
-;..\sprite.c:64: }
+;..\sprite.c:65: }
 	add	sp, #9
 	ret
-;..\sprite.c:66: bool getVisible(struct Sprite* this) {
+;..\sprite.c:67: bool getVisible(struct Sprite* this) {
 ;	---------------------------------
 ; Function getVisible
 ; ---------------------------------
 _getVisible::
-;..\sprite.c:67: return this->visible;
-	ld	hl, #0x0010
+;..\sprite.c:68: return this->visible;
+	ld	hl, #0x0011
 	add	hl, de
 	ld	a, (hl)
-;..\sprite.c:68: }
+;..\sprite.c:69: }
 	ret
-;..\sprite.c:70: void move(struct Sprite* this, int screen_x, int screen_y) {
+;..\sprite.c:71: void move(struct Sprite* this, int screen_x, int screen_y) {
 ;	---------------------------------
 ; Function move
 ; ---------------------------------
 _move::
 	add	sp, #-17
-	ldhl	sp,	#11
+	ldhl	sp,	#13
 	ld	a, e
 	ld	(hl+), a
 	ld	(hl), d
-	ldhl	sp,	#9
+	ldhl	sp,	#11
 	ld	a, c
 	ld	(hl+), a
-;..\sprite.c:72: if(this->hidden == false && isOnScreen(this, screen_x, screen_y)) {
+;..\sprite.c:73: if(this->hidden == false && isOnScreen(this, screen_x, screen_y)) {
 	ld	a, b
 	ld	(hl+), a
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #0x0011
+	ld	hl, #0x0012
 	add	hl, de
 	ld	c, l
 	ld	b, h
@@ -923,7 +932,7 @@ _move::
 	inc	hl
 	ld	d, (hl)
 	push	de
-	ldhl	sp,	#11
+	ldhl	sp,	#13
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
@@ -934,50 +943,75 @@ _move::
 	call	_isOnScreen
 	or	a, a
 	jr	Z, 00102$
-;..\sprite.c:73: setVisible(this, true);
+;..\sprite.c:74: setVisible(this, true);
 	ld	a, #0x01
-	ldhl	sp,	#11
+	ldhl	sp,	#13
 	ld	e, (hl)
 	inc	hl
 	ld	d, (hl)
 	call	_setVisible
-	jr	00121$
+	jr	00103$
 00102$:
-;..\sprite.c:76: setVisible(this, false);
+;..\sprite.c:77: setVisible(this, false);
 	xor	a, a
-	ldhl	sp,	#11
+	ldhl	sp,	#13
 	ld	e, (hl)
 	inc	hl
 	ld	d, (hl)
 	call	_setVisible
-;..\sprite.c:79: for(int y = 0; y < this->tileDimension.height; y++)
-00121$:
-	ldhl	sp,#11
+00103$:
+;..\sprite.c:79: if(this->renderMode == RENDER_16X16) {
+	ldhl	sp,#13
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #0x0008
+	ld	hl, #0x0004
 	add	hl, de
-	inc	sp
-	inc	sp
+	ld	c, l
+	ld	b, h
+	ld	a, (bc)
+	ld	c, a
+;..\sprite.c:80: for(int y = 0; y < this->tileDimension.height; y++)
+	ldhl	sp,#13
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0x0009
+	add	hl, de
 	ld	e, l
 	ld	d, h
 	push	de
 	ld	hl, #0x0002
 	add	hl, de
+	pop	de
 	push	hl
 	ld	a, l
-	ldhl	sp,	#4
+	ldhl	sp,	#17
 	ld	(hl), a
 	pop	hl
 	ld	a, h
+	ldhl	sp,	#16
+	ld	(hl), a
+;..\sprite.c:79: if(this->renderMode == RENDER_16X16) {
+	bit	0, c
+	jp	Z, 00112$
+;..\sprite.c:80: for(int y = 0; y < this->tileDimension.height; y++)
+	dec	hl
+	inc	sp
+	inc	sp
+	push	de
+	ld	a, (hl)
+	ldhl	sp,	#2
+	ld	(hl), a
+	ldhl	sp,	#16
+	ld	a, (hl)
 	ldhl	sp,	#3
 	ld	(hl), a
 	xor	a, a
-	ldhl	sp,	#13
+	ldhl	sp,	#9
 	ld	(hl+), a
 	ld	(hl), a
-00112$:
+00120$:
 	ldhl	sp,#2
 	ld	a, (hl+)
 	ld	e, a
@@ -987,7 +1021,7 @@ _move::
 	inc	de
 	ld	a, (de)
 	ld	b, a
-	ldhl	sp,	#13
+	ldhl	sp,	#9
 	ld	a, (hl+)
 	sub	a, c
 	ld	a, (hl)
@@ -996,23 +1030,23 @@ _move::
 	ld	a, b
 	ld	e, a
 	bit	7, e
-	jr	Z, 00160$
+	jr	Z, 00218$
 	bit	7, d
-	jr	NZ, 00161$
+	jr	NZ, 00219$
 	cp	a, a
-	jr	00161$
-00160$:
+	jr	00219$
+00218$:
 	bit	7, d
-	jr	Z, 00161$
+	jr	Z, 00219$
 	scf
-00161$:
-	jp	NC, 00114$
-;..\sprite.c:82: for(int x = 0; x < this->tileDimension.width; x++)
+00219$:
+	jp	NC, 00128$
+;..\sprite.c:83: for(int x = 0; x < this->tileDimension.width; x++)
 	xor	a, a
 	ldhl	sp,	#15
 	ld	(hl+), a
 	ld	(hl), a
-00109$:
+00117$:
 	pop	de
 	push	de
 	ld	a, (de)
@@ -1034,47 +1068,49 @@ _move::
 	ld	a, (de)
 	ld	d, a
 	bit	7, (hl)
-	jr	Z, 00162$
+	jr	Z, 00220$
 	bit	7, d
-	jr	NZ, 00163$
+	jr	NZ, 00221$
 	cp	a, a
-	jr	00163$
-00162$:
+	jr	00221$
+00220$:
 	bit	7, d
-	jr	Z, 00163$
+	jr	Z, 00221$
 	scf
-00163$:
-	jr	NC, 00113$
-;..\sprite.c:84: move_sprite(this->spriteIndex + (y + this->tileDimension.width * x), screen_x + x * 8, screen_y + y * 8);
+00221$:
+	jr	NC, 00121$
+;..\sprite.c:85: move_sprite(this->spriteIndex + (y + this->tileDimension.width * x), screen_x + x * 8, screen_y + y * 8);
 	ldhl	sp,	#19
-	ld	c, (hl)
-	ldhl	sp,	#13
 	ld	a, (hl)
-	ldhl	sp,	#6
-	ld	(hl), a
-	ld	a, (hl+)
-	add	a, a
-	add	a, a
-	add	a, a
-	add	a, c
+	ldhl	sp,	#8
 	ld	(hl+), a
-	inc	hl
-	ld	c, (hl)
+	ld	a, (hl-)
+	ld	c, a
+	add	a, a
+	add	a, a
+	add	a, a
+	add	a, (hl)
+	dec	hl
+	dec	hl
+	ld	(hl), a
+	ldhl	sp,	#11
+	ld	e, (hl)
 	ldhl	sp,	#15
 	ld	b, (hl)
 	ld	a, b
 	add	a, a
 	add	a, a
 	add	a, a
-	add	a, c
-	ldhl	sp,	#8
+	add	a, e
+	ldhl	sp,	#7
 	ld	(hl), a
-	ldhl	sp,#11
+	ldhl	sp,#13
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
 	ld	a, (de)
-	ld	c, a
+	ldhl	sp,	#8
+	ld	(hl), a
 	ldhl	sp,	#4
 	ld	d, (hl)
 	push	bc
@@ -1083,109 +1119,304 @@ _move::
 	call	__mulschar
 	ld	a, c
 	pop	bc
-	ldhl	sp,	#6
-	add	a, (hl)
 	add	a, c
-	ld	c, a
+	ldhl	sp,	#8
+	add	a, (hl)
 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1877: OAM_item_t * itm = &shadow_OAM[nb];
-	ld	de, #_shadow_OAM+0
+	ld	l, a
+	ld	bc, #_shadow_OAM+0
+;	spillPairReg hl
+;	spillPairReg hl
 	ld	h, #0x00
 ;	spillPairReg hl
 ;	spillPairReg hl
-	ld	l, c
 	add	hl, hl
 	add	hl, hl
-	add	hl, de
+	add	hl, bc
 	ld	c, l
 	ld	b, h
 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1878: itm->y=y, itm->x=x;
-	ldhl	sp,	#7
+	ldhl	sp,	#6
 	ld	a, (hl+)
 	ld	(bc), a
 	inc	bc
 	ld	a, (hl)
 	ld	(bc), a
-;..\sprite.c:82: for(int x = 0; x < this->tileDimension.width; x++)
+;..\sprite.c:83: for(int x = 0; x < this->tileDimension.width; x++)
 	ldhl	sp,	#15
 	inc	(hl)
-	jr	NZ, 00109$
+	jr	NZ, 00117$
 	inc	hl
 	inc	(hl)
-	jr	00109$
-00113$:
-;..\sprite.c:79: for(int y = 0; y < this->tileDimension.height; y++)
-	ldhl	sp,	#13
+	jr	00117$
+00121$:
+;..\sprite.c:80: for(int y = 0; y < this->tileDimension.height; y++)
+	ldhl	sp,	#9
 	inc	(hl)
-	jp	NZ,00112$
+	jp	NZ,00120$
 	inc	hl
 	inc	(hl)
-	jp	00112$
-00114$:
-;..\sprite.c:87: }
+	jp	00120$
+00112$:
+;..\sprite.c:89: else if(this->renderMode == RENDER_8X8) {
+	bit	0, c
+	jp	NZ, 00128$
+;..\sprite.c:90: for(int y = 0; y < this->tileDimension.height; y++)
+	inc	sp
+	inc	sp
+	push	de
+	ldhl	sp,	#15
+	ld	a, (hl)
+	ldhl	sp,	#2
+	ld	(hl), a
+	ldhl	sp,	#16
+	ld	a, (hl)
+	ldhl	sp,	#3
+	ld	(hl), a
+	ld	bc, #0x0000
+00126$:
+	ldhl	sp,#2
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	a, (de)
+	ld	l, a
+;	spillPairReg hl
+;	spillPairReg hl
+	inc	de
+	ld	a, (de)
+	ld	h, a
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	e, h
+	ld	d, b
+	ld	a, c
+	sub	a, l
+	ld	a, b
+	sbc	a, h
+	bit	7, e
+	jr	Z, 00224$
+	bit	7, d
+	jr	NZ, 00225$
+	cp	a, a
+	jr	00225$
+00224$:
+	bit	7, d
+	jr	Z, 00225$
+	scf
+00225$:
+	jp	NC, 00128$
+;..\sprite.c:93: for(int x = 0; x < this->tileDimension.width; x++)
+	xor	a, a
+	ldhl	sp,	#15
+	ld	(hl+), a
+	ld	(hl), a
+00123$:
+	pop	de
+	push	de
+	ld	a, (de)
+	ldhl	sp,	#4
+	ld	(hl+), a
+	inc	de
+	ld	a, (de)
+	ld	(hl), a
+	ldhl	sp,	#15
+	ld	e, l
+	ld	d, h
+	ldhl	sp,	#4
+	ld	a, (de)
+	inc	de
+	sub	a, (hl)
+	inc	hl
+	ld	a, (de)
+	sbc	a, (hl)
+	ld	a, (de)
+	ld	d, a
+	bit	7, (hl)
+	jr	Z, 00226$
+	bit	7, d
+	jr	NZ, 00227$
+	cp	a, a
+	jr	00227$
+00226$:
+	bit	7, d
+	jr	Z, 00227$
+	scf
+00227$:
+	jr	NC, 00127$
+;..\sprite.c:95: move_sprite(this->spriteIndex + (x + this->tileDimension.width * y), screen_x + x * 8, screen_y + y * 8);
+	ldhl	sp,	#19
+	ld	e, (hl)
+	ldhl	sp,	#6
+	ld	(hl), c
+	ld	a, (hl+)
+	add	a, a
+	add	a, a
+	add	a, a
+	add	a, e
+	ld	(hl), a
+	ldhl	sp,	#11
+	ld	e, (hl)
+	ldhl	sp,	#15
+	ld	a, (hl)
+	ldhl	sp,	#8
+	ld	(hl), a
+	ld	a, (hl+)
+	add	a, a
+	add	a, a
+	add	a, a
+	add	a, e
+	ld	(hl), a
+	ldhl	sp,#13
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	a, (de)
+	ldhl	sp,	#10
+	ld	(hl), a
+	ldhl	sp,	#4
+	ld	a, (hl+)
+	inc	hl
+	ld	d, a
+	push	bc
+	ld	e, (hl)
+	ld	a, d
+	call	__mulschar
+	ld	a, c
+	pop	bc
+	ldhl	sp,	#8
+	add	a, (hl)
+	inc	hl
+	inc	hl
+	add	a, (hl)
+	ld	e, a
+;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1877: OAM_item_t * itm = &shadow_OAM[nb];
+	ld	h, #0x00
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	l, e
+	add	hl, hl
+	add	hl, hl
+	ld	de, #_shadow_OAM
+	add	hl, de
+	ld	e, l
+	ld	d, h
+;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1878: itm->y=y, itm->x=x;
+	ldhl	sp,	#7
+	ld	a, (hl+)
+	inc	hl
+	ld	(de), a
+	inc	de
+	ld	a, (hl)
+	ld	(de), a
+;..\sprite.c:93: for(int x = 0; x < this->tileDimension.width; x++)
+	ldhl	sp,	#15
+	inc	(hl)
+	jr	NZ, 00123$
+	inc	hl
+	inc	(hl)
+	jr	00123$
+00127$:
+;..\sprite.c:90: for(int y = 0; y < this->tileDimension.height; y++)
+	inc	bc
+	jp	00126$
+00128$:
+;..\sprite.c:99: }
 	add	sp, #17
 	pop	hl
 	pop	af
 	jp	(hl)
-;..\sprite.c:89: byte createPalette(UWORD first, UWORD second, UWORD third, UWORD fourth) {
+;..\sprite.c:101: byte create_palette(UWORD first, UWORD second, UWORD third, UWORD fourth) {
 ;	---------------------------------
-; Function createPalette
+; Function create_palette
 ; ---------------------------------
-_createPalette::
+_create_palette::
+;..\sprite.c:102: update_palette(palette_index, first, second, third, fourth);
+	ldhl	sp,	#4
+	ld	a, (hl+)
+	ld	h, (hl)
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	l, a
+;	spillPairReg hl
+;	spillPairReg hl
+	push	hl
+	ldhl	sp,	#4
+	ld	a, (hl+)
+	ld	h, (hl)
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	l, a
+;	spillPairReg hl
+;	spillPairReg hl
+	push	hl
 	push	bc
-;..\sprite.c:91: palette[0] = first;
-	ld	bc, #_createPalette_palette_65536_188+0
+	ld	a, (#_palette_index)
+	call	_update_palette
+;..\sprite.c:103: byte oldIdex = palette_index;
+	ld	hl, #_palette_index
+	ld	c, (hl)
+;..\sprite.c:104: palette_index++;
+	inc	(hl)
+;..\sprite.c:105: return oldIdex;
+	ld	a, c
+;..\sprite.c:106: }
+	pop	hl
+	add	sp, #4
+	jp	(hl)
+;..\sprite.c:108: void update_palette(byte hPallet, UWORD first, UWORD second, UWORD third, UWORD fourth) {
+;	---------------------------------
+; Function update_palette
+; ---------------------------------
+_update_palette::
+	dec	sp
+	ldhl	sp,	#0
+	ld	(hl), a
+;..\sprite.c:110: palette[0] = first;
+	ld	bc, #_update_palette_palette_65536_201+0
 	ld	l, c
 	ld	h, b
 	ld	a, e
 	ld	(hl+), a
 	ld	(hl), d
-;..\sprite.c:92: palette[1] = second;
-	ld	de, #(_createPalette_palette_65536_188 + 2)
-	ldhl	sp,	#0
+;..\sprite.c:111: palette[1] = second;
+	ld	de, #(_update_palette_palette_65536_201 + 2)
+	ldhl	sp,	#3
+	ld	a, (hl+)
+	ld	(de), a
+	inc	de
+;..\sprite.c:112: palette[2] = third;
+	ld	a, (hl+)
+	ld	(de), a
+	ld	de, #(_update_palette_palette_65536_201 + 4)
+	ld	a, (hl+)
+	ld	(de), a
+	inc	de
+;..\sprite.c:113: palette[3] = fourth;
+	ld	a, (hl+)
+	ld	(de), a
+	ld	de, #(_update_palette_palette_65536_201 + 6)
 	ld	a, (hl+)
 	ld	(de), a
 	inc	de
 	ld	a, (hl)
 	ld	(de), a
-;..\sprite.c:93: palette[2] = third;
-	ld	de, #(_createPalette_palette_65536_188 + 4)
-	ldhl	sp,	#4
-	ld	a, (hl+)
-	ld	(de), a
-	inc	de
-;..\sprite.c:94: palette[3] = fourth;
-	ld	a, (hl+)
-	ld	(de), a
-	ld	de, #(_createPalette_palette_65536_188 + 6)
-	ld	a, (hl+)
-	ld	(de), a
-	inc	de
-	ld	a, (hl)
-	ld	(de), a
-;..\sprite.c:95: set_sprite_palette(palette_index, 1, palette);
+;..\sprite.c:114: set_sprite_palette(hPallet, 1, palette);
 	push	bc
 	ld	a, #0x01
 	push	af
 	inc	sp
-	ld	a, (#_palette_index)
+	ldhl	sp,	#3
+	ld	a, (hl)
 	push	af
 	inc	sp
 	call	_set_sprite_palette
-	add	sp, #4
-;..\sprite.c:96: byte oldIdex = palette_index;
-	ld	hl, #_palette_index
-	ld	c, (hl)
-;..\sprite.c:97: palette_index++;
-	inc	(hl)
-;..\sprite.c:98: return oldIdex;
-	ld	a, c
-;..\sprite.c:99: }
-	inc	sp
-	inc	sp
+;..\sprite.c:115: }
+	add	sp, #5
 	pop	hl
-	add	sp, #4
+	add	sp, #6
 	jp	(hl)
-;..\sprite.c:101: void setPalette(struct Sprite* this, byte paletteIndex) {
+;..\sprite.c:118: void setPalette(struct Sprite* this, byte paletteIndex) {
 ;	---------------------------------
 ; Function setPalette
 ; ---------------------------------
@@ -1197,12 +1428,12 @@ _setPalette::
 	ld	(hl), d
 	dec	hl
 	dec	hl
-;..\sprite.c:102: int totalTiles = this->tileDimension.width * this->tileDimension.height * this->frames;
+;..\sprite.c:119: int totalTiles = this->tileDimension.width * this->tileDimension.height * this->frames;
 	ld	(hl+), a
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #0x0008
+	ld	hl, #0x0009
 	add	hl, de
 	ld	c, l
 	ld	b, h
@@ -1234,7 +1465,7 @@ _setPalette::
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #0x000c
+	ld	hl, #0x000d
 	add	hl, de
 	ld	a, (hl+)
 	ld	c, a
@@ -1243,7 +1474,7 @@ _setPalette::
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-;..\sprite.c:103: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
+;..\sprite.c:120: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
 	call	__mulint
 	pop	hl
 	push	bc
@@ -1292,7 +1523,7 @@ _setPalette::
 	scf
 00124$:
 	jr	NC, 00106$
-;..\sprite.c:104: set_sprite_prop(i, paletteIndex);
+;..\sprite.c:121: set_sprite_prop(i, paletteIndex);
 	ldhl	sp,	#5
 	ld	c, (hl)
 ;c:\source\gameboy\gbdk-win64\gbdk\include\gb\gb.h:1850: shadow_OAM[nb].prop=prop;
@@ -1312,7 +1543,7 @@ _setPalette::
 	ldhl	sp,	#2
 	ld	a, (hl)
 	ld	(bc), a
-;..\sprite.c:103: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
+;..\sprite.c:120: for(int i = this->spriteIndex; i < this->spriteIndex + totalTiles; i++)
 	ldhl	sp,	#5
 	inc	(hl)
 	jr	NZ, 00104$
@@ -1320,34 +1551,34 @@ _setPalette::
 	inc	(hl)
 	jr	00104$
 00106$:
-;..\sprite.c:105: }
+;..\sprite.c:122: }
 	add	sp, #7
 	ret
-;..\sprite.c:109: void show(struct Sprite* this) {
+;..\sprite.c:126: void show(struct Sprite* this) {
 ;	---------------------------------
 ; Function show
 ; ---------------------------------
 _show::
-;..\sprite.c:110: this->hidden = false;
-	ld	hl, #0x0011
+;..\sprite.c:127: this->hidden = false;
+	ld	hl, #0x0012
 	add	hl, de
 	ld	(hl), #0x00
-;..\sprite.c:111: setVisible(this, true);
+;..\sprite.c:128: setVisible(this, true);
 	ld	a, #0x01
-;..\sprite.c:112: }
+;..\sprite.c:129: }
 	jp	_setVisible
-;..\sprite.c:114: void hide(struct Sprite* this){
+;..\sprite.c:131: void hide(struct Sprite* this){
 ;	---------------------------------
 ; Function hide
 ; ---------------------------------
 _hide::
-;..\sprite.c:115: this->hidden = true;
-	ld	hl, #0x0011
+;..\sprite.c:132: this->hidden = true;
+	ld	hl, #0x0012
 	add	hl, de
 	ld	(hl), #0x01
-;..\sprite.c:116: setVisible(this, false);
+;..\sprite.c:133: setVisible(this, false);
 	xor	a, a
-;..\sprite.c:117: }
+;..\sprite.c:134: }
 	jp	_setVisible
 	.area _CODE
 	.area _INITIALIZER

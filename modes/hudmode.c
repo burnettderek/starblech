@@ -26,10 +26,10 @@ void Hud_init(struct Hud* this) {
     set_win_tiles(0, 0, sensor_screenWidth, sensor_screenHeight, sensor_screen);
     move_win(this->screen_position.x, this->screen_position.y);
 	set_bkg_palette(0,1, hud_pallette);
-    ctor(&planetSprite, sensor_sprites, 2, 2, 1);
+    sprite_init(&planetSprite, sensor_sprites, RENDER_16X16, 2, 2, 1);
     setFrame(&planetSprite, 0);
     //move(&planetSprite, 70, 70);
-    byte planetPalette = createPalette(RGB_BLACK, RGB_YELLOW, RGB_ORANGE, RGB_RED);
+    byte planetPalette = create_palette(RGB_BLACK, RGB_YELLOW, RGB_ORANGE, RGB_RED);
     setPalette(&planetSprite, planetPalette);    
 }
 

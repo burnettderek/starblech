@@ -16,8 +16,7 @@ Symbol Table
     _WY_REG                                                        ****** GX
     __divsint                                                      ****** GX
   7 __xinit__HUD_SCALE                                             000000 R
-    _createPalette                                                 ****** GX
-    _ctor                                                          ****** GX
+    _create_palette                                                ****** GX
     _gameobjects                                                   ****** GX
     _hide                                                          ****** GX
   0 _hud_pallette                                                  000096 GR
@@ -32,6 +31,7 @@ Symbol Table
     _set_win_data                                                  ****** GX
     _set_win_tiles                                                 ****** GX
     _show                                                          ****** GX
+    _sprite_init                                                   ****** GX
     _sprites_reset                                                 ****** GX
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy)                  Page 2
@@ -40,7 +40,7 @@ Hexadecimal [24-Bits]
 Area Table
 
    0 _CODE                                      size    188   flags    0
-   1 _DATA                                      size     14   flags    0
+   1 _DATA                                      size     15   flags    0
    2 _INITIALIZED                               size      2   flags    0
    3 _DABS                                      size      0   flags    8
    4 _HOME                                      size      0   flags    0

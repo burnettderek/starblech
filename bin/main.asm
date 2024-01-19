@@ -34,7 +34,7 @@
 _hud::
 	.ds 6
 _explorationMode::
-	.ds 4
+	.ds 5
 ;--------------------------------------------------------
 ; ram data
 ;--------------------------------------------------------
@@ -104,17 +104,21 @@ _init_game::
 	add	hl, bc
 	ld	a, #0x01
 	ld	(hl+), a
-;..\main.c:26: struct GameObject* planet1 = gameobjects(GO_PLANET1);
+	ld	(hl), #0x00
+;..\main.c:25: ship->isAlive = true;
+	ld	hl, #0x0004
+	add	hl, bc
+;..\main.c:27: struct GameObject* planet1 = gameobjects(GO_PLANET1);
 	ld	de, #0x0001
-	ld	(hl), d
+	ld	(hl), e
 	call	_gameobjects
-;..\main.c:27: planet1->world.x = -64;
+;..\main.c:28: planet1->world.x = -64;
 	ld	l, c
 	ld	h, b
 	ld	a, #0xc0
 	ld	(hl+), a
 	ld	(hl), #0xff
-;..\main.c:28: planet1->world.y = -64;
+;..\main.c:29: planet1->world.y = -64;
 	inc	bc
 	inc	bc
 	ld	a, #0xc0
@@ -122,27 +126,27 @@ _init_game::
 	inc	bc
 	ld	a, #0xff
 	ld	(bc), a
-;..\main.c:30: }
+;..\main.c:31: }
 	ret
-;..\main.c:32: void main(void)
+;..\main.c:33: void main(void)
 ;	---------------------------------
 ; Function main
 ; ---------------------------------
 _main::
-;..\main.c:34: DISPLAY_ON;
+;..\main.c:35: DISPLAY_ON;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x80
 	ldh	(_LCDC_REG + 0), a
-;..\main.c:35: init_game();
+;..\main.c:36: init_game();
 	call	_init_game
-;..\main.c:37: ExplorationMode_init(&explorationMode);
+;..\main.c:38: ExplorationMode_init(&explorationMode);
 	ld	de, #_explorationMode
 	call	_ExplorationMode_init
-;..\main.c:38: int wait = 0;
+;..\main.c:39: int wait = 0;
 	ld	bc, #0x0000
-;..\main.c:40: while(1) {
+;..\main.c:41: while(1) {
 00117$:
-;..\main.c:41: if(wait > 0)wait++;
+;..\main.c:42: if(wait > 0)wait++;
 	ld	e, b
 	xor	a, a
 	ld	d, a
@@ -162,7 +166,7 @@ _main::
 	jr	NC, 00102$
 	inc	bc
 00102$:
-;..\main.c:42: if(wait > 50)wait = 0;
+;..\main.c:43: if(wait > 50)wait = 0;
 	ld	e, b
 	ld	d, #0x00
 	ld	a, #0x32
@@ -183,18 +187,18 @@ _main::
 	jr	NC, 00104$
 	ld	bc, #0x0000
 00104$:
-;..\main.c:43: joypadCurrent=joypad();
+;..\main.c:44: joypadCurrent=joypad();
 	call	_joypad
 	ld	hl, #_joypadCurrent
 	ld	(hl), a
-;..\main.c:44: if (joypadCurrent & J_START && wait == 0)
+;..\main.c:45: if (joypadCurrent & J_START && wait == 0)
 	ld	a, (hl)
 	rlca
 	jr	NC, 00110$
 	ld	a, b
 	or	a, c
 	jr	NZ, 00110$
-;..\main.c:46: switch (gameState)
+;..\main.c:47: switch (gameState)
 	ld	hl, #_gameState
 	ld	a, (hl+)
 	dec	a
@@ -206,37 +210,37 @@ _main::
 	or	a, (hl)
 	jr	Z, 00106$
 	jr	00110$
-;..\main.c:48: case EXPLORATION_MODE:
+;..\main.c:49: case EXPLORATION_MODE:
 00105$:
-;..\main.c:49: gameState = HUD_MODE;
+;..\main.c:50: gameState = HUD_MODE;
 	ld	hl, #_gameState
 	ld	a, #0x03
 	ld	(hl+), a
 	xor	a, a
 	ld	(hl), a
-;..\main.c:50: Hud_init(&hud);
+;..\main.c:51: Hud_init(&hud);
 	ld	de, #_hud
 	call	_Hud_init
-;..\main.c:51: wait = 1;
+;..\main.c:52: wait = 1;
 	ld	bc, #0x0001
-;..\main.c:52: break;
+;..\main.c:53: break;
 	jr	00110$
-;..\main.c:53: case HUD_MODE:
+;..\main.c:54: case HUD_MODE:
 00106$:
-;..\main.c:54: gameState = EXPLORATION_MODE;
+;..\main.c:55: gameState = EXPLORATION_MODE;
 	ld	hl, #_gameState
 	ld	a, #0x01
 	ld	(hl+), a
 	xor	a, a
 	ld	(hl), a
-;..\main.c:55: ExplorationMode_init(&explorationMode);
+;..\main.c:56: ExplorationMode_init(&explorationMode);
 	ld	de, #_explorationMode
 	call	_ExplorationMode_init
-;..\main.c:56: wait = 1;
+;..\main.c:57: wait = 1;
 	ld	bc, #0x0001
-;..\main.c:60: }
+;..\main.c:61: }
 00110$:
-;..\main.c:63: switch (gameState)
+;..\main.c:64: switch (gameState)
 	ld	hl, #_gameState
 	ld	a, (hl+)
 	dec	a
@@ -248,9 +252,9 @@ _main::
 	or	a, (hl)
 	jr	Z, 00113$
 	jr	00115$
-;..\main.c:65: case EXPLORATION_MODE:
+;..\main.c:66: case EXPLORATION_MODE:
 00112$:
-;..\main.c:66: ExplorationMode_update(&explorationMode);
+;..\main.c:67: ExplorationMode_update(&explorationMode);
 	push	bc
 	ld	de, #_explorationMode
 	call	_ExplorationMode_update
@@ -258,11 +262,11 @@ _main::
 	ld	de, #_explorationMode
 	call	_ExplorationMode_processInput
 	pop	bc
-;..\main.c:68: break;
+;..\main.c:69: break;
 	jr	00115$
-;..\main.c:69: case HUD_MODE:
+;..\main.c:70: case HUD_MODE:
 00113$:
-;..\main.c:70: Hud_processInput(&hud, joypadCurrent);
+;..\main.c:71: Hud_processInput(&hud, joypadCurrent);
 	push	bc
 	ld	a, (#_joypadCurrent)
 	ld	de, #_hud
@@ -270,11 +274,11 @@ _main::
 	ld	de, #_hud
 	call	_Hud_drawScreen
 	pop	bc
-;..\main.c:75: }
+;..\main.c:76: }
 00115$:
-;..\main.c:87: wait_vbl_done();
+;..\main.c:88: wait_vbl_done();
 	call	_wait_vbl_done
-;..\main.c:89: }
+;..\main.c:90: }
 	jp	00117$
 	.area _CODE
 	.area _INITIALIZER

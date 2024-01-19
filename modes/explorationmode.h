@@ -5,6 +5,7 @@
 typedef struct ExplorationMode {
     int counter;
     struct GameObject* exploration_objects;
+    byte gameover_fader;
 };
 
 void ExplorationMode_init(struct ExplorationMode* this);

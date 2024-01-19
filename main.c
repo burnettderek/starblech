@@ -22,6 +22,7 @@ void init_game(void) {
 	ship->world.y = 0;
 	ship->vector.x = 0;
 	ship->vector.y = 1;
+	ship->isAlive = true;
 
 	struct GameObject* planet1 = gameobjects(GO_PLANET1);
 	planet1->world.x = -64;

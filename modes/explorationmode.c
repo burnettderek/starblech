@@ -33,6 +33,8 @@ struct Sprite asteroidGraphic;
 struct Sprite explosionGraphic;
 struct Sprite gameoverGraphic;
 
+static byte hGameOverPalette;
+
 void do_explosion(int world_x, int world_y) {
 	explosion.isAlive = true;
 	explosion.world.x = world_x;
@@ -40,12 +42,11 @@ void do_explosion(int world_x, int world_y) {
 	show(&explosionGraphic);
 }
 
-void do_gameover(void) {
-	/*set_win_tiles(0, 0, gameover_mapWidth, gameover_mapHeight, gameover_map);
-	move_win(7, 0);
-	const UWORD gameover_pallette[4]={ 0x000000, RGB_WHITE, RGB8(0, 200, 255), RGB8(127, 51, 0) };
-	set_bkg_palette(0, 1, gameover_pallette);
-	SHOW_WIN;*/
+void do_gameover(struct GameObject* ship) {
+	move(&gameoverGraphic, 70, 84);
+	show(&gameoverGraphic);
+	ship->isAlive = false;
+	hide(&shipGraphic);
 }
 
 struct Vector to_screen(struct Vector* ship, struct Vector* object) {
@@ -87,13 +88,11 @@ void manage_asteroid(struct GameObject* ship) {
 			hide(&photonGraphic);
 			do_explosion(photon.world.x, photon.world.y);
 		}
-		if(asteroid.world.x/8 == ship->world.x/8 && asteroid.world.y/8 == ship->world.y/8) {
+		if(ship->isAlive == true && asteroid.world.x/8 == ship->world.x/8 && asteroid.world.y/8 == ship->world.y/8) {
 			asteroid.isAlive = false;
-			ship->isAlive = false;
 			hide(&asteroidGraphic);
-			hide(&shipGraphic);
 			do_explosion(ship->world.x, ship->world.y);
-			do_gameover();
+			do_gameover(ship);
 		}
 		if(abs(asteroid.world.x - ship->world.x) > 255 || abs(asteroid.world.y - ship->world.y) > 255) { //we're so far away, kill the asteroid
 			asteroid.isAlive = false;
@@ -118,44 +117,48 @@ void ExplorationMode_init(struct ExplorationMode* this) {
 	set_bkg_tiles(0, 0, bckground_mapWidth, bckground_mapHeight, bckground_map);
 	set_bkg_palette(0,1, space_pallette);
     this->counter = 0;
-    byte ship_pal = createPalette(0xFFFFFF,RGB8(200,200,200),RGB8(127, 127, 127),RGB8(255, 255, 255));
+    byte ship_pal = create_palette(0xFFFFFF,RGB8(200,200,200),RGB8(127, 127, 127),RGB8(255, 255, 255));
+	byte fire_pallet = create_palette(0, RGB_WHITE, RGB8(255, 160, 68), RGB_RED);
+	hGameOverPalette = create_palette(RGB8(0, 0, 0), RGB8(0, 50, 64), RGB8(0, 100, 128), RGB8(0, 200, 0));
 	//byte ter_pal = createPalette(RGB8(255, 255, 255),0x00FF00,RGB8(127, 51, 0),RGB8(255, 255, 255));
 
 	this->exploration_objects = gameobjects(0);
 
-	ctor(&shipGraphic, enterprise_tiles, 2, 2, 8);
-	
+	sprite_init(&gameoverGraphic, gameover_tiles, RENDER_8X8, 6, 1, 1);
+	setFrame(&gameoverGraphic, 0);
+	setPalette(&gameoverGraphic, hGameOverPalette);
+	move(&gameoverGraphic, 300, 300);
+	hide(&gameoverGraphic);
+
+	sprite_init(&shipGraphic, enterprise_tiles, RENDER_16X16, 2, 2, 8);
 	setFrame(&shipGraphic, 0);
 	move(&shipGraphic, mid_screen.width, mid_screen.height);
 
-    ctor(&saturnGraphic, saturn_tiles, 2, 2, 1);
+    sprite_init(&saturnGraphic, saturn_tiles, RENDER_16X16, 2, 2, 1);
 	setFrame(&saturnGraphic, 0);
-	setPalette(&saturnGraphic, createPalette(0, RGB8(255, 200, 200), RGB8(200, 50, 50), RGB8(255, 160, 68)));
+	setPalette(&saturnGraphic, create_palette(0, RGB8(255, 200, 200), RGB8(200, 50, 50), RGB8(255, 160, 68)));
 
-	byte fire_pallet = createPalette(0, RGB_WHITE, RGB8(255, 160, 68), RGB_RED);
+	
     photon.isAlive = false;
-	ctor(&photonGraphic, photon_tiles, 1, 1, 2);
+	sprite_init(&photonGraphic, photon_tiles, RENDER_8X8,  1, 1, 2);
 	setFrame(&photonGraphic, 0);
 	setPalette(&photonGraphic, fire_pallet);
 	hide(&photonGraphic);
 
-    ctor(&asteroidGraphic, asteroid_tiles, 1, 1, 4);
+    sprite_init(&asteroidGraphic, asteroid_tiles, RENDER_8X8, 1, 1, 4);
     setFrame(&asteroidGraphic, 0);
 	hide(&asteroidGraphic);
     //setPalette(asteroidGraphic, ship_pal);
-    setPalette(&asteroidGraphic, createPalette(0, RGB8(223, 223, 223), RGB8(128, 128, 128), RGB8(64, 64, 64)));
+    setPalette(&asteroidGraphic, create_palette(0, RGB8(223, 223, 223), RGB8(128, 128, 128), RGB8(64, 64, 64)));
 	asteroid.isAlive = false;
 
-	ctor(&explosionGraphic, explosion_tiles, 2, 2, 4);
+	sprite_init(&explosionGraphic, explosion_tiles, RENDER_16X16, 2, 2, 4);
 	setFrame(&explosionGraphic, 0);
 	hide(&explosionGraphic);
 	setPalette(&explosionGraphic, fire_pallet);
 	explosion.isAlive = false;
 
-	/*ctor(&gameoverGraphic, gameover_tiles, 6, 1, 1);
-	setFrame(&gameoverGraphic, 0);
-	setPalette(&gameoverGraphic, fire_pallet);
-	move(&gameoverGraphic, 84, 84);*/
+	
 }
 
 void ExplorationMode_update(struct ExplorationMode* this) {
@@ -202,6 +205,11 @@ void ExplorationMode_update(struct ExplorationMode* this) {
 		screen = to_screen(&ship->world, &explosion.world);
 		move(&explosionGraphic, screen.x, screen.y);
 	}
+
+	if(ship->isAlive == false && this->gameover_fader < 255){
+		this->gameover_fader++;
+		update_palette(hGameOverPalette, RGB8(0, 0, 0), RGB8(0, 50, 64), RGB8(0, 100, 128), RGB8(0, this->gameover_fader/2, this->gameover_fader));
+	}
     
 }
 
@@ -210,6 +218,7 @@ void ExplorationMode_processInput(struct ExplorationMode* this, byte joypad) {
 	int x = 0; int y = 0;
 	struct GameObject* ship = this->exploration_objects + GO_SHIP;
     struct GameObject* planet1 = this->exploration_objects + GO_PLANET1;
+	if(ship->isAlive == false)return;
 
 	if(joypad & J_B) {
 	}

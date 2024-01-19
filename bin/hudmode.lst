@@ -13,10 +13,10 @@
                                      13 	.globl _hide
                                      14 	.globl _show
                                      15 	.globl _setPalette
-                                     16 	.globl _createPalette
+                                     16 	.globl _create_palette
                                      17 	.globl _move
                                      18 	.globl _setFrame
-                                     19 	.globl _ctor
+                                     19 	.globl _sprite_init
                                      20 	.globl _set_bkg_palette
                                      21 	.globl _set_win_tiles
                                      22 	.globl _set_win_data
@@ -33,7 +33,7 @@
                                      33 ;--------------------------------------------------------
                                      34 	.area _DATA
       000000                         35 _planetSprite::
-      000000                         36 	.ds 20
+      000000                         36 	.ds 21
                                      37 ;--------------------------------------------------------
                                      38 ; ram data
                                      39 ;--------------------------------------------------------
@@ -128,35 +128,35 @@
                                     128 ;..\modes\hudmode.c:28: set_bkg_palette(0,1, hud_pallette);
       000053 11r96r00         [12]  129 	ld	de, #_hud_pallette
       000056 D5               [16]  130 	push	de
-      000057 3E 01            [ 8]  131 	ld	a, #0x01
-      000059 F5               [16]  132 	push	af
-      00005A 33               [ 8]  133 	inc	sp
-      00005B AF               [ 4]  134 	xor	a, a
-      00005C F5               [16]  135 	push	af
-      00005D 33               [ 8]  136 	inc	sp
-      00005E CDr00r00         [24]  137 	call	_set_bkg_palette
-      000061 E8 04            [16]  138 	add	sp, #4
-                                    139 ;..\modes\hudmode.c:29: ctor(&planetSprite, sensor_sprites, 2, 2, 1);
-      000063 11 01 00         [12]  140 	ld	de, #0x0001
-      000066 D5               [16]  141 	push	de
-      000067 11 02 00         [12]  142 	ld	de, #0x0002
-      00006A D5               [16]  143 	push	de
-      00006B D5               [16]  144 	push	de
+      000057 AF               [ 4]  131 	xor	a, a
+      000058 3C               [ 4]  132 	inc	a
+      000059 F5               [16]  133 	push	af
+      00005A CDr00r00         [24]  134 	call	_set_bkg_palette
+      00005D E8 04            [16]  135 	add	sp, #4
+                                    136 ;..\modes\hudmode.c:29: sprite_init(&planetSprite, sensor_sprites, RENDER_16X16, 2, 2, 1);
+      00005F 11 01 00         [12]  137 	ld	de, #0x0001
+      000062 D5               [16]  138 	push	de
+      000063 11 02 00         [12]  139 	ld	de, #0x0002
+      000066 D5               [16]  140 	push	de
+      000067 D5               [16]  141 	push	de
+      000068 3E 01            [ 8]  142 	ld	a, #0x01
+      00006A F5               [16]  143 	push	af
+      00006B 33               [ 8]  144 	inc	sp
       00006C 01r00r00         [12]  145 	ld	bc, #_sensor_sprites
       00006F 11r00r00         [12]  146 	ld	de, #_planetSprite
-      000072 CDr00r00         [24]  147 	call	_ctor
+      000072 CDr00r00         [24]  147 	call	_sprite_init
                                     148 ;..\modes\hudmode.c:30: setFrame(&planetSprite, 0);
       000075 01 00 00         [12]  149 	ld	bc, #0x0000
       000078 11r00r00         [12]  150 	ld	de, #_planetSprite
       00007B CDr00r00         [24]  151 	call	_setFrame
-                                    152 ;..\modes\hudmode.c:32: byte planetPalette = createPalette(RGB_BLACK, RGB_YELLOW, RGB_ORANGE, RGB_RED);
+                                    152 ;..\modes\hudmode.c:32: byte planetPalette = create_palette(RGB_BLACK, RGB_YELLOW, RGB_ORANGE, RGB_RED);
       00007E 11 1F 00         [12]  153 	ld	de, #0x001f
       000081 D5               [16]  154 	push	de
       000082 11 9E 02         [12]  155 	ld	de, #0x029e
       000085 D5               [16]  156 	push	de
       000086 01 FF 03         [12]  157 	ld	bc, #0x03ff
       000089 11 00 00         [12]  158 	ld	de, #0x0000
-      00008C CDr00r00         [24]  159 	call	_createPalette
+      00008C CDr00r00         [24]  159 	call	_create_palette
                                     160 ;..\modes\hudmode.c:33: setPalette(&planetSprite, planetPalette);    
       00008F 4F               [ 4]  161 	ld	c, a
       000090 11r00r00         [12]  162 	ld	de, #_planetSprite

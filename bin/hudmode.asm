@@ -13,10 +13,10 @@
 	.globl _hide
 	.globl _show
 	.globl _setPalette
-	.globl _createPalette
+	.globl _create_palette
 	.globl _move
 	.globl _setFrame
-	.globl _ctor
+	.globl _sprite_init
 	.globl _set_bkg_palette
 	.globl _set_win_tiles
 	.globl _set_win_data
@@ -33,7 +33,7 @@
 ;--------------------------------------------------------
 	.area _DATA
 _planetSprite::
-	.ds 20
+	.ds 21
 ;--------------------------------------------------------
 ; ram data
 ;--------------------------------------------------------
@@ -128,35 +128,35 @@ _Hud_init::
 ;..\modes\hudmode.c:28: set_bkg_palette(0,1, hud_pallette);
 	ld	de, #_hud_pallette
 	push	de
-	ld	a, #0x01
-	push	af
-	inc	sp
 	xor	a, a
+	inc	a
 	push	af
-	inc	sp
 	call	_set_bkg_palette
 	add	sp, #4
-;..\modes\hudmode.c:29: ctor(&planetSprite, sensor_sprites, 2, 2, 1);
+;..\modes\hudmode.c:29: sprite_init(&planetSprite, sensor_sprites, RENDER_16X16, 2, 2, 1);
 	ld	de, #0x0001
 	push	de
 	ld	de, #0x0002
 	push	de
 	push	de
+	ld	a, #0x01
+	push	af
+	inc	sp
 	ld	bc, #_sensor_sprites
 	ld	de, #_planetSprite
-	call	_ctor
+	call	_sprite_init
 ;..\modes\hudmode.c:30: setFrame(&planetSprite, 0);
 	ld	bc, #0x0000
 	ld	de, #_planetSprite
 	call	_setFrame
-;..\modes\hudmode.c:32: byte planetPalette = createPalette(RGB_BLACK, RGB_YELLOW, RGB_ORANGE, RGB_RED);
+;..\modes\hudmode.c:32: byte planetPalette = create_palette(RGB_BLACK, RGB_YELLOW, RGB_ORANGE, RGB_RED);
 	ld	de, #0x001f
 	push	de
 	ld	de, #0x029e
 	push	de
 	ld	bc, #0x03ff
 	ld	de, #0x0000
-	call	_createPalette
+	call	_create_palette
 ;..\modes\hudmode.c:33: setPalette(&planetSprite, planetPalette);    
 	ld	c, a
 	ld	de, #_planetSprite
